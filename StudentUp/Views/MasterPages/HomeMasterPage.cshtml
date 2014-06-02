@@ -1,16 +1,22 @@
-﻿@{
+﻿@using StudentUp.Models;
+
+@{
     Layout = null;
 }
 
 <!DOCTYPE html>
 
 <html>
-    <head>
-        <title></title>
-    </head>
-    <body>
-        <div>
-            @RenderBody() 
-        </div>
-    </body>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@RenderSection("Title", true)</title>
+    <link href="~/Images/icon.png" rel="shortcut icon" type="image/png" />
+    <link href="~/CSS/all.css" rel="stylesheet" type="text/css" />
+    @RenderSection("Style", true)
+</head>
+<body>
+    @RenderBody()
+</body>
+<script type="text/ecmascript" src="~/JS/all.js"></script>
+@RenderSection("Script", true)
 </html>
