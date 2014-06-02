@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Web;
 
 namespace StudentUp.Models
@@ -57,6 +58,7 @@ namespace StudentUp.Models
 		/// <param name="newUserId">Идентификатор пользователя</param>
 		public Users(int newUserId)
 		{
+			if(newUserId <= 0) throw new Exception("no id");
 			this.userId = newUserId;
 		}
 
@@ -66,6 +68,7 @@ namespace StudentUp.Models
         /// <param name="newEmail">Email пользователя</param>
         public Users(string newEmail)
         {
+	        if (!Validation.IsEmail(newEmail)) throw new ValidationDataException("no email");
             this.email = newEmail;
         }
 
@@ -89,6 +92,12 @@ namespace StudentUp.Models
 		/// <param name="newPassword">Пароль пользователя</param>
 		public Users(string newEmail, string newPassword)
 		{
+			Messages messages = new Messages();
+			if (!Validation.IsEmail(newEmail))
+				messages.Add(Messages.Message.TypeMessage.error, "no email");
+			if (!Validation.IsPassword(newPassword))
+				messages.Add(Messages.Message.TypeMessage.error, "no password");
+			if (messages.Count != 0) throw new ValidationDataException(messages);
 			this.email = newEmail;
 			this.passwodr = newPassword;
 		}
@@ -100,12 +109,24 @@ namespace StudentUp.Models
 		/// <param name="newEmail">Email пользователя</param>
 		/// <param name="newPassword">Пароль пользователя</param>
 		/// <param name="newAccessLevel">Уровень доступа пользователя</param>
-		public Users(int newUserId, string newEmail, string newPassword, int newAccessLevel)
+		/// <param name="newUserType">Тип пользователя</param>
+		public Users(int newUserId, string newEmail, string newPassword, int newAccessLevel, Users.UserType newUserType)
 		{
+			Messages messages = new Messages();
+			if (newUserId <= 0)
+				messages.Add(Messages.Message.TypeMessage.error, "no id");
+			if (!Validation.IsEmail(newEmail))
+				messages.Add(Messages.Message.TypeMessage.error, "no email");
+			if (!Validation.IsPassword(newPassword))
+				messages.Add(Messages.Message.TypeMessage.error, "no password");
+			if (accessLevel < 0 || accessLevel > 2)
+				messages.Add(Messages.Message.TypeMessage.error, "no access level");
+			if (messages.Count != 0) throw new ValidationDataException(messages);
 			this.userId = newUserId;
 			this.email = newEmail;
 			this.passwodr = newPassword;
 			this.accessLevel = newAccessLevel;
+			this.userType = newUserType;
 		}
 
 		/// <summary>
@@ -156,8 +177,7 @@ namespace StudentUp.Models
 				else
 					if (this.email != string.Empty)
 						users = db.QueryToRespontTable(string.Format("select * from Users where Email='{0}';", this.email));
-			if (users != null && users.CountRow == 1) return true;
-			return false;
+			return users != null && users.CountRow == 1;
 		}
 
 		/// <summary>
@@ -177,17 +197,14 @@ namespace StudentUp.Models
 				else
 					if(this.email != "")
 						users = db.QueryToRespontTable(string.Format("select * from Users where Email='{0}';", this.Email));
-			if (users != null)
-			{
-				users.Read();
-				this.userId = (int)users["User_id"];
-				this.email = (string)users["Email"];
-				this.passwodr = (string)users["Password"];
-				this.accessLevel = (int)users["Access_level"];
-				this.userType = users["Student_id"] == null ? UserType.Lecturer : UserType.Student;
-				return true;
-			}
-			return false;
+			if (users == null) return false;
+			users.Read();
+			this.userId = (int)users["User_id"];
+			this.email = (string)users["Email"];
+			this.passwodr = (string)users["Password"];
+			this.accessLevel = (int)users["Access_level"];
+			this.userType = users["Student_id"] == null ? UserType.Lecturer : UserType.Student;
+			return true;
 		}
 
 		/// <summary>
@@ -207,8 +224,7 @@ namespace StudentUp.Models
 		/// <returns>true - созданна, false - не созданна</returns>
 		public static bool IsCreatedSession(HttpRequestBase Request)
 		{
-			if (Request.Cookies["userID"] != null && Request.Cookies["userID"].Value != "") return true;
-			return false;
+			return Request.Cookies["userID"] != null && Request.Cookies["userID"].Value != "";
 		}
 
 		/// <summary>
@@ -240,33 +256,6 @@ namespace StudentUp.Models
 				HttpCookie myCookie = new HttpCookie("userID") {Expires = DateTime.Now.AddDays(-1d)};
 				Response.Cookies.Add(myCookie);
 			}
-		}
-
-		static Users AddUser(string email, string password, int accessLevel, int idStudent, int idLecturer)
-		{
-			DB db = new DB();
-			string query;
-			if (idStudent == 0 && idLecturer != 0)
-				query = string.Format("insert into Users(Lecturer_id, Email, Password, Access_level) value({0}, '{1}', '{2}', '{3}');", idLecturer, email, password, accessLevel);
-			else
-				if (idStudent != 0 && idLecturer == 0)
-					query = string.Format("insert into Users(Student_id, Email, Password, Access_level) value({0}, '{1}', '{2}', '{3}');", idStudent, email, password, accessLevel);
-				else
-					throw new Exception("Не переданна вся информация");
-			db.QueryToRespontTable(query);
-			Users user = new Users(email, password);
-			user.GetInformationAboutUserFromDB();
-			return user;
-		}
-
-		static public Users AddUserStudent(string email, string password, int accessLevel, int idStudent)
-		{
-			return Users.AddUser(email, password, accessLevel, idStudent, 0);
-		}
-
-		static public Users AddUserLecturer(string email, string password, int accessLevel, int idLecturer)
-		{
-			return Users.AddUser(email, password, accessLevel, 0, idLecturer);
 		}
 	}
 }

@@ -1,4 +1,6 @@
-﻿@{
+﻿@using StudentUp.Models
+
+@{
     ViewBag.Title = "Index";
     Layout = "~/Views/MasterPages/IndexMasterPage.cshtml";
 }
@@ -14,14 +16,14 @@
 </form>
 
 <div class="b-message">
-    @*{
+    @{
         Messages listMessages = (Messages)ViewData["messages"];
         if (listMessages != null)
         {
             foreach (Messages.Message item in listMessages)
             {
-        <p class="@item.Type">@Html.Raw(item.Value.ToString())</p>
+        <p class="@item.Type">@Html.Raw(item.Value)</p>
             }
         }      
-    }*@
+    }
 </div>
