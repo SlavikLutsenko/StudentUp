@@ -1,0 +1,61 @@
+﻿input[type='text'].error, input[type='password'].error {
+    border-color: #c60000 !important;
+    color: #c60000;
+}
+
+input[type='submit']:disabled {
+    background: #c60000;
+    border: 2px solid #ffe5e5;
+    color: #ffe5e5;
+    opacity: 0.5;
+}
+
+    input[type='submit']:disabled:hover {
+        cursor: default;
+        background: #c60000 !important;
+        border: 2px solid #ffe5e5 !important;
+        color: #ffe5e5 !important;
+    }
+
+.b-message {
+    width: 100%;
+}
+
+    .b-message p.error, .b-message p.good {
+        overflow: hidden;
+        word-wrap: break-word;
+        text-align: center;
+        margin: 20px 0;
+        padding: 10px;
+        border-radius: 7px;
+    }
+
+    .b-message p.error {
+        background: #ffe5e5;
+        border: 2px solid #c60000;
+        color: #c60000;
+    }
+
+        .b-message p.error a {
+            text-decoration: none;
+            color: #61a9da;
+        }
+
+            .b-message p.error a:hover {
+                color: #246c9d;
+            }
+
+    .b-message p.good {
+        background: #75ff94;
+        border: 2px solid #006015;
+        color: #333;
+    }
+
+        .b-message p.good a {
+            text-decoration: none;
+            color: #000c89;
+        }
+
+            .b-message p.good a:hover {
+                color: #246c9d;
+            }

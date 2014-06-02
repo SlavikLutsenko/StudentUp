@@ -124,6 +124,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Content Include="CSS\all.css" />
     <Content Include="CSS\StyleIndexMasterPage.css" />
+    <Content Include="CSS\Validation.css" />
     <Content Include="Global.asax" />
     <Content Include="Images\add.png" />
     <Content Include="Images\avatar_female.png" />
@@ -137,6 +138,8 @@
     <Content Include="Images\logo.png" />
     <Content Include="Images\message.png" />
     <Content Include="JS\all.js" />
+    <Content Include="JS\ScriptIndexMasterPage.js" />
+    <Content Include="JS\Validation.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
