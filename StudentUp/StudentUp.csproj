@@ -123,6 +123,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Content Include="CSS\all.css" />
+    <Content Include="CSS\StyleIndexMasterPage.css" />
     <Content Include="Global.asax" />
     <Content Include="Images\add.png" />
     <Content Include="Images\avatar_female.png" />

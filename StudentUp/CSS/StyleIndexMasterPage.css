@@ -1,0 +1,68 @@
+﻿body {
+    background: #41be69;
+}
+
+.b-all {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 374px;
+    margin: -164.5px -187px;
+    -webkit-transition: margin-top 0.5s;
+}
+
+    .b-all .logo {
+        display: block;
+        color: #fff;
+        height: 75px;
+        font-size: 35px;
+        font-weight: bold;
+        text-align: center;
+        margin: 15px;
+        cursor: pointer;
+        -webkit-user-select: none;
+    }
+
+        .b-all .logo > span.img {
+            display: inline-block;
+            background: url("../Images/logo.png") no-repeat 4px 0;
+            height: 75px;
+            width: 75px;
+        }
+
+        .b-all .logo > span.name {
+            vertical-align: middle;
+            display: inline-block;
+            height: 75px;
+            padding: 0 0 27px;
+        }
+
+.b-signIn {
+    padding: 25px;
+    border-radius: 3px;
+    background: rgba(255,255,255,0.3);
+}
+
+    .b-signIn input {
+        width: 300px;
+        border: 2px solid rgba(170, 170, 170, 0.3);
+        border-radius: 3px;
+        padding: 10px;
+        margin: 5px auto;
+        font-size: 20px;
+    }
+
+        .b-signIn input[type="text"]:focus, .b-signIn input[type="password"]:focus {
+            border-color: #41be69;
+        }
+
+        .b-signIn input[type="submit"] {
+            width: 100%;
+            cursor: pointer;
+        }
+
+            .b-signIn input[type="submit"]:hover {
+                border-color: #41be69;
+                background: #0be94b;
+                color: #fff;
+            }
