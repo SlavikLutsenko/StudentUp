@@ -1,6 +1,4 @@
-﻿@using StudentUp.Models
-
-@{
+﻿@{
     ViewBag.Title = "Index";
     Layout = "~/Views/MasterPages/IndexMasterPage.cshtml";
 }
@@ -14,16 +12,3 @@
     <input type="password" name="password" placeholder="Пароль" data-verification="notEmpty password"><br />
     <input type="submit" name="singIn" value="Вхід">
 </form>
-
-<div class="b-message">
-    @{
-        Messages listMessages = (Messages)ViewData["messages"];
-        if (listMessages != null)
-        {
-            foreach (Messages.Message item in listMessages)
-            {
-        <p class="@item.Type">@Html.Raw(item.Value)</p>
-            }
-        }      
-    }
-</div>

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Net.Mail;
 
@@ -22,7 +21,7 @@ namespace StudentUp.Models
 			if (!Validation.IsEmail(mailto)) throw new ValidationDataException("no email");
 	        try
 	        {
-		        MailMessage mail = new MailMessage {From = new MailAddress(@from)};
+		        MailMessage mail = new MailMessage {From = new MailAddress(from)};
 		        mail.To.Add(new MailAddress(mailto));
 		        mail.Subject = caption;
 		        mail.Body = message;
