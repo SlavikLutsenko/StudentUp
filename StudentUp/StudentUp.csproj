@@ -112,6 +112,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -121,7 +122,20 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Content Include="CSS\all.css" />
     <Content Include="Global.asax" />
+    <Content Include="Images\add.png" />
+    <Content Include="Images\avatar_female.png" />
+    <Content Include="Images\avatar_male.png" />
+    <Content Include="Images\exit.png" />
+    <Content Include="Images\feedback.png" />
+    <Content Include="Images\friend.png" />
+    <Content Include="Images\graph.png" />
+    <Content Include="Images\icon.png" />
+    <Content Include="Images\logo.mini.png" />
+    <Content Include="Images\logo.png" />
+    <Content Include="Images\message.png" />
+    <Content Include="JS\all.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -133,11 +147,16 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Controllers\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\MasterPages\IndexMasterPage.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
