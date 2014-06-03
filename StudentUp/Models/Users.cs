@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using System.Web;
 
 namespace StudentUp.Models
@@ -7,7 +6,7 @@ namespace StudentUp.Models
 	/// <summary>
 	/// Класс описывающий лубого пользователя
 	/// </summary>
-	public class Users
+	public class Users: IPartInstitute
 	{
 		/// <summary>
 		/// Перечисление описывающие тип пользователя
@@ -165,7 +164,7 @@ namespace StudentUp.Models
 		/// true - Зарегистрирован
 		/// flase - Не зарегистрирован
 		/// </returns>
-		public bool IsLogin()
+		public bool IsExistsInDB()
 		{
 			DB db = new DB();
 			DB.ResponseTable users = null;
@@ -186,7 +185,7 @@ namespace StudentUp.Models
 		/// <returns>Если пользователь не зарегистрирован возращает false, иначе true</returns>
 		public virtual bool GetInformationAboutUserFromDB()
 		{
-			if (!this.IsLogin()) return false;
+			if (!this.IsExistsInDB()) return false;
 			DB db = new DB();
 			DB.ResponseTable users = null;
 			if (this.email != string.Empty && this.passwodr != string.Empty)
@@ -197,7 +196,7 @@ namespace StudentUp.Models
 				else
 					if(this.email != "")
 						users = db.QueryToRespontTable(string.Format("select * from Users where Email='{0}';", this.Email));
-			if (users == null) return false;
+			if (users == null || users.CountRow <= 0) return false;
 			users.Read();
 			this.userId = (int)users["User_id"];
 			this.email = (string)users["Email"];
@@ -213,7 +212,7 @@ namespace StudentUp.Models
 		/// <param name="Response">Необходим для вставки в coocke-файл пользователя идентификатор сессии</param>
 		public void CreateSession(HttpResponseBase Response)
 		{
-			if (this.IsLogin())
+			if (this.IsExistsInDB())
 				Response.SetCookie(new HttpCookie("userID", this.userId.ToString()));
 		}
 

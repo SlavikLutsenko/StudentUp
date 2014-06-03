@@ -31,7 +31,7 @@ namespace StudentUp.Controllers
 			try
 			{
 				Users user = new Users(email, password);
-				if (!user.IsLogin()) throw new ValidationDataException("no user");
+				if (!user.IsExistsInDB()) throw new ValidationDataException("no user");
 				user.GetInformationAboutUserFromDB();
 				user.CreateSession(Response);
 				return Redirect("/home");
@@ -101,7 +101,7 @@ namespace StudentUp.Controllers
 			try
 			{
 				Users user = new Users(email);
-				if (!user.IsLogin()) throw new ValidationDataException("no user");
+				if (!user.IsExistsInDB()) throw new ValidationDataException("no user");
 				user.GetInformationAboutUserFromDB();
 				idRestorePassword = Validation.StringToMd5Hash(user.Email + user.Password);
 				(new DB()).QueryToRespontTable(string.Format("insert into RestorePassword(Id, User_id) value ('{0}', {1});",

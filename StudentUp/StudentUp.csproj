@@ -118,6 +118,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\DB.cs" />
+    <Compile Include="Models\Department.cs" />
+    <Compile Include="Models\IPartInstitute.cs" />
     <Compile Include="Models\Mail.cs" />
     <Compile Include="Models\Messages.cs" />
     <Compile Include="Models\Users.cs" />
