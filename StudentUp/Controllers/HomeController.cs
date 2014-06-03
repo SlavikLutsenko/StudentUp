@@ -76,13 +76,15 @@ namespace StudentUp.Controllers
 		/// <returns>Страница</returns>
 		public ActionResult RestorePassword()
 		{
-			Messages messages = new Messages();
 			if (TempData["idRestorePassword"] != null && (string)TempData["idRestorePassword"] != "")
-				messages.Add(Messages.Message.TypeMessage.good,
-					string.Format(
-						"На вашу почту было отправленно письмо с инструкцией по востанавлению пароля. Если вам не пришло письмо, мы можем его <a href='http://{0}/ResendEmailRestorePassword?idRestorePassword={1}'>отправить повторно</a>",
-						Request.Url.Authority, TempData["idRestorePassword"]));
-			ViewData["messages"] = messages;
+				ViewData["messages"] = new Messages
+				{
+					{
+						Messages.Message.TypeMessage.good, string.Format(
+							"На вашу почту было отправленно письмо с инструкцией по востанавлению пароля. Если вам не пришло письмо, мы можем его <a href='http://{0}/ResendEmailRestorePassword?idRestorePassword={1}'>отправить повторно</a>",
+							Request.Url.Authority, TempData["idRestorePassword"])
+					}
+				};
 			return View();
 		}
 
