@@ -116,6 +116,14 @@ namespace StudentUp.Models
 		/// </summary>
 		public new int ID { get { return this.studentID; } }
 
+		/// <summary>
+		/// Возвращает идентификатор пользователя
+		/// </summary>
+		public int UserID { get { return base.ID; } }
+
+		/// <summary>
+		/// Возвращает идентификатор группы студента
+		/// </summary>
 		public int GroupID { get { return this.groupID; } }
 
 		/// <summary>
@@ -221,6 +229,8 @@ namespace StudentUp.Models
 			{
 				users.Read();
 				this.userId = (int)users["User_id"];
+				this.email = (string)users["Email"];
+				this.passwodr = (string)users["Password"];
 				this.accessLevel = (int)users["Access_level"];
 				this.studentID = (int)users["Student_id"];
 				this.groupID = (int)users["Group_id"];
@@ -234,10 +244,7 @@ namespace StudentUp.Models
 				this.typeOfEducetion = (Student.TypeOfEducation)Enum.Parse(typeof(Student.TypeOfEducation), (string)users["Type_of_education"]);
 				this.contactsParents = (string)users["ontacts_parents"];
 				this.employmentInTheDepartment = (string)users["Employment_in_the_department"];
-				if (users["Student_id"] == null)
-					this.userType = UserType.Lecturer;
-				else
-					this.userType = UserType.Student;
+				this.userType = UserType.Student;
 				return true;
 			}
 			return false;

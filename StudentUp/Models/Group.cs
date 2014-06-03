@@ -89,7 +89,6 @@
 			if (this.groupID != -1)
 				group = db.QueryToRespontTable(string.Format("select * from Groups where Group_id = {0};", this.groupID));
 			if (group == null || group.CountRow <= 0) return false;
-			this.groupID = (int)group["Group_id"];
 			this.departmentID = (int)group["Department_id"];
 			this.name = (string)group["Name"];
 			this.emailGroup = (string)group["Email_group"];
