@@ -119,6 +119,7 @@
     </Compile>
     <Compile Include="Models\DB.cs" />
     <Compile Include="Models\Department.cs" />
+    <Compile Include="Models\Group.cs" />
     <Compile Include="Models\IPartInstitute.cs" />
     <Compile Include="Models\Mail.cs" />
     <Compile Include="Models\Messages.cs" />
