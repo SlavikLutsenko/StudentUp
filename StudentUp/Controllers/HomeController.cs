@@ -1,18 +1,23 @@
 ﻿using System.Web.Mvc;
+using MySql.Data.MySqlClient;
 using StudentUp.Models;
 using System.Configuration;
 
 namespace StudentUp.Controllers
 {
-    public class HomeController : Controller
-    {
-        //
-        // GET: /Home/
+	public class HomeController : Controller
+	{
+		//
+		// GET: /Home/
 
-        public ActionResult Index()
-        {
-            return View();
-        }
+		/// <summary>
+		/// Главная страница
+		/// </summary>
+		/// <returns>Возвращает главнуюстраницу</returns>
+		public ActionResult Index()
+		{
+			return View();
+		}
 
 		/// <summary>
 		/// Производит авторизацию пользователей
@@ -56,10 +61,14 @@ namespace StudentUp.Controllers
 			}
 		}
 
-	    public ActionResult Home()
-	    {
-		    return View();
-	    }
+		/// <summary>
+		/// Возвращает домашнюю страницу пользователя
+		/// </summary>
+		/// <returns></returns>
+		public ActionResult Home()
+		{
+			return View();
+		}
 
 		/// <summary>
 		/// Возвращает страницу для востановления пароля
@@ -67,6 +76,13 @@ namespace StudentUp.Controllers
 		/// <returns>Страница</returns>
 		public ActionResult RestorePassword()
 		{
+			Messages messages = new Messages();
+			if (TempData["idRestorePassword"] != null && (string)TempData["idRestorePassword"] != "")
+				messages.Add(Messages.Message.TypeMessage.good,
+					string.Format(
+						"На вашу почту было отправленно письмо с инструкцией по востанавлению пароля. Если вам не пришло письмо, мы можем его <a href='http://{0}/ResendEmailRestorePassword?idRestorePassword={1}'>отправить повторно</a>",
+						Request.Url.Authority, TempData["idRestorePassword"]));
+			ViewData["messages"] = messages;
 			return View();
 		}
 
@@ -78,13 +94,16 @@ namespace StudentUp.Controllers
 		[HttpPost]
 		public ActionResult RestorePassword(string email)
 		{
+			Messages messages = new Messages();
+			string idRestorePassword = "";
 			try
 			{
 				Users user = new Users(email);
 				if (!user.IsLogin()) throw new ValidationDataException("no user");
 				user.GetInformationAboutUserFromDB();
-				string idRestorePassword = Validation.StringToMd5Hash(user.Email + user.Password);
-				(new DB()).QueryToRespontTable(string.Format("insert into RestorePassword(Id, User_id) value ('{0}', {1});", idRestorePassword, user.ID));
+				idRestorePassword = Validation.StringToMd5Hash(user.Email + user.Password);
+				(new DB()).QueryToRespontTable(string.Format("insert into RestorePassword(Id, User_id) value ('{0}', {1});",
+					idRestorePassword, user.ID));
 				Mail.SendMail("smtp.gmail.com",
 								ConfigurationManager.AppSettings.Get("AIDemail"),
 								ConfigurationManager.AppSettings.Get("AIDpassword"),
@@ -94,15 +113,10 @@ namespace StudentUp.Controllers
 								"\n\nВы попросили востановить парольна сайте studentUp.com. Если вы этого не делали игнорируйте это сообщений.\n\n" +
 								"Для востановления пароля перейдите по ниже указзанной ссылке:\n\n" +
 								"http://" + Request.Url.Authority + "/RestorePasswordUser?idRestorePassword=" + idRestorePassword);
-				Messages messages = new Messages
-				{
-					{Messages.Message.TypeMessage.good, "На вашу почту было отправленно письмо с инструкцией по востанавлению пароля"}
-				};
-				ViewData["messages"] = messages;
+				messages.Add(Messages.Message.TypeMessage.good, string.Format("На вашу почту было отправленно письмо с инструкцией по востанавлению пароля. Если вам не пришло письмо, мы можем его <a href='http://{0}/ResendEmailRestorePassword?idRestorePassword={1}'>отправить повторно</a>", Request.Url.Authority, idRestorePassword));
 			}
 			catch (ValidationDataException error)
 			{
-				Messages errorMessages = new Messages();
 				foreach (Messages.Message mes in error.GetValue())
 				{
 					string message = "";
@@ -115,10 +129,15 @@ namespace StudentUp.Controllers
 							message = "Пользователь с таким email не зарегистрирован. Проверте правильно ли Вы ввели свой email.";
 							break;
 					}
-					errorMessages.Add(Messages.Message.TypeMessage.error, message);
+					messages.Add(Messages.Message.TypeMessage.error, message);
 				}
-				ViewData["messages"] = errorMessages;
 			}
+			catch (MySqlException a)
+			{
+				if (a.Number == 1062)
+					messages.Add(Messages.Message.TypeMessage.good, string.Format("Вам письмо было уже отправленно. Проверте почту. Если вам не пришло письмо, мы можем его <a href='http://{0}/ResendEmailRestorePassword?idRestorePassword={1}'>отправить повторно</a>", Request.Url.Authority, idRestorePassword));
+			}
+			ViewData["messages"] = messages;
 			return View();
 		}
 
@@ -129,8 +148,8 @@ namespace StudentUp.Controllers
 		/// <returns>Странница</returns>
 		public ActionResult RestorePasswordUser(string idRestorePassword)
 		{
-			DB.ResponseTable user = (new DB()).QueryToRespontTable(string.Format("select User_id from RestorePassword where Id = \"{0}\";", idRestorePassword));
-			if (user == null) return Redirect("/restorepassword");
+			if ((new DB()).QueryToRespontTable(string.Format("select User_id from RestorePassword where Id = \"{0}\";", idRestorePassword)) == null)
+				return Redirect("/restorepassword");
 			ViewData["id"] = idRestorePassword;
 			return View();
 		}
@@ -149,13 +168,9 @@ namespace StudentUp.Controllers
 			DB.ResponseTable user = db.QueryToRespontTable(string.Format("select User_id from RestorePassword where Id = '{0}';", idRestorePassword));
 			if (user == null) return Redirect("/restorepassword");
 			Messages messages = new Messages();
-			if (password == "")
-				messages.Add(Messages.Message.TypeMessage.error, "Вы не ввели новый пароль");
+			if (password == "") messages.Add(Messages.Message.TypeMessage.error, "Вы не ввели новый пароль");
 			else
-				if (password != replacePassword)
-				{
-					messages.Add(Messages.Message.TypeMessage.error, "Пароли должны совпадать");
-				}
+				if (password != replacePassword) messages.Add(Messages.Message.TypeMessage.error, "Пароли должны совпадать");
 				else
 				{
 					user.Read();
@@ -166,5 +181,31 @@ namespace StudentUp.Controllers
 			ViewData["messages"] = messages;
 			return View();
 		}
-    }
+
+		/// <summary>
+		/// Отправляет заново письмо по востановлению пароля пользоввтелю
+		/// </summary>
+		/// <param name="idRestorePassword">Индефикатор сессии востановления</param>
+		/// <returns>Сообщение об отправке письма</returns>
+		public ActionResult ResendEmailRestorePassword(string idRestorePassword)
+		{
+			DB.ResponseTable restoreSession = (new DB()).QueryToRespontTable(string.Format("select User_id from RestorePassword where Id = \"{0}\";", idRestorePassword));
+			if ((new DB()).QueryToRespontTable(string.Format("select User_id from RestorePassword where Id = \"{0}\";", idRestorePassword)) == null)
+				return Redirect("/restorepassword");
+			restoreSession.Read();
+			Users user = new Users((int)restoreSession["User_id"]);
+			user.GetInformationAboutUserFromDB();
+			Mail.SendMail("smtp.gmail.com",
+						  ConfigurationManager.AppSettings.Get("AIDemail"),
+						  ConfigurationManager.AppSettings.Get("AIDpassword"),
+						  user.Email,
+						  "Востановление пароля",
+						  "Здравствуйте, " + user.Email +
+						  "\n\nВы попросили востановить парольна сайте studentUp.com. Если вы этого не делали игнорируйте это сообщений.\n\n" +
+						  "Для востановления пароля перейдите по ниже указзанной ссылке:\n\n" +
+						  "http://" + Request.Url.Authority + "/RestorePasswordUser?idRestorePassword=" + idRestorePassword);
+			TempData["idRestorePassword"] = idRestorePassword;
+			return Redirect("/RestorePassword");
+		}
+	}
 }

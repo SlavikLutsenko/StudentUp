@@ -131,6 +131,11 @@ namespace StudentUp.Models
 			return 0 == comparer.Compare(hashOfInput, hash);
 		}
 
+		/// <summary>
+		/// Создает случайный пароль
+		/// </summary>
+		/// <param name="length">Длина пароля</param>
+		/// <returns>Пароль</returns>
 		static public string GeneratePassword(int length)
 		{
 			string result = "";

@@ -4,6 +4,9 @@ using System.Net.Mail;
 
 namespace StudentUp.Models
 {
+	/// <summary>
+	/// Класс содержащий в себе методы по работе с smtp почты
+	/// </summary>
     class Mail
     {
         /// <summary>
