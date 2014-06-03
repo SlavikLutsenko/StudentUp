@@ -2,6 +2,20 @@
 
 @{
     Layout = null;
+    Users user = (Users)ViewData["user"];
+    int typePage = 0;
+    switch((string)ViewBag.Title)
+    {
+        case "Home":
+            typePage = 0;
+            break;
+        case "PersonalData":
+            typePage = 1;
+            break;
+        case "Add":
+            typePage = 2;
+            break;
+    }
 }
 
 <!DOCTYPE html>
@@ -12,10 +26,58 @@
     <title>@RenderSection("Title", true)</title>
     <link href="~/Images/icon.png" rel="shortcut icon" type="image/png" />
     <link href="~/CSS/all.css" rel="stylesheet" type="text/css" />
+    <link href="~/CSS/StyleHomeMasterPage.css" rel="stylesheet" type="text/css" />
     @RenderSection("Style", true)
 </head>
 <body>
-    @RenderBody()
+    <div class="b-menu">
+        <a href="/Home" class="logo element">
+            <span class="icon"></span>
+            <span class="name">StudentUp</span>
+        </a>
+        <a href="/PersonalData" class="userInfo element @(typePage == 1? "action" : "")">
+            <span class="icon">
+                <img src="~/Images/avatar_male.png" />
+            </span>
+            <span class="name">
+                @switch (user.Type)
+                {
+                    case Users.UserType.Student:
+                    @(((Student)user).Name)
+                        break;
+                    case Users.UserType.Lecturer:
+                    @(((Lecturer)user).Name)
+                        break;
+                }
+            </span>
+        </a>
+        <a class="graph element">
+            <span class="icon"></span>
+            <span class="name">Оценки</span>
+        </a>
+        @if (user.AccessLevel == 2)
+        {
+            <a href="/Add" class="add element  @(typePage == 2? "action" : "")">
+                <span class="icon"></span>
+                <span class="name">Добавить</span>
+            </a> 
+        }
+        <a class="exit element" href="/Exit">
+            <span class="icon"></span>
+            <span class="name">Выход</span>
+        </a>
+    </div>
+
+    <div class="b-content">
+        <div class="content">
+            @RenderBody()
+        </div>
+        <div class="b-footer">
+            <a href="#">Поддержка</a>
+            <a href="#">Об авторах</a>
+            <p>Все права защищены НТУУ КПИ.  &copy; 2014</p>
+        </div>
+    </div>
 </body>
 <script type="text/ecmascript" src="~/JS/all.js"></script>
 @RenderSection("Script", true)

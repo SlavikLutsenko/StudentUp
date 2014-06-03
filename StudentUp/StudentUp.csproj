@@ -134,6 +134,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Content Include="CSS\all.css" />
+    <Content Include="CSS\StyleHomeMasterPage.css" />
     <Content Include="CSS\StyleIndexMasterPage.css" />
     <Content Include="CSS\Validation.css" />
     <Content Include="Global.asax" />

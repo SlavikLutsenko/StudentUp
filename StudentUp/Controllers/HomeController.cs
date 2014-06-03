@@ -16,6 +16,7 @@ namespace StudentUp.Controllers
 		/// <returns>Возвращает главнуюстраницу</returns>
 		public ActionResult Index()
 		{
+			if (Login()) return Redirect("/home");
 			return View();
 		}
 
@@ -62,12 +63,52 @@ namespace StudentUp.Controllers
 		}
 
 		/// <summary>
-		/// Возвращает домашнюю страницу пользователя
+		/// Проверяет залогинился ли уже пользователь
 		/// </summary>
-		/// <returns></returns>
+		/// <returns>
+		/// true - да
+		/// false - нет
+		/// </returns>
+		private bool Login()
+		{
+			if (Users.IsCreatedSession(Request))
+			{
+				Users user = Users.GetSession(Request);
+				switch (user.Type)
+				{
+					case Users.UserType.Student:
+						user = new Student(user);
+						user.GetInformationAboutUserFromDB();
+						break;
+					case Users.UserType.Lecturer:
+						user = new Lecturer(user);
+						user.GetInformationAboutUserFromDB();
+						break;
+				}
+				ViewData["user"] = user;
+				return true;
+			}
+			return false;
+		}
+
+		/// <summary>
+		/// Главная страница пользователя
+		/// </summary>
+		/// <returns>Если пользователь авторизировался и у него созданна сессия, то у него загрузится эта страница иначе его перенаправят на страницу авторизации</returns>
 		public ActionResult Home()
 		{
-			return View();
+			if (Login()) return View();
+			return Redirect("/");
+		}
+
+		/// <summary>
+		/// Производит выход пользователя
+		/// </summary>
+		/// <returns>Главная страница</returns>
+		public ActionResult Exit()
+		{
+			Users.DeleteSession(Response, Request);
+			return Redirect("/");
 		}
 
 		/// <summary>
