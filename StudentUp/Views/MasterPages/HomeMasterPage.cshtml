@@ -40,14 +40,9 @@
                 <img src="~/Images/avatar_male.png" />
             </span>
             <span class="name">
-                @switch (user.Type)
-                {
-                    case Users.UserType.Student:
-                    @(((Student)user).Name)
-                        break;
-                    case Users.UserType.Lecturer:
-                    @(((Lecturer)user).Name)
-                        break;
+                @{
+                    string name = (user as Student != null ? ((Student)user).Name : ((Lecturer)user).Name);
+                    @name
                 }
             </span>
         </a>

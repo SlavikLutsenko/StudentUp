@@ -1,0 +1,11 @@
+﻿div.b-student, div.b-lecturer {
+    display: none;
+}
+
+input#student[name="typeUser"]:checked ~ div.b-student {
+    display: block;
+}
+
+input#lecturer[name="typeUser"]:checked ~ div.b-lecturer {
+    display: block;
+}

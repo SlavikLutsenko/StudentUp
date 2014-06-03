@@ -1,0 +1,135 @@
+﻿@using StudentUp.Models;
+
+@{
+    ViewBag.Title = "Add";
+    Layout = "~/Views/MasterPages/HomeMasterPage.cshtml";
+    DB db = new DB();
+}
+
+@section Title{
+    StudentUp - Add
+}
+
+@section Style{
+    <link href="~/CSS/add.css" rel="stylesheet" type="text/css" />
+}
+
+<form action="/Add" method="post" accept-charset="utf-8">
+    <label for="student">
+        Студент
+    </label>
+    <input id="student" type="radio" name="typeUser" value="student" checked="checked" />
+    <label for="lecturer">
+        Преподователь
+    </label>
+    <input id="lecturer" type="radio" name="typeUser" value="lecturer" />
+    <label>
+        Администратор
+        <input type="checkbox" name="admin" />
+    </label>
+    <br />
+    <label>
+        Name
+        <input type="text" name="name" />
+    </label>
+    <br />
+    <label>
+        Surname
+        <input type="text" name="surname" />
+    </label>
+    <br />
+    <label>
+        Last name
+        <input type="text" name="secondName" />
+    </label>
+    <br />
+    <label>
+        Email
+        <input type="text" name="email" />
+    </label>
+    <br />
+    <label>
+        Telephone
+        <input type="text" name="telephone" />
+    </label>
+    <br />
+    <div class="b-student">
+        <label>
+            Group 
+            <select name="group">
+                @{
+                    DB.ResponseTable groups = db.QueryToRespontTable("select Name from Groups;"); 
+                    while(groups.Read())
+                    {
+                        <option value="@groups["Group_id"]">@groups["Name"]</option>
+                    }   
+                }
+            </select>
+        </label>
+        <br />
+        <label>
+            Semestr
+            <input type="text" name="numberSemestr" />
+        </label>
+        <br />
+        <label>
+            Address
+            <input type="text" name="address" />
+        </label>
+        <br />
+        <label>
+            Record book
+            <input type="text" name="recordBook" />
+        </label>
+        <br />
+        <label>
+            Type of education
+            <select name="typeOfEducation">
+                @{
+                    DB.ResponseTable table = db.QueryToRespontTable("show columns from Student like 'Type_of_education';");
+                    table.Read();
+                    string[] typeOfEducation = (((((string)table["Type"]).Replace("enum('", "")).Replace("')", "")).Replace("','", ",")).Split(',');
+                    foreach (var item in typeOfEducation)
+                    {
+                        <option value="@item">@item</option>
+                    }
+                }
+            </select>
+        </label>
+        <br />
+        <label>
+            Сontacts parents
+            <input type="text" name="contactsParents" />
+        </label>
+        <br />
+        <label>
+            Employment in the department
+            <input type="text" name="employmentInTheDepartment" />
+        </label>
+        <br />
+    </div>
+    <div class="b-lecturer">
+        <label>
+            Department 
+            <select name="department">
+                @{
+                    DB.ResponseTable department = db.QueryToRespontTable("select Name from Department;");
+                    while (department.Read())
+                    {
+                        <option value="@department["Department"]">@department["Name"]</option>
+                    }   
+                }
+            </select>
+        </label>
+        <br />
+        <label>
+            Position
+            <input type="text" name="position" />
+        </label>
+        <br />
+    </div>
+    <input type="submit" name="addUser" value="ADD" />
+</form>
+
+@section Script{
+}

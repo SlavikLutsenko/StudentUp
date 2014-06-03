@@ -133,6 +133,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Content Include="CSS\add.css" />
     <Content Include="CSS\all.css" />
     <Content Include="CSS\StyleHomeMasterPage.css" />
     <Content Include="CSS\StyleIndexMasterPage.css" />
@@ -184,6 +185,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Home\RestorePasswordUser.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\Add.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

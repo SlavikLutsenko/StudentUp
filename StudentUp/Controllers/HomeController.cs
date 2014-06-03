@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web.Mvc;
 using MySql.Data.MySqlClient;
 using StudentUp.Models;
 using System.Configuration;
@@ -99,6 +100,51 @@ namespace StudentUp.Controllers
 		{
 			if (Login()) return View();
 			return Redirect("/");
+		}
+
+		public ActionResult Add()
+		{
+			if (Login()) return View();
+			return Redirect("/");
+		}
+
+		/// <summary>
+		/// Добавляет нового пользователя
+		/// </summary>
+		/// <param name="typeUser">Тип пользователя: слудент или преподователь</param>
+		/// <param name="name">Имя пользователя</param>
+		/// <param name="surname">Фамилия пользователя</param>
+		/// <param name="secondName">Отчество пользователя</param>
+		/// <param name="email">Email пользователя</param>
+		/// <param name="telephone">Телефон пользователя</param>
+		/// <param name="group">Группа студента</param>
+		/// <param name="address">Адресс студента</param>
+		/// <param name="recordBook">Зачетная книжка студента</param>
+		/// <param name="typeOfEducation">Тип образования студента</param>
+		/// <param name="contactsParents">Контакты родителй студента</param>
+		/// <param name="employmentInTheDepartment">Род деятельности студента на кафедре</param>
+		/// <param name="department">Кафедра преподователя</param>
+		/// <param name="position">Должность преподователя</param>
+		/// <param name="numberSemestr">Номер семестра на котором учится студент</param>
+		/// <param name="admin">Будет ли новый пользователь администраторм</param>
+		/// <returns></returns>
+		[HttpPost]
+		public ActionResult Add(string typeUser, string name, string surname, string secondName, string email, string telephone,/*параметры студента*/ string group, string address, string recordBook, string typeOfEducation, string contactsParents, string employmentInTheDepartment, /*параметра преподователя*/string department, string position, int numberSemestr = 0, string admin = "off")
+		{
+			DB db = new DB();
+			switch (typeUser)
+			{
+				case "student":
+					Student.AddStudent(name, surname, secondName, email, telephone, group, address, recordBook, typeOfEducation, contactsParents, employmentInTheDepartment, numberSemestr, (admin == "on"));
+					break;
+				case "lecturer":
+					Lecturer.AddLecturer(name, surname, secondName, email, telephone, department, position, (admin == "on"));
+					break;
+				default:
+					throw new Exception("не правильный тип пользователя");
+			}
+			if (Login()) return View();
+			else return Redirect("/");
 		}
 
 		/// <summary>
