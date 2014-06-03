@@ -107,9 +107,9 @@ namespace StudentUp.Models
 		/// <param name="newUserId">Идентификатор пользователя</param>
 		/// <param name="newEmail">Email пользователя</param>
 		/// <param name="newPassword">Пароль пользователя</param>
-		/// <param name="newAccessLevel">Уровень доступа пользователя</param>
+
 		/// <param name="newUserType">Тип пользователя</param>
-		public Users(int newUserId, string newEmail, string newPassword, int newAccessLevel, Users.UserType newUserType)
+		public Users(int newUserId, string newEmail, string newPassword, Users.UserType newUserType)
 		{
 			Messages messages = new Messages();
 			if (newUserId <= 0)
@@ -118,13 +118,10 @@ namespace StudentUp.Models
 				messages.Add(Messages.Message.TypeMessage.error, "no email");
 			if (!Validation.IsPassword(newPassword))
 				messages.Add(Messages.Message.TypeMessage.error, "no password");
-			if (accessLevel < 0 || accessLevel > 2)
-				messages.Add(Messages.Message.TypeMessage.error, "no access level");
 			if (messages.Count != 0) throw new ValidationDataException(messages);
 			this.userId = newUserId;
 			this.email = newEmail;
 			this.passwodr = newPassword;
-			this.accessLevel = newAccessLevel;
 			this.userType = newUserType;
 		}
 
