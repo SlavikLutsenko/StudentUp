@@ -253,32 +253,5 @@ namespace StudentUp.Models
 				Response.Cookies.Add(myCookie);
 			}
 		}
-
-		static Users AddUser(string email, string password, int accessLevel, int idStudent, int idLecturer)
-		{
-			DB db = new DB();
-			string query;
-			if (idStudent == 0 && idLecturer != 0)
-				query = string.Format("insert into Users(Lecturer_id, Email, Password, Access_level) value({0}, '{1}', '{2}', '{3}');", idLecturer, email, password, accessLevel);
-			else
-				if (idStudent != 0 && idLecturer == 0)
-					query = string.Format("insert into Users(Student_id, Email, Password, Access_level) value({0}, '{1}', '{2}', '{3}');", idStudent, email, password, accessLevel);
-				else
-					throw new Exception("Не переданна вся информация");
-			db.QueryToRespontTable(query);
-			Users user = new Users(email, password);
-			user.GetInformationAboutUserFromDB();
-			return user;
-		}
-
-		static public Users AddUserStudent(string email, string password, int accessLevel, int idStudent)
-		{
-			return Users.AddUser(email, password, accessLevel, idStudent, 0);
-		}
-
-		static public Users AddUserLecturer(string email, string password, int accessLevel, int idLecturer)
-		{
-			return Users.AddUser(email, password, accessLevel, 0, idLecturer);
-		}
 	}
 }

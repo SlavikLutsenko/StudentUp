@@ -250,28 +250,5 @@ namespace StudentUp.Models
 			}
 			return false;
 		}
-
-		public static Student AddStudent(string name, string surname, string lastName, string email, string telephone, string group, string address, string recordBook, string typeOfEducation, string contactsParents, string employmentInTheDepartment, int numberSemestr, bool admin)
-		{
-			DB db = new DB();
-			DB.ResponseTable table = db.QueryToRespontTable(string.Format("select Group_id from Groups where Name='{0}';", group));
-			string userPassword = Validation.GeneratePassword(8);
-			table.Read();
-			int Group_id = (int)table["Group_id"];
-			db.QueryToRespontTable(string.Format("insert into Student(Group_id, Name, Surname, Second_name, Semester, Address, Telephone, Record_book, Type_of_education, Сontacts_parents, Employment_in_the_department) values({0}, '{1}', '{2}', '{3}', {4}, '{5}', '{6}', '{7}', '{8}', '{9}', '{10}');", Group_id, name, surname, lastName, numberSemestr, address, telephone, recordBook, typeOfEducation, contactsParents, employmentInTheDepartment));
-			table = db.QueryToRespontTable("select LAST_INSERT_ID();");
-			table.Read();
-			int studentId = int.Parse(table[0].ToString());
-			Student student = new Student(Users.AddUserStudent(email, userPassword, (admin ? 2 : 0), studentId));
-			student.GetInformationAboutUserFromDB();
-			Mail.SendMail("smtp.gmail.com",
-							ConfigurationManager.AppSettings.Get("AIDemail"),
-							ConfigurationManager.AppSettings.Get("AIDpassword"),
-							email,
-							"Вы новый пользователь StudentUp",
-							"Здравствуйте, " + email +
-							"\n\nВы были зарегистрированы на сайте StudentUp\n\nДля доступа в систему Вам понадобится ввесли свой Email и пароль\n\nEmail: " + email + "\nПароль: " + userPassword + "\nСсылка на наш сайт:http://localhost:11292/");
-			return student;
-		}
 	}
 }

@@ -171,28 +171,5 @@ namespace StudentUp.Models
 			}
 			return false;
 		}
-
-		public static Lecturer AddLecturer(string name, string surname, string lastName, string email, string telephone, string department, string position, bool admin = false)
-		{
-			DB db = new DB();
-			DB.ResponseTable table = db.QueryToRespontTable(string.Format("select Department_id from Department where name='{0}';", department));
-			string userPassword = Validation.GeneratePassword(8);
-			table.Read();
-			int Department_id = (int)table["Department_id"];
-			db.QueryToRespontTable(string.Format("insert into Lecturer(Department_id, Name, Surname, Second_name, Position, Telephone) value({0}, '{1}', '{2}', '{3}', '{4}', '{5}');", Department_id, name, surname, lastName, position, telephone));
-			table = db.QueryToRespontTable("select LAST_INSERT_ID();");
-			table.Read();
-			int lecturerId = int.Parse(table[0].ToString());
-			Lecturer lecturer = new Lecturer(Users.AddUserLecturer(email, userPassword, (admin ? 2 : 1), lecturerId));
-			lecturer.GetInformationAboutUserFromDB();
-			Mail.SendMail("smtp.gmail.com",
-							ConfigurationManager.AppSettings.Get("AIDemail"),
-							ConfigurationManager.AppSettings.Get("AIDpassword"),
-							email,
-							"Вы новый пользователь StudentUp",
-							"Здравствуйте, " + email +
-							"\n\nВы были зарегистрированы на сайте StudentUp\n\nДля доступа в систему Вам понадобится ввесли свой Email и пароль\n\nEmail: " + email + "\nПароль: " + userPassword + "\nСсылка на наш сайт:http://localhost:11292/");
-			return lecturer;
-		}
 	}
 }
