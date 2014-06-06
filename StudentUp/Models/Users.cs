@@ -255,6 +255,14 @@ namespace StudentUp.Models
 			}
 		}
 
+		/// <summary>
+		/// Добавляет нового пользователя
+		/// </summary>
+		/// <param name="email">Email пользователя</param>
+		/// <param name="accessLevel">Уровень доступа пользователя</param>
+		/// <param name="idStudent">Идентификатор студента, если это не студент необходимо передавать число меньшее 0</param>
+		/// <param name="idLecturer">Идентификатор преподователя, если это не преподователь необходимо передавать число меньшее 0</param>
+		/// <returns>Новый пользователь</returns>
 		private static Users AddUsers(string email, int accessLevel, int idStudent, int idLecturer)
 		{
 			if (!Validation.IsEmail(email)) throw new ValidationDataException("no email");
@@ -282,11 +290,25 @@ namespace StudentUp.Models
 			return user;
 		}
 
+		/// <summary>
+		/// Добавление студента
+		/// </summary>
+		/// <param name="email">Email студента</param>
+		/// <param name="accessLevel">Уровень доступа студента</param>
+		/// <param name="idStudent">Идентификатор студента</param>
+		/// <returns></returns>
 		public static Users AddStudentUsers(string email, int accessLevel, int idStudent)
 		{
 			return Users.AddUsers(email, accessLevel, idStudent, -1);
 		}
 
+		/// <summary>
+		/// Добавление преподователя
+		/// </summary>
+		/// <param name="email">Email преподователя</param>
+		/// <param name="accessLevel">Уровень доступа преподователя</param>
+		/// <param name="idLecturer">Идентификатор преподователя</param>
+		/// <returns></returns>
 		public static Users AddLecturerUsers(string email, int accessLevel, int idLecturer)
 		{
 			return Users.AddUsers(email, accessLevel, -1, idLecturer);

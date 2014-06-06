@@ -141,7 +141,7 @@ namespace StudentUp.Models
 		/// <summary>
 		/// Считывает информацию об преподователе из БД
 		/// </summary>
-		/// <returns></returns>
+		/// <returns>Возвращает всю информацию о преподователе</returns>
 		public override bool GetInformationAboutUserFromDB()
 		{
 			if (!this.IsExistsInDB()) return false;
@@ -172,6 +172,18 @@ namespace StudentUp.Models
 			return false;
 		}
 
+		/// <summary>
+		/// Добовляет нового преподователя
+		/// </summary>
+		/// <param name="name">Имя преподователя</param>
+		/// <param name="surname">Фамилия преподователя</param>
+		/// <param name="secondName">Отчество преподователя</param>
+		/// <param name="email">Email преподователя</param>
+		/// <param name="position">Должность преподователя</param>
+		/// <param name="telephone">Телефон преподователя</param>
+		/// <param name="department">Кафедра преподователя, где он будет работать</param>
+		/// <param name="admin">Будет ли преподователь администратором</param>
+		/// <returns>Новый преподователь</returns>
 		public static Lecturer AddLecturer(string name, string surname, string secondName, string email, string position, string telephone, int department, bool admin)
 		{
 			DB db = new DB();

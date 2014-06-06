@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Configuration;
 
 namespace StudentUp.Models
 {
@@ -249,6 +248,36 @@ namespace StudentUp.Models
 				return true;
 			}
 			return false;
+		}
+
+		/// <summary>
+		/// Добавление студента
+		/// </summary>
+		/// <param name="name">Имя студента</param>
+		/// <param name="surname">Фамилия студента</param>
+		/// <param name="secondName">Отчество студента</param>
+		/// <param name="email">Email студента</param>
+		/// <param name="telephone">Телефон студента</param>
+		/// <param name="group">Группа студента</param>
+		/// <param name="currentSemestr">Семестр на котором учится студент</param>
+		/// <param name="address">Адрес студента</param>
+		/// <param name="recordBook">Код зачетной книги студента</param>
+		/// <param name="typeOfEducation">Тип обралования студента ('дена','заочна')</param>
+		/// <param name="contactsParents">Контакты родителей студента</param>
+		/// <param name="employmentInTheDepartment">Чем занимается студент на кафедре</param>
+		/// <param name="admin">Является ли студент администраторм системы</param>
+		/// <returns>Новый студент</returns>
+		public static Student AddStudent(string name, string surname, string secondName, string email, string telephone,
+			int group, int currentSemestr, string address, string recordBook, string typeOfEducation, string contactsParents,
+			string employmentInTheDepartment, bool admin)
+		{
+			DB db = new DB();
+			db.QueryToRespontTable(string.Format("insert into Student(Group_id, Name, Surname, Second_name, Semester, Address, Telephone, Record_book, Type_of_education, Сontacts_parents, Employment_in_the_department) values ({0}, '{1}', '{2}', '{3}', {4}, '{5}', '{6}', '{7}', '{8}', '{9}', '{10}');", group, name, surname, secondName, currentSemestr, address, telephone, recordBook, typeOfEducation, contactsParents, employmentInTheDepartment));
+			DB.ResponseTable userIdTable = db.QueryToRespontTable("select LAST_INSERT_ID() as id;");
+			userIdTable.Read();
+			Student user = new Student(Users.AddStudentUsers(email, admin ? 2 : 0, Convert.ToInt32(userIdTable["id"])));
+			user.GetInformationAboutUserFromDB();
+			return user;
 		}
 	}
 }

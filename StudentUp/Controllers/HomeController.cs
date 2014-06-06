@@ -101,12 +101,28 @@ namespace StudentUp.Controllers
 			return Redirect("/");
 		}
 
+		/// <summary>
+		/// Твраница администрирования сайта
+		/// </summary>
+		/// <returns>Возвращает страницу администрирования если пользователь зарегистрирован иначе перенаправляет на главную страницу</returns>
 		public ActionResult Admin()
 		{
 			if (Login()) return View();
 			return Redirect("/");
 		}
 
+		/// <summary>
+		/// Добовляет пользователя - преподователя
+		/// </summary>
+		/// <param name="name">Имя преподователя</param>
+		/// <param name="surname">Фамилия преподователя</param>
+		/// <param name="secondName">Отчество преподователя</param>
+		/// <param name="email">Email преподователя</param>
+		/// <param name="position">Должность преподователя</param>
+		/// <param name="telephone">Телефон преподователя</param>
+		/// <param name="department">Кафедра где преподователь будет работать</param>
+		/// <param name="admin">Будет ли преподователь администратором</param>
+		/// <returns>Возвращает страницу администрирования и сообщения про добавленных пользователей</returns>
 		[HttpPost]
 		public ActionResult AddLecturer(string name, string surname, string secondName, string email, string position, string telephone, int department, string admin = "off")
 		{
@@ -114,6 +130,50 @@ namespace StudentUp.Controllers
 			try
 			{
 				Lecturer.AddLecturer(name, surname, secondName, email, position, telephone, department, admin == "on");
+				messages.Add(Messages.Message.TypeMessage.good, string.Format("Пользователь {0} {1} {2} был добавлен", name, surname, secondName));
+			}
+			catch (ValidationDataException error)
+			{
+				Messages erorrMessages = error.GetValue();
+				foreach (Messages.Message item in erorrMessages)
+				{
+					switch (item.Value)
+					{
+						case "no email":
+							messages.Add(Messages.Message.TypeMessage.error, "Вы ввели не правильный email");
+							break;
+					}
+				}
+			}
+			TempData["messages"] = messages;
+			return Redirect("/Admin");
+		}
+
+		/// <summary>
+		/// Добавление студента
+		/// </summary>
+		/// <param name="name">Имя студента</param>
+		/// <param name="surname">Фамилия студента</param>
+		/// <param name="secondName">Отчество студента</param>
+		/// <param name="email">Email студента</param>
+		/// <param name="telephone">Телефон студента</param>
+		/// <param name="group">Группа студента</param>
+		/// <param name="currentSemestr">Семестр на котором учится студент</param>
+		/// <param name="address">Адрес студента</param>
+		/// <param name="recordBook">Код зачетной книги студента</param>
+		/// <param name="typeOfEducation">Тип обралования студента ('дена','заочна')</param>
+		/// <param name="contactsParents">Контакты родителей студента</param>
+		/// <param name="employmentInTheDepartment">Чем занимается студент на кафедре</param>
+		/// <param name="admin">Является ли студент администраторм системы</param>
+		/// <returns>Возвращает страницу администрирования и сообщения про добавленных пользователей</returns>
+		[HttpPost]
+		public ActionResult AddStudent(string name, string surname, string secondName, string email, string telephone, int group, int currentSemestr, string address, string recordBook, string typeOfEducation, string contactsParents, string employmentInTheDepartment, string admin = "off")
+		{
+			Messages messages = new Messages();
+			try
+			{
+				Student.AddStudent(name, surname, secondName, email, telephone, group, currentSemestr, address, recordBook,
+					typeOfEducation, contactsParents, employmentInTheDepartment, admin == "on");
 				messages.Add(Messages.Message.TypeMessage.good, string.Format("Пользователь {0} {1} {2} был добавлен", name, surname, secondName));
 			}
 			catch (ValidationDataException error)
