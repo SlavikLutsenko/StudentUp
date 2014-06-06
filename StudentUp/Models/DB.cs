@@ -153,6 +153,14 @@ namespace StudentUp.Models
 			}
 
 			/// <summary>
+			/// Ставит указатель на текущую строку на начало таблици
+			/// </summary>
+			public void GoToStatrTable()
+			{
+				currentRow = -1;
+			}
+
+			/// <summary>
 			/// Возвращает имя столбца
 			/// </summary>
 			/// <param name="n">Номер столбца</param>

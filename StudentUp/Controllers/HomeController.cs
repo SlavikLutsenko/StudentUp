@@ -1,5 +1,4 @@
-﻿using System;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using MySql.Data.MySqlClient;
 using StudentUp.Models;
 using System.Configuration;
@@ -102,13 +101,37 @@ namespace StudentUp.Controllers
 			return Redirect("/");
 		}
 
-		public ActionResult Add()
+		public ActionResult Admin()
 		{
 			if (Login()) return View();
 			return Redirect("/");
 		}
 
-		
+		[HttpPost]
+		public ActionResult AddLecturer(string name, string surname, string secondName, string email, string position, string telephone, int department, string admin = "off")
+		{
+			Messages messages = new Messages();
+			try
+			{
+				Lecturer.AddLecturer(name, surname, secondName, email, position, telephone, department, admin == "on");
+				messages.Add(Messages.Message.TypeMessage.good, string.Format("Пользователь {0} {1} {2} был добавлен", name, surname, secondName));
+			}
+			catch (ValidationDataException error)
+			{
+				Messages erorrMessages = error.GetValue();
+				foreach (Messages.Message item in erorrMessages)
+				{
+					switch (item.Value)
+					{
+						case "no email":
+							messages.Add(Messages.Message.TypeMessage.error, "Вы ввели не правильный email");
+							break;
+					}
+				}
+			}
+			TempData["messages"] = messages;
+			return Redirect("/Admin");
+		}
 
 		/// <summary>
 		/// Производит выход пользователя

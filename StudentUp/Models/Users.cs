@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Web;
 
 namespace StudentUp.Models
@@ -252,6 +253,43 @@ namespace StudentUp.Models
 				HttpCookie myCookie = new HttpCookie("userID") {Expires = DateTime.Now.AddDays(-1d)};
 				Response.Cookies.Add(myCookie);
 			}
+		}
+
+		private static Users AddUsers(string email, int accessLevel, int idStudent, int idLecturer)
+		{
+			if (!Validation.IsEmail(email)) throw new ValidationDataException("no email");
+			DB db = new DB();
+			string password = Validation.GeneratePassword(8);
+			if (idLecturer <= 0)
+				db.QueryToRespontTable(string.Format("insert into Users(Student_id, Email, Password, Access_level) values ({0}, '{1}', '{2}', {3});", idStudent, email, password, accessLevel));
+			else
+				if(idStudent <= 0)
+					db.QueryToRespontTable(string.Format("insert into Users(Lecturer_id, Email, Password, Access_level) values ({0}, '{1}', '{2}', {3});", idLecturer, email, password, accessLevel));
+				else throw new Exception("error in data add user");
+			Users user = new Users(email, password);
+			user.GetInformationAboutUserFromDB();
+			Mail.SendMail("smtp.gmail.com",
+							ConfigurationManager.AppSettings.Get("AIDemail"),
+							ConfigurationManager.AppSettings.Get("AIDpassword"),
+							email,
+							"Вы наш новый пользователь",
+							"Здравствуйте, " + email +
+							"\n\nВы теперь зарегистрированны в StudentUp\n\n" +
+							"Вы можете зайти в системы использу я следущие:\n\n" + 
+							"Свой email: " + email + "\n" +
+							"Пароль: " + password + "\n" +
+							"Перейдя по ссылке: http://127.0.0.1/");
+			return user;
+		}
+
+		public static Users AddStudentUsers(string email, int accessLevel, int idStudent)
+		{
+			return Users.AddUsers(email, accessLevel, idStudent, -1);
+		}
+
+		public static Users AddLecturerUsers(string email, int accessLevel, int idLecturer)
+		{
+			return Users.AddUsers(email, accessLevel, -1, idLecturer);
 		}
 	}
 }

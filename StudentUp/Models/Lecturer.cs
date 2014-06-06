@@ -1,4 +1,4 @@
-﻿using System.Configuration;
+﻿using System;
 
 namespace StudentUp.Models
 {
@@ -170,6 +170,19 @@ namespace StudentUp.Models
 				return true;
 			}
 			return false;
+		}
+
+		public static Lecturer AddLecturer(string name, string surname, string secondName, string email, string position, string telephone, int department, bool admin)
+		{
+			DB db = new DB();
+			db.QueryToRespontTable(
+				string.Format(
+					"insert into Lecturer(Department_id, Name, Surname, Second_name, Position, Telephone) value({0}, '{1}', '{2}', '{3}', '{4}', '{5}');", department, name, surname, secondName, position, telephone));
+			DB.ResponseTable userIdTable = db.QueryToRespontTable("select LAST_INSERT_ID() as id;");
+			userIdTable.Read();
+			Lecturer user = new Lecturer(Users.AddLecturerUsers(email, admin ? 2 : 1, Convert.ToInt32(userIdTable["id"])));
+			user.GetInformationAboutUserFromDB();
+			return user;
 		}
 	}
 }

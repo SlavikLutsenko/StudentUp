@@ -1,0 +1,133 @@
+﻿@using StudentUp.Models;
+
+@{
+    ViewBag.Title = "Admin";
+    Layout = "~/Views/MasterPages/HomeMasterPage.cshtml";
+    DB db = new DB();
+    DB.ResponseTable department = db.QueryToRespontTable("select * from Department;");
+}
+
+@section Title{
+    StudentUp - Add
+}
+
+@section Style{
+    <link href="~/CSS/Admin.css" rel="stylesheet" type="text/css" />
+}
+
+<div class="messages">
+    @{
+        Messages messages = TempData["messages"] as Messages;
+        if (messages != null)
+        {
+            foreach (Messages.Message item in messages)
+            {
+                <h3 style="color: @(item.Type == Messages.Message.TypeMessage.error ? "red" : "black");">@item.Value</h3>
+            }
+        }
+    }
+</div>
+
+<label>
+    Group
+    <input type="radio" name="typeAdd" value="group" checked="checked"/>
+</label>
+<br/>
+
+<label>
+    Student
+    <input type="radio" name="typeAdd" value="student"/>
+</label>
+<br/>
+
+<label>
+    Lecturer
+    <input type="radio" name="typeAdd" value="lecturer"/>
+</label>
+<br/>
+
+<form class="/addGroup" action="" method="POST" accept-charset="utf-8">
+    <input type="text" placeholder="Name" name="name"/>
+    <select name="department">
+        @{
+            department.GoToStatrTable();
+            while (department.Read())
+            {
+                <option value="@department["Department_id"]">@department["Name"]</option>
+            }
+        }
+    </select>
+    <select name="numberStudent">
+        @for (int i = 1; i <= 50; i++)
+        {
+            <option value="@i">@i</option>
+        }
+    </select>
+    <input type="submit" value="ADD" name="ADD"/>
+</form>
+
+<form class="addLecturer" action="/AddLecturer" method="POST" accept-charset="utf-8">
+    <input type="text" name="name" placeholder="Name"/>
+    <input type="text" name="surname" placeholder="Surname"/>
+    <input type="text" name="secondName" placeholder="Secon name"/>
+    <input type="text" name="email" placeholder="Email" />
+    <label>
+        Admin
+        <input type="checkbox" name="admin"/>
+    </label>
+    <br/>
+    <input type="text" name="position" placeholder="Position"/>
+    <input type="text" name="telephone" placeholder="Telephone"/>
+    <select name="department">
+        @{
+            department.GoToStatrTable();
+            while (department.Read())
+            {
+                <option value="@department["Department_id"]">@department["Name"]</option>
+            }
+        }
+    </select>
+    <input type="submit" value="ADD" name="ADD"/>
+</form>
+
+<form class="/addStudent" action="" method="POST" accept-charset="utf-8">
+    <input type="text" name="name" placeholder="Name"/>
+    <input type="text" name="surname" placeholder="Surname"/>
+    <input type="text" name="secondName" placeholder="Secon name"/>
+    <input type="text" name="email" placeholder="Email" />
+    <label>
+        Admin
+        <input type="checkbox" name="admin"/>
+    </label>
+    <br/>
+    <input type="text" name="telephone" placeholder="Telephone"/>
+    <select name="group">
+        @{
+            DB.ResponseTable groups = db.QueryToRespontTable("select * from Groups;");
+            while (groups.Read())
+            {
+                <option value="@groups["Group_id"]">@groups["Name"]</option>
+            }
+        }
+    </select>
+    <input type="text" name="currentSemestr" placeholder="Current semestr"/>
+    <input type="text" name="address" placeholder="Address"/>
+    <input type="text" name="recordBook" placeholder="Record book"/>
+    <select name="typeOfEducation">
+        @{
+            DB.ResponseTable typeOfEducation = db.QueryToRespontTable("show columns from Student like 'Type_of_education';");
+            typeOfEducation.Read();
+            string[] type = ((string)typeOfEducation["Type"]).Replace("enum('","").Replace("')","").Replace("'","").Split(',');
+            foreach (string item in type)
+            {
+                <option value="@item">@item</option>
+            }
+        }
+    </select>
+    <input type="text" name="contactsParents" placeholder="Сontacts parents"/>
+    <input type="text" name="employmentInTheDepartment" placeholder="Employment in the department"/>
+    <input type="submit" value="ADD" name="ADD"/>
+</form>
+
+@section Script{
+}
