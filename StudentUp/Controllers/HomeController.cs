@@ -112,6 +112,20 @@ namespace StudentUp.Controllers
 		}
 
 		/// <summary>
+		/// Добавляет группу
+		/// </summary>
+		/// <param name="name">Код группы</param>
+		/// <param name="department">Кафедра группы</param>
+		/// <returns>Возвращает страницу администрирования и сообщения про добавленную группу</returns>
+		public ActionResult AddGroup(string name, int department)
+		{
+			Group.AddGroup(name, department);
+			Messages messages = new Messages {{Messages.Message.TypeMessage.good, string.Format("Группа {0} добавленна", name)}};
+			TempData["messages"] = messages;
+			return Redirect("/Admin");
+		}
+
+		/// <summary>
 		/// Добовляет пользователя - преподователя
 		/// </summary>
 		/// <param name="name">Имя преподователя</param>

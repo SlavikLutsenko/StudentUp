@@ -1,4 +1,6 @@
-﻿namespace StudentUp.Models
+﻿using System;
+
+namespace StudentUp.Models
 {
 	/// <summary>
 	/// Класс описывающий группу студентов
@@ -89,11 +91,29 @@
 			if (this.groupID != -1)
 				group = db.QueryToRespontTable(string.Format("select * from Groups where Group_id = {0};", this.groupID));
 			if (group == null || group.CountRow <= 0) return false;
-			this.departmentID = (int)group["Department_id"];
+			group.Read();
+			this.departmentID = Convert.ToInt32(group["Department_id"]);
 			this.name = (string)group["Name"];
 			this.emailGroup = (string)group["Email_group"];
-			this.elderID = (int)group["Elder_id"];
+			this.elderID = Convert.ToInt32(group["Elder_id"]);
 			return true;
+		}
+
+		/// <summary>
+		/// Добавляет группу
+		/// </summary>
+		/// <param name="nameGroup">Код группы</param>
+		/// <param name="department">Кафедра группы</param>
+		/// <returns>Новая группа</returns>
+		public static Group AddGroup(string nameGroup, int department)
+		{
+			DB db = new DB();
+			db.QueryToRespontTable(string.Format("insert into Groups(Department_id, Name) value ({0}, '{1}');", department, nameGroup));
+			DB.ResponseTable idGoup = db.QueryToRespontTable("select LAST_INSERT_ID() as id;");
+			idGoup.Read();
+			Group group = new Group(Convert.ToInt32(idGoup["id"]));
+			group.GetInformationAboutUserFromDB();
+			return group;
 		}
 	}
 }
