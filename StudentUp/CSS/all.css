@@ -16,7 +16,12 @@ a, a:visited, a:link {
     color: #3290cf;
 }
 
-label {
+label[for] {
+    cursor: pointer;
+    -webkit-user-select: none;
+}
+
+input[type='checkbox'], input[type='radio'] {
     cursor: pointer;
 }
 

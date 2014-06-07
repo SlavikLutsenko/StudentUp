@@ -1,11 +1,9 @@
-﻿div.b-student, div.b-lecturer {
+﻿form {
     display: none;
 }
 
-input#student[name="typeUser"]:checked ~ div.b-student {
-    display: block;
-}
-
-input#lecturer[name="typeUser"]:checked ~ div.b-lecturer {
+input#group[name="typeAdd"]:checked ~ form#addGroup, 
+input#student[name="typeAdd"]:checked ~ form#addStudent,
+input#lecturer[name="typeAdd"]:checked ~ form#addLecturer {
     display: block;
 }

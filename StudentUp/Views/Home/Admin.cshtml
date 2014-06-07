@@ -28,25 +28,25 @@
     }
 </div>
 
-<label>
+<label for="group">
     Group
-    <input type="radio" name="typeAdd" value="group" checked="checked"/>
 </label>
+<input id="group" type="radio" name="typeAdd" value="group" checked="checked"/>
 <br/>
 
-<label>
+<label for="student">
     Student
-    <input type="radio" name="typeAdd" value="student"/>
 </label>
+<input id="student" type="radio" name="typeAdd" value="student"/>
 <br/>
 
-<label>
+<label for="lecturer">
     Lecturer
-    <input type="radio" name="typeAdd" value="lecturer"/>
 </label>
+<input id="lecturer" type="radio" name="typeAdd" value="lecturer"/>
 <br/>
 
-<form class="/addGroup" action="" method="POST" accept-charset="utf-8">
+<form id="addGroup" action="" method="POST" accept-charset="utf-8">
     <input type="text" placeholder="Name" name="name"/>
     <select name="department">
         @{
@@ -66,7 +66,7 @@
     <input type="submit" value="ADD" name="ADD"/>
 </form>
 
-<form class="addLecturer" action="/AddLecturer" method="POST" accept-charset="utf-8">
+<form id="addLecturer" action="/AddLecturer" method="POST" accept-charset="utf-8">
     <input type="text" name="name" placeholder="Name"/>
     <input type="text" name="surname" placeholder="Surname"/>
     <input type="text" name="secondName" placeholder="Secon name"/>
@@ -90,7 +90,7 @@
     <input type="submit" value="ADD" name="ADD"/>
 </form>
 
-<form class="/addStudent" action="/AddStudent" method="POST" accept-charset="utf-8">
+<form id="addStudent" action="/AddStudent" method="POST" accept-charset="utf-8">
     <input type="text" name="name" placeholder="Name"/>
     <input type="text" name="surname" placeholder="Surname"/>
     <input type="text" name="secondName" placeholder="Secon name"/>
