@@ -108,7 +108,6 @@ namespace StudentUp.Models
 		/// <param name="newUserId">Идентификатор пользователя</param>
 		/// <param name="newEmail">Email пользователя</param>
 		/// <param name="newPassword">Пароль пользователя</param>
-
 		/// <param name="newUserType">Тип пользователя</param>
 		public Users(int newUserId, string newEmail, string newPassword, Users.UserType newUserType)
 		{

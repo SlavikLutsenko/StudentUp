@@ -5,6 +5,9 @@ using System.Configuration;
 
 namespace StudentUp.Controllers
 {
+	/// <summary>
+	/// Базовый контролер
+	/// </summary>
 	public class HomeController : Controller
 	{
 		//
