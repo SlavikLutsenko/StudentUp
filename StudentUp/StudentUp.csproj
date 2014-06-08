@@ -125,6 +125,7 @@
     <Compile Include="Models\Mail.cs" />
     <Compile Include="Models\Messages.cs" />
     <Compile Include="Models\Student.cs" />
+    <Compile Include="Models\Subject.cs" />
     <Compile Include="Models\Users.cs" />
     <Compile Include="Models\Validation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

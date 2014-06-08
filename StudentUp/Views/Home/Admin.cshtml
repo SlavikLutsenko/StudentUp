@@ -4,7 +4,9 @@
     ViewBag.Title = "Admin";
     Layout = "~/Views/MasterPages/HomeMasterPage.cshtml";
     DB db = new DB();
+    DB.ResponseTable resultResponseTable;
     DB.ResponseTable department = db.QueryToRespontTable("select * from Department;");
+    string[] typeEnum;
 }
 
 @section Title{
@@ -46,6 +48,12 @@
 <input id="lecturer" type="radio" name="typeAdd" value="lecturer"/>
 <br/>
 
+<label for="subject">
+    Subject
+</label>
+<input id="subject" type="radio" name="typeAdd" value="subject"/>
+<br/>
+
 <form id="addGroup" action="/AddGroup" method="POST" accept-charset="utf-8">
     <input type="text" placeholder="Name" name="name"/>
     <select name="department">
@@ -67,8 +75,8 @@
 </form>
 
 <form id="addLecturer" action="/AddLecturer" method="POST" accept-charset="utf-8">
-    <input type="text" name="name" placeholder="Name"/>
     <input type="text" name="surname" placeholder="Surname"/>
+    <input type="text" name="name" placeholder="Name"/>
     <input type="text" name="secondName" placeholder="Secon name"/>
     <input type="text" name="email" placeholder="Email" />
     <label>
@@ -91,8 +99,8 @@
 </form>
 
 <form id="addStudent" action="/AddStudent" method="POST" accept-charset="utf-8">
-    <input type="text" name="name" placeholder="Name"/>
     <input type="text" name="surname" placeholder="Surname"/>
+    <input type="text" name="name" placeholder="Name"/>
     <input type="text" name="secondName" placeholder="Secon name"/>
     <input type="text" name="email" placeholder="Email" />
     <label>
@@ -103,10 +111,10 @@
     <input type="text" name="telephone" placeholder="Telephone"/>
     <select name="group">
         @{
-            DB.ResponseTable groups = db.QueryToRespontTable("select * from Groups;");
-            while (groups.Read())
+            resultResponseTable = db.QueryToRespontTable("select * from Groups;");
+            while (resultResponseTable.Read())
             {
-                <option value="@groups["Group_id"]">@groups["Name"]</option>
+                <option value="@resultResponseTable["Group_id"]">@resultResponseTable["Name"]</option>
             }
         }
     </select>
@@ -115,10 +123,10 @@
     <input type="text" name="recordBook" placeholder="Record book"/>
     <select name="typeOfEducation">
         @{
-            DB.ResponseTable typeOfEducation = db.QueryToRespontTable("show columns from Student like 'Type_of_education';");
-            typeOfEducation.Read();
-            string[] type = ((string)typeOfEducation["Type"]).Replace("enum('","").Replace("')","").Replace("'","").Split(',');
-            foreach (string item in type)
+            resultResponseTable = db.QueryToRespontTable("show columns from Student like 'Type_of_education';");
+            resultResponseTable.Read();
+            typeEnum = ((string)resultResponseTable["Type"]).Replace("enum('", "").Replace("')", "").Replace("'", "").Split(',');
+            foreach (string item in typeEnum)
             {
                 <option value="@item">@item</option>
             }
@@ -126,6 +134,31 @@
     </select>
     <input type="text" name="contactsParents" placeholder="Сontacts parents"/>
     <input type="text" name="employmentInTheDepartment" placeholder="Employment in the department"/>
+    <input type="submit" value="ADD" name="ADD"/>
+</form>
+
+<form id="addSubject" action="/AddSubject" method="POST" accept-charset="utf-8">
+    <input type="text" name="name" placeholder="Name subject"/>
+    <select name="lecturer">
+        @{
+            resultResponseTable = db.QueryToRespontTable("select Lecturer_id, Name, Surname, Second_name from Lecturer;");
+            while (resultResponseTable.Read())
+            {
+                <option value="@resultResponseTable["Lecturer_id"]">@resultResponseTable["Surname"] @resultResponseTable["Name"] @resultResponseTable["Second_name"]</option>
+            }
+        }
+    </select>
+    <select name="examType">
+        @{
+            resultResponseTable = db.QueryToRespontTable("show columns from Subject like 'Exam_type';");
+            resultResponseTable.Read();
+            typeEnum = ((string)resultResponseTable["Type"]).Replace("enum('", "").Replace("')", "").Replace("'", "").Split(',');
+            foreach (string item in typeEnum)
+            {
+                <option value="@item">@item</option>
+            }
+        }
+    </select>
     <input type="submit" value="ADD" name="ADD"/>
 </form>
 

@@ -120,7 +120,7 @@ namespace StudentUp.Controllers
 		public ActionResult AddGroup(string name, int department)
 		{
 			Group.AddGroup(name, department);
-			Messages messages = new Messages {{Messages.Message.TypeMessage.good, string.Format("Группа {0} добавленна", name)}};
+			Messages messages = new Messages { { Messages.Message.TypeMessage.good, string.Format("Группа {0} добавленна", name) } };
 			TempData["messages"] = messages;
 			return Redirect("/Admin");
 		}
@@ -203,6 +203,26 @@ namespace StudentUp.Controllers
 					}
 				}
 			}
+			TempData["messages"] = messages;
+			return Redirect("/Admin");
+		}
+
+		/// <summary>
+		/// Добовляет предмет в БД
+		/// </summary>
+		/// <param name="name">Название предмета</param>
+		/// <param name="lecturer">Идентификатор преподователя ведущий этот предмет</param>
+		/// <param name="examType">Тип сдачи предмета</param>
+		/// <returns>Новый предмет</returns>
+		[HttpPost]
+		public ActionResult AddSubject(string name, int lecturer, string examType)
+		{
+
+			Messages messages = new Messages();
+			if (Subject.AddSubject(name, lecturer, examType) != null)
+				messages.Add(Messages.Message.TypeMessage.good, string.Format("Предмет {0} был добавлен", name));
+			else
+				messages.Add(Messages.Message.TypeMessage.error, "Вы указали не правильный тип сдачи предмета");
 			TempData["messages"] = messages;
 			return Redirect("/Admin");
 		}
