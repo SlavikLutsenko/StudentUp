@@ -85,6 +85,15 @@ namespace StudentUp.Models
 		/// <summary>
 		/// Конструктор класса
 		/// </summary>
+		/// <param name="newStudentID">Идентификатор студента</param>
+		public Student(int newStudentID)
+		{
+			this.studentID = newStudentID;
+		}
+
+		/// <summary>
+		/// Конструктор класса
+		/// </summary>
 		/// <param name="newUser">Пользователь являющийся студентом</param>
 		public Student(Users newUser)
 			: base(newUser)
@@ -140,6 +149,11 @@ namespace StudentUp.Models
 		/// Возвращает отчество студента
 		/// </summary>
 		public string SecondName { get { return this.secondName; } }
+
+		/// <summary>
+		/// Возвращает полное имя студента
+		/// </summary>
+		public string FullName { get { return string.Format("{0} {1} {2}", this.surname, this.name, this.secondName); } }
 
 		/// <summary>
 		/// Возвращает семестр на котором учится студент
@@ -219,12 +233,17 @@ namespace StudentUp.Models
 		{
 			if (!this.IsExistsInDB()) return false;
 			DB db = new DB();
-			DB.ResponseTable users = null;
+			string query;
 			if (this.email != string.Empty && this.passwodr != string.Empty)
-				users = db.QueryToRespontTable(string.Format("select * from Student inner join Users on Student.Student_id = Users.Student_id where Email='{0}' and Password='{1}';", this.Email, this.Password));
+				query = string.Format("select * from Student inner join Users on Student.Student_id = Users.Student_id where Users.Email='{0}' and Users.Password='{1}';", this.Email, this.Password);
 			else
 				if (this.userID != -1)
-					users = db.QueryToRespontTable(string.Format("select * from Student inner join Users on Student.Student_id = Users.Student_id where User_id = {0};", this.userID));
+					query = string.Format("select * from Student inner join Users on Student.Student_id = Users.Student_id where Users.User_id = {0};", this.userID);
+				else 
+					if (this.studentID != -1)
+						query = string.Format("select * from Student inner join Users on Student.Student_id = Users.Student_id where Student.Student_id = {0};", this.studentID);
+					else query = "";
+			DB.ResponseTable users = db.QueryToRespontTable(query);
 			if (users != null && users.CountRow == 1)
 			{
 				users.Read();

@@ -53,6 +53,11 @@ namespace StudentUp.Models
 		protected UserType userType;
 
 		/// <summary>
+		/// Конструктор предназначенн для создания классов потомков без участия этого класса
+		/// </summary>
+		protected Users(){}
+
+		/// <summary>
 		/// Конструктор класса
 		/// </summary>
 		/// <param name="newUserId">Идентификатор пользователя</param>

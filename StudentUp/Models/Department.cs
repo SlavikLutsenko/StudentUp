@@ -63,11 +63,14 @@
 		public bool IsExistsInDB()
 		{
 			DB db = new DB();
-			DB.ResponseTable department = null;
+			string query;
 			if (this.departmentID != -1)
-				department = db.QueryToRespontTable(string.Format("select * from Department where Department_id = {0};", this.departmentID));
-			else if (this.name != "" && this.facultyName != "")
-				department = db.QueryToRespontTable(string.Format("select * from Department where Name='{0}' and Faculty_name='{1}';", this.name, this.departmentID));
+				query = string.Format("select * from Department where Department_id = {0};", this.departmentID);
+			else
+				if (this.name != "" && this.facultyName != "")
+					query = string.Format("select * from Department where Name='{0}' and Faculty_name='{1}';", this.name, this.departmentID);
+				else query = "";
+			DB.ResponseTable department = db.QueryToRespontTable(query);
 			return department != null && department.CountRow == 1;
 		}
 
@@ -78,11 +81,14 @@
 		public bool GetInformationAboutUserFromDB()
 		{
 			DB db = new DB();
-			DB.ResponseTable department = null;
+			string query;
 			if (this.departmentID != -1)
-				department = db.QueryToRespontTable(string.Format("select * from Department where Department_id = {0};", this.departmentID));
-			else if (this.name != "" && this.facultyName != "")
-				department = db.QueryToRespontTable(string.Format("select * from Department where Name='{0}' and Faculty_name='{1}';", this.name, this.departmentID));
+				query = string.Format("select * from Department where Department_id = {0};", this.departmentID);
+			else
+				if (this.name != "" && this.facultyName != "")
+					query = string.Format("select * from Department where Name='{0}' and Faculty_name='{1}';", this.name, this.departmentID);
+				else query = "";
+			DB.ResponseTable department = db.QueryToRespontTable(query);
 			if (department == null || department.CountRow <= 0) return false;
 			department.Read();
 			this.departmentID = (int)department["Department_id"];

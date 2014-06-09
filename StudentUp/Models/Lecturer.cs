@@ -42,6 +42,14 @@ namespace StudentUp.Models
 		/// </summary>
 		string telephone = string.Empty;
 
+		/// <summary>
+		/// Конструктор класса
+		/// </summary>
+		/// <param name="newLecturerID">Идентификатор преподователя</param>
+		public Lecturer(int newLecturerID)
+		{
+			this.lecturerID = newLecturerID;
+		}
 
 		/// <summary>
 		/// Коструктор класса
@@ -99,6 +107,11 @@ namespace StudentUp.Models
 		public string SecondName { get { return this.secondName; } }
 
 		/// <summary>
+		/// Возвращает полное имя преподователя
+		/// </summary>
+		public string FullName { get { return string.Format("{0} {1} {2}", this.surname, this.name, this.secondName); } }
+
+		/// <summary>
 		/// Возвращает должность преподователя
 		/// </summary>
 		public string Position { get { return this.position; } }
@@ -122,7 +135,7 @@ namespace StudentUp.Models
 				this.userID = (int)users["User_id"];
 				this.accessLevel = (int)users["Access_level"];
 				this.lecturerID = (int)users["Lecturer_id"];
-				this.departmentID = (int) users["Department_id"];
+				this.departmentID = (int)users["Department_id"];
 				this.name = (string)users["Name"];
 				this.surname = (string)users["Surname"];
 				this.secondName = (string)users["Second_name"];
@@ -146,12 +159,17 @@ namespace StudentUp.Models
 		{
 			if (!this.IsExistsInDB()) return false;
 			DB db = new DB();
-			DB.ResponseTable users = null;
+			string query;
 			if (this.email != string.Empty && this.passwodr != string.Empty)
-				users = db.QueryToRespontTable(string.Format("select * from Lecturer inner join Users on Lecturer.Lecturer_id = Users.Lecturer_id where Email='{0}' and Password='{1}';", this.Email, this.Password));
+				query = string.Format("select * from Lecturer inner join Users on Lecturer.Lecturer_id = Users.Lecturer_id where Users.Email='{0}' and Users.Password='{1}';", this.Email, this.Password);
 			else
 				if (this.userID != -1)
-					users = db.QueryToRespontTable(string.Format("select * from Student inner join Users on Lecturer.Lecturer_id = Users.Lecturer_id where User_id = {0};", this.userID));
+					query = string.Format("select * from Student inner join Users on Lecturer.Lecturer_id = Users.Lecturer_id where Users.User_id = {0};", this.userID);
+				else
+					if (this.lecturerID != -1)
+						query = string.Format("select * from Student inner join Users on Lecturer.Lecturer_id = Users.Lecturer_id where Lecturer.Lecturer_id = {0};", this.userID);
+					else query = "";
+			DB.ResponseTable users = db.QueryToRespontTable(query);
 			if (users != null && users.CountRow == 1)
 			{
 				users.Read();
