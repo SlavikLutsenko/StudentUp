@@ -157,17 +157,16 @@ namespace StudentUp.Models
 		/// <returns>Возвращает всю информацию о преподователе</returns>
 		public override bool GetInformationAboutUserFromDB()
 		{
-			if (!this.IsExistsInDB()) return false;
 			DB db = new DB();
 			string query;
 			if (this.email != string.Empty && this.passwodr != string.Empty)
 				query = string.Format("select * from Lecturer inner join Users on Lecturer.Lecturer_id = Users.Lecturer_id where Users.Email='{0}' and Users.Password='{1}';", this.Email, this.Password);
 			else
 				if (this.userID != -1)
-					query = string.Format("select * from Student inner join Users on Lecturer.Lecturer_id = Users.Lecturer_id where Users.User_id = {0};", this.userID);
+					query = string.Format("select * from Lecturer inner join Users on Lecturer.Lecturer_id = Users.Lecturer_id where Users.User_id = {0};", this.userID);
 				else
 					if (this.lecturerID != -1)
-						query = string.Format("select * from Student inner join Users on Lecturer.Lecturer_id = Users.Lecturer_id where Lecturer.Lecturer_id = {0};", this.userID);
+						query = string.Format("select * from Lecturer inner join Users on Lecturer.Lecturer_id = Users.Lecturer_id where Lecturer.Lecturer_id = {0};", this.lecturerID);
 					else query = "";
 			DB.ResponseTable users = db.QueryToRespontTable(query);
 			if (users != null && users.CountRow == 1)

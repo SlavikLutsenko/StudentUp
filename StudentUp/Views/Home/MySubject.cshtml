@@ -20,6 +20,12 @@
     {
         <p>
             @mySubjects[i].Name 
+            @if (user.Type == Users.UserType.Student)
+            {
+                Lecturer lecturer = new Lecturer(mySubjects[i].LecturerID);
+                lecturer.GetInformationAboutUserFromDB();
+                @lecturer.FullName
+            }
         </p>
     }
 }

@@ -231,7 +231,6 @@ namespace StudentUp.Models
 		/// <returns></returns>
 		public override bool GetInformationAboutUserFromDB()
 		{
-			if (!this.IsExistsInDB()) return false;
 			DB db = new DB();
 			string query;
 			if (this.email != string.Empty && this.passwodr != string.Empty)
