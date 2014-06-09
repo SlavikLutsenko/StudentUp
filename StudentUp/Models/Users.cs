@@ -203,6 +203,10 @@ namespace StudentUp.Models
 			return true;
 		}
 
+		/// <summary>
+		/// Возвращает предметы пользователя
+		/// </summary>
+		/// <returns>Масив предметов</returns>
 		public Subject[] GetMySubjects()
 		{
 			Subject[] result = null;

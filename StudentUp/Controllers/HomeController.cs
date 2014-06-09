@@ -244,6 +244,10 @@ namespace StudentUp.Controllers
 			return Redirect("/Admin");
 		}
 
+		/// <summary>
+		/// Возващает страницу с предметами пользователя
+		/// </summary>
+		/// <returns>Страница</returns>
 		public ActionResult MySubject()
 		{
 			if (Login()) return View();
@@ -282,7 +286,7 @@ namespace StudentUp.Controllers
 		/// Отправляет письмо для востановления пароля если польщователь зарегистрировался
 		/// </summary>
 		/// <param name="email">Email пользователя</param>
-		/// <returns></returns>
+		/// <returns>Страница</returns>
 		[HttpPost]
 		public ActionResult RestorePassword(string email)
 		{
