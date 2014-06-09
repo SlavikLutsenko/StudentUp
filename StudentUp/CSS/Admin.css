@@ -5,6 +5,7 @@
 input#group[name="typeAdd"]:checked ~ form#addGroup, 
 input#student[name="typeAdd"]:checked ~ form#addStudent,
 input#lecturer[name="typeAdd"]:checked ~ form#addLecturer,
-input#subject[name="typeAdd"]:checked ~ form#addSubject {
+input#subject[name="typeAdd"]:checked ~ form#addSubject,
+input#studentSubject[name="typeAdd"]:checked ~ form#setSubjectForStudent {
     display: block;
 }

@@ -54,6 +54,12 @@
 <input id="subject" type="radio" name="typeAdd" value="subject"/>
 <br/>
 
+<label for="studentSubject">
+    Set subject for student
+</label>
+<input id="studentSubject" type="radio" name="typeAdd" value="subject"/>
+<br/>
+
 <form id="addGroup" action="/AddGroup" method="POST" accept-charset="utf-8">
     <input type="text" placeholder="Name" name="name"/>
     <select name="department">
@@ -160,6 +166,28 @@
         }
     </select>
     <input type="submit" value="ADD" name="ADD"/>
+</form>
+
+<form id="setSubjectForStudent" action="/SetSubjectForStudent" method="POST" accept-charset="utf-8">
+    <select name="subjectID">
+        @{
+            resultResponseTable = db.QueryToRespontTable("select * from Subject;");
+            while (resultResponseTable.Read())
+            {
+                <option value="@resultResponseTable["Subject_id"]">@resultResponseTable["Name"]</option>
+            }
+        }
+    </select>
+    <select name="students" multiple="multiple">
+        @{
+            resultResponseTable = db.QueryToRespontTable("select * from Student;");
+            while (resultResponseTable.Read())
+            {
+                <option value="@resultResponseTable["Student_id"]">@resultResponseTable["Surname"] @resultResponseTable["Name"] @resultResponseTable["Second_name"]</option>
+            }
+        }
+    </select>
+    <input type="submit" value="SET" name="SET"/>
 </form>
 
 @section Script{

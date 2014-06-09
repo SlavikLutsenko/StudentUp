@@ -152,6 +152,19 @@ namespace StudentUp.Models
 			return Subject.ExamType.nothing;
 		}
 
+		public void SetStudent(int[] students)
+		{
+			DB db = new DB();
+			string query = "insert into StudentSubject(Subject_id, Student_id) values ";
+			for (int i = 0, end = students.Length; i < end; i++)
+			{
+				query += string.Format("({0}, {1})", this.subjectID, students[i]);
+				if (i < end - 1) query += ",";
+				else query += ";";
+			}
+			db.QueryToRespontTable(query);
+		}
+
 		/// <summary>
 		/// Добовляет предмет в БД
 		/// </summary>

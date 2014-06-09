@@ -220,12 +220,21 @@ namespace StudentUp.Controllers
 		[HttpPost]
 		public ActionResult AddSubject(string name, int lecturer, string examType)
 		{
-
 			Messages messages = new Messages();
 			if (Subject.AddSubject(name, lecturer, examType) != null)
 				messages.Add(Messages.Message.TypeMessage.good, string.Format("Предмет {0} был добавлен", name));
 			else
 				messages.Add(Messages.Message.TypeMessage.error, "Вы указали не правильный тип сдачи предмета");
+			TempData["messages"] = messages;
+			return Redirect("/Admin");
+		}
+
+		public ActionResult SetSubjectForStudent(int subjectID, int[] students)
+		{
+			Subject subject = new Subject(subjectID);
+			if (subject.IsExistsInDB())
+				subject.SetStudent(students);
+			Messages messages = new Messages { { Messages.Message.TypeMessage.good, "OK" } };
 			TempData["messages"] = messages;
 			return Redirect("/Admin");
 		}
