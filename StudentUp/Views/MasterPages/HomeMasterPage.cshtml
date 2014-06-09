@@ -15,6 +15,9 @@
         case "Admin":
             typePage = 2;
             break;
+        case "MySubject":
+            typePage = 3;
+            break;
     }
 }
 
@@ -46,13 +49,17 @@
                 }
             </span>
         </a>
+        <a href="/MySubject" class="subject element @(typePage == 3? "action" : "")">
+            <span class="icon"></span>
+            <span class="name">Мои предметы</span>
+        </a>
         <a class="graph element">
             <span class="icon"></span>
-            <span class="name">Оценки</span>
+            <span class="name">Мои оценки</span>
         </a>
         @if (user.AccessLevel == 2)
         {
-            <a href="/Admin" class="add element  @(typePage == 2? "action" : "")">
+            <a href="/Admin" class="add element @(typePage == 2? "action" : "")">
                 <span class="icon"></span>
                 <span class="name">Администрирование</span>
             </a> 

@@ -187,7 +187,7 @@ namespace StudentUp.Models
 			if (users != null && users.CountRow == 1)
 			{
 				users.Read();
-				this.userId = (int)users["User_id"];
+				this.userID = (int)users["User_id"];
 				this.groupID = (int)users["Group_id"];
 				this.accessLevel = (int)users["Access_level"];
 				this.studentID = (int)users["Student_id"];
@@ -223,12 +223,12 @@ namespace StudentUp.Models
 			if (this.email != string.Empty && this.passwodr != string.Empty)
 				users = db.QueryToRespontTable(string.Format("select * from Student inner join Users on Student.Student_id = Users.Student_id where Email='{0}' and Password='{1}';", this.Email, this.Password));
 			else
-				if (this.userId != -1)
-					users = db.QueryToRespontTable(string.Format("select * from Student inner join Users on Student.Student_id = Users.Student_id where User_id = {0};", this.userId));
+				if (this.userID != -1)
+					users = db.QueryToRespontTable(string.Format("select * from Student inner join Users on Student.Student_id = Users.Student_id where User_id = {0};", this.userID));
 			if (users != null && users.CountRow == 1)
 			{
 				users.Read();
-				this.userId = (int)users["User_id"];
+				this.userID = (int)users["User_id"];
 				this.email = (string)users["Email"];
 				this.passwodr = (string)users["Password"];
 				this.accessLevel = (int)users["Access_level"];

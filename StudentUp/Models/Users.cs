@@ -27,7 +27,7 @@ namespace StudentUp.Models
 		/// <summary>
 		/// Идентификатор пользователя
 		/// </summary>
-		protected int userId = -1;
+		protected int userID = -1;
 
 		/// <summary>
 		/// Email пользователя
@@ -59,7 +59,7 @@ namespace StudentUp.Models
 		public Users(int newUserId)
 		{
 			if(newUserId <= 0) throw new Exception("no id");
-			this.userId = newUserId;
+			this.userID = newUserId;
 		}
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace StudentUp.Models
 		/// <param name="newUser">Новый пользователь</param>
 		public Users(Users newUser)
 		{
-			this.userId = newUser.userId;
+			this.userID = newUser.userID;
 			this.email = newUser.email;
 			this.passwodr = newUser.passwodr;
 			this.accessLevel = newUser.accessLevel;
@@ -119,7 +119,7 @@ namespace StudentUp.Models
 			if (!Validation.IsPassword(newPassword))
 				messages.Add(Messages.Message.TypeMessage.error, "no password");
 			if (messages.Count != 0) throw new ValidationDataException(messages);
-			this.userId = newUserId;
+			this.userID = newUserId;
 			this.email = newEmail;
 			this.passwodr = newPassword;
 			this.userType = newUserType;
@@ -128,7 +128,7 @@ namespace StudentUp.Models
 		/// <summary>
 		/// Возвращает идентификатор пользователя
 		/// </summary>
-		public int ID { get { return this.userId; } }
+		public int ID { get { return this.userID; } }
 
 		/// <summary>
 		/// Возвращает email пользователя
@@ -168,8 +168,8 @@ namespace StudentUp.Models
 			if (this.email != string.Empty && this.passwodr != string.Empty)
 				users = db.QueryToRespontTable(string.Format("select * from Users where Email='{0}' and Password='{1}';", this.Email, this.Password));
 			else
-				if (this.userId != -1)
-					users = db.QueryToRespontTable(string.Format("select * from Users where User_id='{0}';", this.userId));
+				if (this.userID != -1)
+					users = db.QueryToRespontTable(string.Format("select * from Users where User_id='{0}';", this.userID));
 				else
 					if (this.email != string.Empty)
 						users = db.QueryToRespontTable(string.Format("select * from Users where Email='{0}';", this.email));
@@ -188,19 +188,38 @@ namespace StudentUp.Models
 			if (this.email != string.Empty && this.passwodr != string.Empty)
 				users = db.QueryToRespontTable(string.Format("select * from Users where Email='{0}' and Password='{1}';", this.Email, this.Password));
 			else
-				if (this.userId != -1)
-					users = db.QueryToRespontTable(string.Format("select * from Users where User_id='{0}';", this.userId));
+				if (this.userID != -1)
+					users = db.QueryToRespontTable(string.Format("select * from Users where User_id='{0}';", this.userID));
 				else
 					if(this.email != "")
 						users = db.QueryToRespontTable(string.Format("select * from Users where Email='{0}';", this.Email));
 			if (users == null || users.CountRow <= 0) return false;
 			users.Read();
-			this.userId = (int)users["User_id"];
+			this.userID = (int)users["User_id"];
 			this.email = (string)users["Email"];
 			this.passwodr = (string)users["Password"];
 			this.accessLevel = (int)users["Access_level"];
 			this.userType = users["Student_id"] == null ? UserType.Lecturer : UserType.Student;
 			return true;
+		}
+
+		public Subject[] GetMySubjects()
+		{
+			Subject[] result = null;
+			DB db = new DB();
+			string query;
+			if (this.userType == UserType.Student)
+				query = string.Format("select studentsubject.Subject_id from student inner join StudentSubject on student.Student_id = studentsubject.Student_id and student.Student_id = {0};", this.userID);
+			else
+				query = string.Format("select subject.Subject_id from lecturer inner join subject on lecturer.Lecturer_id = subject.Subject_id and lecturer.Lecturer_id = {0};", this.userID);
+			DB.ResponseTable subjectsID = db.QueryToRespontTable(query);
+			result = new Subject[subjectsID.CountRow];
+			for (int i = 0, end = result.Length; i < end && subjectsID.Read(); i++)
+			{
+				result[i] = new Subject(Convert.ToInt32(subjectsID["Subject_id"]));
+				result[i].GetInformationAboutUserFromDB();
+			}
+			return result;
 		}
 
 		/// <summary>
@@ -210,7 +229,7 @@ namespace StudentUp.Models
 		public void CreateSession(HttpResponseBase Response)
 		{
 			if (this.IsExistsInDB())
-				Response.SetCookie(new HttpCookie("userID", this.userId.ToString()));
+				Response.SetCookie(new HttpCookie("userID", this.userID.ToString()));
 		}
 
 		/// <summary>

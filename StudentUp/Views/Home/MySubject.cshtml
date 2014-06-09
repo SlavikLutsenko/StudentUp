@@ -1,0 +1,28 @@
+﻿@using StudentUp.Models
+
+@{
+    ViewBag.Title = "MySubject";
+    Layout = "~/Views/MasterPages/HomeMasterPage.cshtml";
+}
+
+@section Title
+{
+    StudentUp - My subject
+}
+
+@section Style
+{}
+
+@{
+    Users user = (Users)ViewData["user"];
+    Subject[] mySubjects = user.GetMySubjects();
+    for (int i = 0, end = mySubjects.Length; i < end; i++)
+    {
+        <p>
+            @mySubjects[i].Name 
+        </p>
+    }
+}
+
+@section Script
+{}

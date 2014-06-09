@@ -82,6 +82,10 @@ body {
             background: url("../images/add.png") no-repeat;
         }
 
+        .b-menu .element.subject > .icon {
+            background: url("../images/subject.png") no-repeat;
+        }
+
         .b-menu .element.exit > .icon {
             background: url("../images/exit.png") no-repeat;
         }

@@ -81,13 +81,12 @@ namespace StudentUp.Controllers
 				{
 					case Users.UserType.Student:
 						user = new Student(user);
-						user.GetInformationAboutUserFromDB();
 						break;
 					case Users.UserType.Lecturer:
 						user = new Lecturer(user);
-						user.GetInformationAboutUserFromDB();
 						break;
 				}
+				user.GetInformationAboutUserFromDB();
 				ViewData["user"] = user;
 				return true;
 			}
@@ -243,6 +242,12 @@ namespace StudentUp.Controllers
 			Messages messages = new Messages { { Messages.Message.TypeMessage.good, "OK" } };
 			TempData["messages"] = messages;
 			return Redirect("/Admin");
+		}
+
+		public ActionResult MySubject()
+		{
+			if (Login()) return View();
+			return Redirect("/");
 		}
 
 		/// <summary>
