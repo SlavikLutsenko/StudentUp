@@ -119,17 +119,17 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\DB.cs" />
+    <Compile Include="Models\Сommon functionality\DB.cs" />
     <Compile Include="Models\Department.cs" />
     <Compile Include="Models\Group.cs" />
     <Compile Include="Models\IPartInstitute.cs" />
     <Compile Include="Models\Lecturer.cs" />
-    <Compile Include="Models\Mail.cs" />
-    <Compile Include="Models\Messages.cs" />
+    <Compile Include="Models\Сommon functionality\Mail.cs" />
+    <Compile Include="Models\Сommon functionality\Messages.cs" />
     <Compile Include="Models\Student.cs" />
     <Compile Include="Models\Subject.cs" />
     <Compile Include="Models\Users.cs" />
-    <Compile Include="Models\Validation.cs" />
+    <Compile Include="Models\Сommon functionality\Validation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -154,6 +154,7 @@
     <Content Include="Images\logo.mini.png" />
     <Content Include="Images\logo.png" />
     <Content Include="Images\message.png" />
+    <Content Include="Images\subject.png" />
     <Content Include="JS\all.js" />
     <Content Include="JS\ScriptIndexMasterPage.js" />
     <Content Include="JS\Validation.js" />

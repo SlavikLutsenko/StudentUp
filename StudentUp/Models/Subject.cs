@@ -152,6 +152,10 @@ namespace StudentUp.Models
 			return Subject.ExamType.nothing;
 		}
 
+		/// <summary>
+		/// Устанавливает студентов на этот предмет
+		/// </summary>
+		/// <param name="students">Масив индетификаторв студентов</param>
 		public void SetStudent(int[] students)
 		{
 			DB db = new DB();

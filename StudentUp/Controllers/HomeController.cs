@@ -216,7 +216,7 @@ namespace StudentUp.Controllers
 		/// <param name="name">Название предмета</param>
 		/// <param name="lecturer">Идентификатор преподователя ведущий этот предмет</param>
 		/// <param name="examType">Тип сдачи предмета</param>
-		/// <returns>Новый предмет</returns>
+		/// <returns>Возвращает страницу администрирования и сообщения про добавленных предметах</returns>
 		[HttpPost]
 		public ActionResult AddSubject(string name, int lecturer, string examType)
 		{
@@ -229,6 +229,12 @@ namespace StudentUp.Controllers
 			return Redirect("/Admin");
 		}
 
+		/// <summary>
+		/// Устанавливает предметы студентам
+		/// </summary>
+		/// <param name="subjectID">Индетификатор предмета</param>
+		/// <param name="students">Массив индетификаторов студентов</param>
+		/// <returns>Возвращает страницу администрирования и сообщения про результат действия</returns>
 		public ActionResult SetSubjectForStudent(int subjectID, int[] students)
 		{
 			Subject subject = new Subject(subjectID);
