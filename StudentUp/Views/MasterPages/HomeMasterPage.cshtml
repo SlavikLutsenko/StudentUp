@@ -18,6 +18,12 @@
         case "MySubject":
             typePage = 3;
             break;
+        case "MyMark":
+            typePage = 4;
+            break;
+        case "AddMark":
+            typePage = 4;
+            break;
     }
 }
 
@@ -53,7 +59,7 @@
             <span class="icon"></span>
             <span class="name">Мои предметы</span>
         </a>
-        <a class="graph element">
+        <a href="/MyMark" class="graph element @(typePage == 4? "action" : "")">
             <span class="icon"></span>
             <span class="name">Мои оценки</span>
         </a>

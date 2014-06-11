@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web.Mvc;
 using MySql.Data.MySqlClient;
 using StudentUp.Models;
 using System.Configuration;
@@ -19,7 +20,7 @@ namespace StudentUp.Controllers
 		/// <returns>Возвращает главнуюстраницу</returns>
 		public ActionResult Index()
 		{
-			if (Login()) return Redirect("/home");
+			if (Login() != null) return Redirect("/home");
 			return View();
 		}
 
@@ -72,11 +73,12 @@ namespace StudentUp.Controllers
 		/// true - да
 		/// false - нет
 		/// </returns>
-		private bool Login()
+		private Users Login()
 		{
+			Users user = null;
 			if (Users.IsCreatedSession(Request))
 			{
-				Users user = Users.GetSession(Request);
+				user = Users.GetSession(Request);
 				switch (user.Type)
 				{
 					case Users.UserType.Student:
@@ -88,9 +90,8 @@ namespace StudentUp.Controllers
 				}
 				user.GetInformationAboutUserFromDB();
 				ViewData["user"] = user;
-				return true;
 			}
-			return false;
+			return user;
 		}
 
 		/// <summary>
@@ -99,7 +100,7 @@ namespace StudentUp.Controllers
 		/// <returns>Если пользователь авторизировался и у него созданна сессия, то у него загрузится эта страница иначе его перенаправят на страницу авторизации</returns>
 		public ActionResult Home()
 		{
-			if (Login()) return View();
+			if (Login() != null) return View();
 			return Redirect("/");
 		}
 
@@ -109,7 +110,7 @@ namespace StudentUp.Controllers
 		/// <returns>Возвращает страницу администрирования если пользователь зарегистрирован иначе перенаправляет на главную страницу</returns>
 		public ActionResult Admin()
 		{
-			if (Login()) return View();
+			if (Login() != null) return View();
 			return Redirect("/");
 		}
 
@@ -250,8 +251,51 @@ namespace StudentUp.Controllers
 		/// <returns>Страница</returns>
 		public ActionResult MySubject()
 		{
-			if (Login()) return View();
+			if (Login() != null) return View();
 			return Redirect("/");
+		}
+
+		/// <summary>
+		/// Выводит страничку с оценками пользователя
+		/// </summary>
+		/// <returns>Страница</returns>
+		public ActionResult MyMark()
+		{
+			if (Login() != null) return View();
+			return Redirect("/");
+		}
+
+		/// <summary>
+		/// Выводит страницу для добавления оценки
+		/// </summary>
+		/// <returns>Страница</returns>
+		public ActionResult AddMark()
+		{
+			Users user = Login();
+			if (user != null)
+			{
+				if (user.Type == Users.UserType.Lecturer) return View();
+				else return Redirect("/MyMark");
+			}
+			return Redirect("/");
+		}
+
+		/// <summary>
+		/// Добавляет оценку
+		/// </summary>
+		/// <param name="student">Студент которому ставится оценка</param>
+		/// <param name="subject">Предмет по которому ставится оценка</param>
+		/// <param name="mark">Оценка</param>
+		/// <param name="bonusMark">Бонусные балы</param>
+		/// <param name="maxMark">максимальная оценка</param>
+		/// <param name="typeMark">Тип оценки</param>
+		/// <param name="date">Дата выставления оценки</param>
+		/// <returns>Страница с оценками пользователя</returns>
+		[HttpPost]
+		public ActionResult AddMark(int student, int subject, int mark, int bonusMark, int maxMark, string typeMark, DateTime date)
+		{
+			Marks.AddMark(student, subject, mark, bonusMark, maxMark, Marks.ConverStringToEnum(typeMark), date);
+			return Redirect("/MyMark");
 		}
 
 		/// <summary>

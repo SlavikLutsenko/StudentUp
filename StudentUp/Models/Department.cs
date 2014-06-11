@@ -59,7 +59,7 @@
 		/// <summary>
 		/// Проверяет сущетвует ли такая кафедра в БД
 		/// </summary>
-		/// <returns></returns>
+		/// <returns>true - есть, false - нету</returns>
 		public bool IsExistsInDB()
 		{
 			DB db = new DB();
@@ -77,7 +77,7 @@
 		/// <summary>
 		/// Берет всю информацию о кафедре из БД
 		/// </summary>
-		/// <returns></returns>
+		/// <returns>true - есть, false - нету</returns>
 		public bool GetInformationAboutUserFromDB()
 		{
 			DB db = new DB();

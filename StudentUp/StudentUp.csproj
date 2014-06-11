@@ -119,6 +119,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Mark.cs" />
     <Compile Include="Models\Сommon functionality\DB.cs" />
     <Compile Include="Models\Department.cs" />
     <Compile Include="Models\Group.cs" />
@@ -196,6 +197,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Home\MySubject.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\MyMark.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\AddMark.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

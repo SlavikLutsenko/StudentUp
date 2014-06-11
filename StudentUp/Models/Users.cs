@@ -7,7 +7,7 @@ namespace StudentUp.Models
 	/// <summary>
 	/// Класс описывающий лубого пользователя
 	/// </summary>
-	public class Users: IPartInstitute
+	public class Users : IPartInstitute
 	{
 		/// <summary>
 		/// Перечисление описывающие тип пользователя
@@ -28,6 +28,16 @@ namespace StudentUp.Models
 		/// Идентификатор пользователя
 		/// </summary>
 		protected int userID = -1;
+
+		/// <summary>
+		/// Индетификатор студента
+		/// </summary>
+		int studentID = -1;
+
+		/// <summary>
+		/// Индетификатор преподователя
+		/// </summary>
+		int lecturerID = -1;
 
 		/// <summary>
 		/// Email пользователя
@@ -55,7 +65,7 @@ namespace StudentUp.Models
 		/// <summary>
 		/// Конструктор предназначенн для создания классов потомков без участия этого класса
 		/// </summary>
-		protected Users(){}
+		protected Users() { }
 
 		/// <summary>
 		/// Конструктор класса
@@ -63,19 +73,19 @@ namespace StudentUp.Models
 		/// <param name="newUserId">Идентификатор пользователя</param>
 		public Users(int newUserId)
 		{
-			if(newUserId <= 0) throw new Exception("no id");
+			if (newUserId <= 0) throw new Exception("no id");
 			this.userID = newUserId;
 		}
 
-        /// <summary>
-        /// Конструктор класса
-        /// </summary>
-        /// <param name="newEmail">Email пользователя</param>
-        public Users(string newEmail)
-        {
-	        if (!Validation.IsEmail(newEmail)) throw new ValidationDataException("no email");
-            this.email = newEmail;
-        }
+		/// <summary>
+		/// Конструктор класса
+		/// </summary>
+		/// <param name="newEmail">Email пользователя</param>
+		public Users(string newEmail)
+		{
+			if (!Validation.IsEmail(newEmail)) throw new ValidationDataException("no email");
+			this.email = newEmail;
+		}
 
 		/// <summary>
 		/// Конструктор класса
@@ -134,6 +144,16 @@ namespace StudentUp.Models
 		/// Возвращает идентификатор пользователя
 		/// </summary>
 		public int ID { get { return this.userID; } }
+
+		/// <summary>
+		/// Возвращает идентификатор студента
+		/// </summary>
+		public int StudentID { get { return this.studentID; } }
+
+		/// <summary>
+		/// Возвращает идентификатор преподователя
+		/// </summary>
+		public int LecturerID { get { return this.lecturerID; } }
 
 		/// <summary>
 		/// Возвращает email пользователя
@@ -196,11 +216,13 @@ namespace StudentUp.Models
 				if (this.userID != -1)
 					users = db.QueryToRespontTable(string.Format("select * from Users where User_id='{0}';", this.userID));
 				else
-					if(this.email != "")
+					if (this.email != "")
 						users = db.QueryToRespontTable(string.Format("select * from Users where Email='{0}';", this.Email));
 			if (users == null || users.CountRow <= 0) return false;
 			users.Read();
 			this.userID = (int)users["User_id"];
+			this.studentID = users["Student_id"] == null ? -1 : Convert.ToInt32(users["Student_id"]);
+			this.lecturerID = users["Lecturer_id"] == null ? -1 : Convert.ToInt32(users["Lecturer_id"]);
 			this.email = (string)users["Email"];
 			this.passwodr = (string)users["Password"];
 			this.accessLevel = (int)users["Access_level"];
@@ -214,7 +236,7 @@ namespace StudentUp.Models
 		/// <returns>Масив предметов</returns>
 		public Subject[] GetMySubjects()
 		{
-			Subject[] result = null;
+			Subject[] result;
 			DB db = new DB();
 			string query;
 			if (this.userType == UserType.Student)
@@ -226,6 +248,29 @@ namespace StudentUp.Models
 			for (int i = 0, end = result.Length; i < end && subjectsID.Read(); i++)
 			{
 				result[i] = new Subject(Convert.ToInt32(subjectsID["Subject_id"]));
+				result[i].GetInformationAboutUserFromDB();
+			}
+			return result;
+		}
+
+		/// <summary>
+		/// Возвращает масив оценок пользователя
+		/// </summary>
+		/// <returns>Масив оценок</returns>
+		public Marks[] GetMyMarks()
+		{
+			Marks[] result;
+			DB db = new DB();
+			string query;
+			if (this.userType == UserType.Student)
+				query = string.Format("select marks.Mark_id from marks inner join studentsubject inner join student inner join users on marks.StudentSubject_id = studentsubject.StudentSubject_id and studentsubject.Student_id = student.Student_id and student.Student_id = users.Student_id and users.User_id = {0};", this.userID);
+			else
+				query = string.Format("select marks.Mark_id from marks inner join studentsubject inner join subject inner join lecturer on lecturer.Lecturer_id = subject.Lecturer_id and studentsubject.Subject_id = subject.Subject_id and studentsubject.StudentSubject_id = marks.StudentSubject_id and lecturer.Lecturer_id = {0};", this.userID);
+			DB.ResponseTable markID = db.QueryToRespontTable(query);
+			result = new Marks[markID.CountRow];
+			for (int i = 0, end = result.Length; i < end && markID.Read(); i++)
+			{
+				result[i] = new Marks(Convert.ToInt32(markID["Mark_id"]));
 				result[i].GetInformationAboutUserFromDB();
 			}
 			return result;
@@ -277,7 +322,7 @@ namespace StudentUp.Models
 		{
 			if (IsCreatedSession(Request))
 			{
-				HttpCookie myCookie = new HttpCookie("userID") {Expires = DateTime.Now.AddDays(-1d)};
+				HttpCookie myCookie = new HttpCookie("userID") { Expires = DateTime.Now.AddDays(-1d) };
 				Response.Cookies.Add(myCookie);
 			}
 		}
@@ -298,7 +343,7 @@ namespace StudentUp.Models
 			if (idLecturer <= 0)
 				db.QueryToRespontTable(string.Format("insert into Users(Student_id, Email, Password, Access_level) values ({0}, '{1}', '{2}', {3});", idStudent, email, password, accessLevel));
 			else
-				if(idStudent <= 0)
+				if (idStudent <= 0)
 					db.QueryToRespontTable(string.Format("insert into Users(Lecturer_id, Email, Password, Access_level) values ({0}, '{1}', '{2}', {3});", idLecturer, email, password, accessLevel));
 				else throw new Exception("error in data add user");
 			Users user = new Users(email, password);
@@ -310,7 +355,7 @@ namespace StudentUp.Models
 							"Вы наш новый пользователь",
 							"Здравствуйте, " + email +
 							"\n\nВы теперь зарегистрированны в StudentUp\n\n" +
-							"Вы можете зайти в системы использу я следущие:\n\n" + 
+							"Вы можете зайти в системы использу я следущие:\n\n" +
 							"Свой email: " + email + "\n" +
 							"Пароль: " + password + "\n" +
 							"Перейдя по ссылке: http://127.0.0.1/");
