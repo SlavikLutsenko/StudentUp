@@ -5,7 +5,7 @@
     Layout = "~/Views/MasterPages/HomeMasterPage.cshtml";
     DB db = new DB();
     DB.ResponseTable resultResponseTable;
-    DB.ResponseTable department = db.QueryToRespontTable("select * from Department;");
+    DB.ResponseTable department = ViewData["departments"] as DB.ResponseTable;
     string[] typeEnum;
 }
 
@@ -117,7 +117,7 @@
     <input type="text" name="telephone" placeholder="Telephone"/>
     <select name="group">
         @{
-            resultResponseTable = db.QueryToRespontTable("select * from Groups;");
+            resultResponseTable = ViewData["groups"] as DB.ResponseTable;
             while (resultResponseTable.Read())
             {
                 <option value="@resultResponseTable["Group_id"]">@resultResponseTable["Name"]</option>
@@ -129,9 +129,7 @@
     <input type="text" name="recordBook" placeholder="Record book"/>
     <select name="typeOfEducation">
         @{
-            resultResponseTable = db.QueryToRespontTable("show columns from Student like 'Type_of_education';");
-            resultResponseTable.Read();
-            typeEnum = ((string)resultResponseTable["Type"]).Replace("enum('", "").Replace("')", "").Replace("'", "").Split(',');
+            typeEnum = ViewData["typeEducation"] as string[];
             foreach (string item in typeEnum)
             {
                 <option value="@item">@item</option>
@@ -147,7 +145,7 @@
     <input type="text" name="name" placeholder="Name subject"/>
     <select name="lecturer">
         @{
-            resultResponseTable = db.QueryToRespontTable("select Lecturer_id, Name, Surname, Second_name from Lecturer;");
+            resultResponseTable = ViewData["lecturers"] as DB.ResponseTable;
             while (resultResponseTable.Read())
             {
                 <option value="@resultResponseTable["Lecturer_id"]">@resultResponseTable["Surname"] @resultResponseTable["Name"] @resultResponseTable["Second_name"]</option>
@@ -156,9 +154,7 @@
     </select>
     <select name="examType">
         @{
-            resultResponseTable = db.QueryToRespontTable("show columns from Subject like 'Exam_type';");
-            resultResponseTable.Read();
-            typeEnum = ((string)resultResponseTable["Type"]).Replace("enum('", "").Replace("')", "").Replace("'", "").Split(',');
+            typeEnum = ViewData["examType"] as string[];
             foreach (string item in typeEnum)
             {
                 <option value="@item">@item</option>
@@ -171,7 +167,7 @@
 <form id="setSubjectForStudent" action="/SetSubjectForStudent" method="POST" accept-charset="utf-8">
     <select name="subjectID">
         @{
-            resultResponseTable = db.QueryToRespontTable("select * from Subject;");
+            resultResponseTable = ViewData["subjects"] as DB.ResponseTable;
             while (resultResponseTable.Read())
             {
                 <option value="@resultResponseTable["Subject_id"]">@resultResponseTable["Name"]</option>
@@ -180,7 +176,7 @@
     </select>
     <select name="students" multiple="multiple">
         @{
-            resultResponseTable = db.QueryToRespontTable("select * from Student;");
+            resultResponseTable = ViewData["students"] as DB.ResponseTable;
             while (resultResponseTable.Read())
             {
                 <option value="@resultResponseTable["Student_id"]">@resultResponseTable["Surname"] @resultResponseTable["Name"] @resultResponseTable["Second_name"]</option>

@@ -24,7 +24,7 @@
         @RenderBody()
         <div class="b-message">
             @{
-                Messages listMessages = (Messages)ViewData["messages"];
+                Messages listMessages = ViewData["messages"] as Messages;
                 if (listMessages != null)
                 {
                     foreach (Messages.Message item in listMessages)
@@ -39,4 +39,7 @@
 <script type="text/ecmascript" src="~/JS/all.js"></script>
 <script type="text/javascript" src="~/JS/Validation.js"></script>
 <script type="text/javascript" src="~/JS/ScriptIndexMasterPage.js"></script>
+<script type="text/javascript">
+    CenteredAll();
+</script>
 </html>

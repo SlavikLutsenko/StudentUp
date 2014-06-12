@@ -2,7 +2,7 @@
 
 @{
     Layout = null;
-    Users user = (Users)ViewData["user"];
+    Users user = ViewData["user"] as Users;
     int typePage = 0;
     switch((string)ViewBag.Title)
     {
@@ -49,10 +49,7 @@
                 <img src="~/Images/avatar_male.png" />
             </span>
             <span class="name">
-                @{
-                    string name = (user as Student != null ? ((Student)user).Name : ((Lecturer)user).Name);
-                    @name
-                }
+                @(user as Student != null ? ((Student)user).Name : ((Lecturer)user).Name)
             </span>
         </a>
         <a href="/MySubject" class="subject element @(typePage == 3? "action" : "")">

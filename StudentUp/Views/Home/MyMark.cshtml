@@ -16,8 +16,8 @@
 }
 
 @{
-    Users user = (Users)ViewData["user"];
-    Marks[] myMarks = user.GetMyMarks();
+    Users user = ViewData["user"] as Users;
+    Marks[] myMarks = ViewData["myMarks"] as Marks[];
     if (myMarks != null)
     {
         if (user.Type == Users.UserType.Student)

@@ -11,9 +11,6 @@ namespace StudentUp.Controllers
 	/// </summary>
 	public class HomeController : Controller
 	{
-		//
-		// GET: /Home/
-
 		/// <summary>
 		/// Главная страница
 		/// </summary>
@@ -89,7 +86,6 @@ namespace StudentUp.Controllers
 						break;
 				}
 				user.GetInformationAboutUserFromDB();
-				ViewData["user"] = user;
 			}
 			return user;
 		}
@@ -100,7 +96,12 @@ namespace StudentUp.Controllers
 		/// <returns>Если пользователь авторизировался и у него созданна сессия, то у него загрузится эта страница иначе его перенаправят на страницу авторизации</returns>
 		public ActionResult Home()
 		{
-			if (Login() != null) return View();
+			Users user = Login();
+			if (user != null)
+			{
+				ViewData["user"] = user;
+				return View();
+			}
 			return Redirect("/");
 		}
 
@@ -110,7 +111,25 @@ namespace StudentUp.Controllers
 		/// <returns>Возвращает страницу администрирования если пользователь зарегистрирован иначе перенаправляет на главную страницу</returns>
 		public ActionResult Admin()
 		{
-			if (Login() != null) return View();
+			Users user = Login();
+			if (user != null)
+			{
+				DB db = new DB();
+				DB.ResponseTable responseTable;
+				ViewData["user"] = user;
+				ViewData["departments"] = db.QueryToRespontTable("select * from Department;");
+				ViewData["groups"] = db.QueryToRespontTable("select * from Groups;");
+				responseTable = db.QueryToRespontTable("show columns from Student like 'Type_of_education';");
+				responseTable.Read();
+				ViewData["typeEducation"] = ((string)responseTable["Type"]).Replace("enum('", "").Replace("')", "").Replace("'", "").Split(',');
+				ViewData["lecturers"] = db.QueryToRespontTable("select Lecturer_id, Name, Surname, Second_name from Lecturer;");
+				responseTable = db.QueryToRespontTable("show columns from Subject like 'Exam_type';");
+				responseTable.Read();
+				ViewData["examType"] = ((string)responseTable["Type"]).Replace("enum('", "").Replace("')", "").Replace("'", "").Split(',');
+				ViewData["students"] = db.QueryToRespontTable("select * from Student;");
+				ViewData["subjects"] = db.QueryToRespontTable("select * from Subject;");
+				return View();
+			}
 			return Redirect("/");
 		}
 
@@ -120,6 +139,7 @@ namespace StudentUp.Controllers
 		/// <param name="name">Код группы</param>
 		/// <param name="department">Кафедра группы</param>
 		/// <returns>Возвращает страницу администрирования и сообщения про добавленную группу</returns>
+		[HttpPost]
 		public ActionResult AddGroup(string name, int department)
 		{
 			Group.AddGroup(name, department);
@@ -251,17 +271,30 @@ namespace StudentUp.Controllers
 		/// <returns>Страница</returns>
 		public ActionResult MySubject()
 		{
-			if (Login() != null) return View();
+			Users user = Login();
+			if (user != null)
+			{
+				ViewData["user"] = user;
+				ViewData["mySubjects"] = user.GetMySubjects();
+				return View();
+			}
 			return Redirect("/");
 		}
 
 		/// <summary>
 		/// Выводит страничку с оценками пользователя
 		/// </summary>
+		/// <param name="subjectID">Идентификатор предмета по которому нужно вывести оценки</param>
 		/// <returns>Страница</returns>
-		public ActionResult MyMark()
+		public ActionResult MyMark(int subjectID = 0)
 		{
-			if (Login() != null) return View();
+			Users user = Login();
+			if (user != null)
+			{
+				ViewData["user"] = user;
+				ViewData["myMarks"] = user.GetMyMarks();
+				return View();
+			}
 			return Redirect("/");
 		}
 
@@ -274,8 +307,19 @@ namespace StudentUp.Controllers
 			Users user = Login();
 			if (user != null)
 			{
-				if (user.Type == Users.UserType.Lecturer) return View();
-				else return Redirect("/MyMark");
+				if (user.Type == Users.UserType.Lecturer)
+				{
+					DB db = new DB();
+					DB.ResponseTable responseTable;
+					ViewData["user"] = user;
+					ViewData["mySubjects"] = user.GetMySubjects();
+					ViewData["myStudents"] = db.QueryToRespontTable(string.Format("select student.Student_id, student.Group_id, student.Name, student.Surname, student.Second_name from student inner join studentsubject inner join subject on student.Student_id = studentsubject.Student_id and subject.Subject_id = studentsubject.Subject_id and subject.Lecturer_id = {0};", user.LecturerID));
+					responseTable = db.QueryToRespontTable("show columns from Marks like 'Type_marks';");
+					responseTable.Read();
+					ViewData["typeMarks"] = ((string)responseTable["Type"]).Replace("enum('", "").Replace("')", "").Replace("'", "").Split(',');
+					return View();
+				}
+				return Redirect("/MyMark");
 			}
 			return Redirect("/");
 		}

@@ -94,6 +94,8 @@ namespace StudentUp.Models
 		public Users(Users newUser)
 		{
 			this.userID = newUser.userID;
+			this.studentID = newUser.studentID;
+			this.lecturerID = newUser.lecturerID;
 			this.email = newUser.email;
 			this.passwodr = newUser.passwodr;
 			this.accessLevel = newUser.accessLevel;
@@ -285,8 +287,7 @@ namespace StudentUp.Models
 		/// <param name="Response">Необходим для вставки в coocke-файл пользователя идентификатор сессии</param>
 		public void CreateSession(HttpResponseBase Response)
 		{
-			if (this.IsExistsInDB())
-				Response.SetCookie(new HttpCookie("userID", this.userID.ToString()));
+			if (this.IsExistsInDB()) Response.SetCookie(new HttpCookie("userID", this.userID.ToString()));
 		}
 
 		/// <summary>
@@ -309,7 +310,7 @@ namespace StudentUp.Models
 			HttpCookie userCookieSession = Request.Cookies["userID"];
 			if (userCookieSession != null && userCookieSession.Value != "")
 			{
-				Users user = new Users(int.Parse(userCookieSession.Value));
+				Users user = new Users(Convert.ToInt32(userCookieSession.Value));
 				user.GetInformationAboutUserFromDB();
 				return user;
 			}

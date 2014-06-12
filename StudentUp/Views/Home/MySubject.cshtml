@@ -14,8 +14,8 @@
 {}
 
 @{
-    Users user = (Users)ViewData["user"];
-    Subject[] mySubjects = user.GetMySubjects();
+    Users user = ViewData["user"] as Users;
+    Subject[] mySubjects = ViewData["mySubjects"] as Subject[];
     for (int i = 0, end = mySubjects.Length; i < end; i++)
     {
         <p>

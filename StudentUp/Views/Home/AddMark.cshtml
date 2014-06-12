@@ -1,4 +1,5 @@
 ﻿@using StudentUp.Models
+
 @{
     ViewBag.Title = "AddMark";
     Layout = "~/Views/MasterPages/HomeMasterPage.cshtml";
@@ -13,15 +14,13 @@
 {}
 
 @{
-    DB db = new DB();
     DB.ResponseTable resultResponseTable;
-    Lecturer lecturer = (Lecturer)ViewData["user"];
 }
 
 <form action="/AddMark" method="POST" accept-charset="ust-8">
     <select name="subject">
     @{
-        Subject[] mySubjects = lecturer.GetMySubjects();
+        Subject[] mySubjects = ViewData["mySubjects"] as Subject[];
         for (int i = 0, end = mySubjects.Length; i < end; i++)
         {
             <option value="@mySubjects[i].ID">@mySubjects[0].Name</option>
@@ -30,7 +29,7 @@
     </select>
     <select name="student">
         @{
-            resultResponseTable = db.QueryToRespontTable(string.Format("select student.Student_id, student.Group_id, student.Name, student.Surname, student.Second_name from student inner join studentsubject inner join subject on student.Student_id = studentsubject.Student_id and subject.Subject_id = studentsubject.Subject_id and subject.Lecturer_id = {0};", lecturer.ID));
+            resultResponseTable = ViewData["myStudents"] as DB.ResponseTable;
             while (resultResponseTable.Read())
             {
                 <option value="@resultResponseTable["Student_id"]">@resultResponseTable["Surname"] @resultResponseTable["Name"] @resultResponseTable["Second_name"]</option>
@@ -43,10 +42,8 @@
     <input type="number" name="maxMark" placeholder="Max mark"/>
     <select name="typeMark">
         @{
-            resultResponseTable = db.QueryToRespontTable("show columns from Marks like 'Type_marks';");
-            resultResponseTable.Read();
-            string[] typeEnum = ((string)resultResponseTable["Type"]).Replace("enum('", "").Replace("')", "").Replace("'", "").Split(',');
-            foreach (string item in typeEnum)
+            string[] typeMarks = ViewData["typeMarks"] as string[];
+            foreach (string item in typeMarks)
             {
                 <option value="@item">@item</option>
             }
