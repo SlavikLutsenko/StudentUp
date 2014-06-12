@@ -61,17 +61,17 @@ namespace StudentUp.Models
 		/// <summary>
 		/// Сама оценка
 		/// </summary>
-		int mark = 0;
+		int mark;
 
 		/// <summary>
 		/// Бонусные балы
 		/// </summary>
-		int bonusMark = 0;
+		int bonusMark;
 
 		/// <summary>
 		/// максивальная оценка
 		/// </summary>
-		int maxMark = 0;
+		int maxMark;
 
 		/// <summary>
 		/// Тип оценки
@@ -226,9 +226,7 @@ namespace StudentUp.Models
 		public static Marks AddMark(int studentID, int subjectID, int mark, int bonusMark, int maxMark, Marks.TypeMarks typeMark, DateTime date)
 		{
 			DB db = new DB();
-			DB.ResponseTable StudentSubject = db.QueryToRespontTable(string.Format("select StudentSubject_id from studentsubject where Student_id = {0} and Subject_id = {1};", studentID, subjectID));
-			StudentSubject.Read();
-			db.QueryToRespontTable(string.Format("insert into Marks(Date, Mark, Bonus_mark, Max_mark, StudentSubject_id, Type_marks) value ('{0}', {1}, {2}, {3}, {4}, '{5}')", date.ToShortDateString(), mark, bonusMark, maxMark, Convert.ToInt32(StudentSubject["StudentSubject_id"]), Marks.GetEnumDescription(typeMark)));
+			db.QueryToRespontTable(string.Format("insert into Marks(Date, Mark, Bonus_mark, Max_mark, StudentSubject_id, Type_marks) value ('{0}', {1}, {2}, {3}, (select StudentSubject_id from studentsubject where Student_id = {4} and Subject_id = {5}), '{6}');", date.ToString("yyyy-MM-dd"), mark, bonusMark, maxMark, studentID, subjectID, Marks.GetEnumDescription(typeMark)));
 			DB.ResponseTable markID = db.QueryToRespontTable("select LAST_INSERT_ID() as id;");
 			markID.Read();
 			Marks currentMark = new Marks(Convert.ToInt32(markID["id"]));
