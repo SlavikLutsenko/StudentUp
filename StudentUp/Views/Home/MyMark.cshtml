@@ -35,10 +35,10 @@
                 @{
                     for (int i = 0, end = myMarks.Length; i < end; i++)
                     {
-                        Lecturer currentLecturer = new Lecturer(myMarks[i].StudentID);
-                        currentLecturer.GetInformationAboutUserFromDB();
-                        Subject currentSubject = new Subject(myMarks[0].SubjectID);
+                        Subject currentSubject = new Subject(myMarks[i].SubjectID);
                         currentSubject.GetInformationAboutUserFromDB();
+                        Lecturer currentLecturer = new Lecturer(currentSubject.LecturerID);
+                        currentLecturer.GetInformationAboutUserFromDB();
                         <tr>
                             <td>@currentSubject.Name</td>
                             <td>@currentLecturer.FullName</td>
