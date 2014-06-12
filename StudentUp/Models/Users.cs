@@ -240,9 +240,9 @@ namespace StudentUp.Models
 			DB db = new DB();
 			string query;
 			if (this.userType == UserType.Student)
-				query = string.Format("select studentsubject.Subject_id from student inner join StudentSubject on student.Student_id = studentsubject.Student_id and student.Student_id = {0};", this.userID);
+				query = string.Format("select studentsubject.Subject_id from studentsubject inner join student inner join users on studentsubject.Student_id = student.Student_id and student.Student_id = users.Student_id and users.User_id = {0};", this.userID);
 			else
-				query = string.Format("select subject.Subject_id from lecturer inner join subject on lecturer.Lecturer_id = subject.Subject_id and lecturer.Lecturer_id = {0};", this.userID);
+				query = string.Format("select subject.Subject_id from subject inner join lecturer inner join users on subject.Lecturer_id = lecturer.Lecturer_id and lecturer.Lecturer_id = users.Lecturer_id and users.User_id = {0};", this.userID);
 			DB.ResponseTable subjectsID = db.QueryToRespontTable(query);
 			result = new Subject[subjectsID.CountRow];
 			for (int i = 0, end = result.Length; i < end && subjectsID.Read(); i++)
@@ -259,19 +259,22 @@ namespace StudentUp.Models
 		/// <returns>Масив оценок</returns>
 		public Marks[] GetMyMarks()
 		{
-			Marks[] result;
+			Marks[] result = null;
 			DB db = new DB();
 			string query;
 			if (this.userType == UserType.Student)
 				query = string.Format("select marks.Mark_id from marks inner join studentsubject inner join student inner join users on marks.StudentSubject_id = studentsubject.StudentSubject_id and studentsubject.Student_id = student.Student_id and student.Student_id = users.Student_id and users.User_id = {0};", this.userID);
 			else
-				query = string.Format("select marks.Mark_id from marks inner join studentsubject inner join subject inner join lecturer on lecturer.Lecturer_id = subject.Lecturer_id and studentsubject.Subject_id = subject.Subject_id and studentsubject.StudentSubject_id = marks.StudentSubject_id and lecturer.Lecturer_id = {0};", this.userID);
+				query = string.Format("select marks.Mark_id from marks inner join studentsubject inner join subject inner join lecturer inner join users on marks.StudentSubject_id = studentsubject.StudentSubject_id and studentsubject.Subject_id = subject.Subject_id and subject.Lecturer_id = lecturer.Lecturer_id and lecturer.Lecturer_id = users.Lecturer_id and users.User_id = {0};", this.userID);
 			DB.ResponseTable markID = db.QueryToRespontTable(query);
-			result = new Marks[markID.CountRow];
-			for (int i = 0, end = result.Length; i < end && markID.Read(); i++)
+			if(markID != null && markID.CountRow > 0)
 			{
-				result[i] = new Marks(Convert.ToInt32(markID["Mark_id"]));
-				result[i].GetInformationAboutUserFromDB();
+				result = new Marks[markID.CountRow];
+				for (int i = 0, end = result.Length; i < end && markID.Read(); i++)
+				{
+					result[i] = new Marks(Convert.ToInt32(markID["Mark_id"]));
+					result[i].GetInformationAboutUserFromDB();
+				}
 			}
 			return result;
 		}

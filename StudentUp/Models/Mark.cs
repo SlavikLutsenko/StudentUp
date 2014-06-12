@@ -156,7 +156,7 @@ namespace StudentUp.Models
 				this.mark = Convert.ToInt32(marks["Mark"]);
 				this.bonusMark = Convert.ToInt32(marks["Bonus_mark"]);
 				this.maxMark = Convert.ToInt32(marks["Max_mark"]);
-				this.typeMark = Marks.ConverStringToEnum((string)marks["Type_mark"]);
+				this.typeMark = Marks.ConverStringToEnum((string)marks["Type_marks"]);
 				return true;
 			}
 			return false;
@@ -228,7 +228,7 @@ namespace StudentUp.Models
 			DB db = new DB();
 			DB.ResponseTable StudentSubject = db.QueryToRespontTable(string.Format("select StudentSubject_id from studentsubject where Student_id = {0} and Subject_id = {1};", studentID, subjectID));
 			StudentSubject.Read();
-			db.QueryToRespontTable(string.Format("insert into Marks(Date, Marks, Bonus_mark, Max_mark, StudentSubject_id, Type_marks) value ('{0}', {1}, {2}, {3}, {4}, '{5}')", date.ToShortDateString(), mark, bonusMark, maxMark, Convert.ToInt32(StudentSubject["StudentSubject_id"]), Marks.GetEnumDescription(typeMark)));
+			db.QueryToRespontTable(string.Format("insert into Marks(Date, Mark, Bonus_mark, Max_mark, StudentSubject_id, Type_marks) value ('{0}', {1}, {2}, {3}, {4}, '{5}')", date.ToShortDateString(), mark, bonusMark, maxMark, Convert.ToInt32(StudentSubject["StudentSubject_id"]), Marks.GetEnumDescription(typeMark)));
 			DB.ResponseTable markID = db.QueryToRespontTable("select LAST_INSERT_ID() as id;");
 			markID.Read();
 			Marks currentMark = new Marks(Convert.ToInt32(markID["id"]));

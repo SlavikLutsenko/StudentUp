@@ -18,70 +18,81 @@
 @{
     Users user = (Users)ViewData["user"];
     Marks[] myMarks = user.GetMyMarks();
-    if (user.Type == Users.UserType.Student)
+    if (myMarks != null)
     {
-        <table border="1" cellspacing="0">
-            <tr>
-                <th>Subject</th>
-                <th>Lecturer</th>
-                <th>Date</th>
-                <th>Marks</th>
-                <th>Bonus mark</th>
-                <th>Max mark</th>
-                <th>Type mark</th>
-            </tr>
-            @{
-                for (int i = 0, end = myMarks.Length; i < end; i++)
-                {
-                    Lecturer currentLecturer = new Lecturer(myMarks[i].StudentID);
-                    currentLecturer.GetInformationAboutUserFromDB();
-                    Subject currentSubject = new Subject(myMarks[0].SubjectID);
-                    currentSubject.GetInformationAboutUserFromDB();
-                    <tr>
-                        <td>@currentSubject.Name</td>
-                        <td>@currentLecturer.FullName</td>
-                        <td>@myMarks[0].Date.ToShortDateString()</td>
-                        <td>@myMarks[0].Mark</td>
-                        <td>@myMarks[0].BonusMark</td>
-                        <td>@myMarks[0].MaxMark</td>
-                        <td>@Marks.GetEnumDescription(myMarks[0].TypeMark)</td>
-                    </tr>
-                }   
-            }
-        </table>
+        if (user.Type == Users.UserType.Student)
+        {
+            <table border="1" cellspacing="0">
+                <tr>
+                    <th>Subject</th>
+                    <th>Lecturer</th>
+                    <th>Date</th>
+                    <th>Marks</th>
+                    <th>Bonus mark</th>
+                    <th>Max mark</th>
+                    <th>Type mark</th>
+                </tr>
+                @{
+                    for (int i = 0, end = myMarks.Length; i < end; i++)
+                    {
+                        Lecturer currentLecturer = new Lecturer(myMarks[i].StudentID);
+                        currentLecturer.GetInformationAboutUserFromDB();
+                        Subject currentSubject = new Subject(myMarks[0].SubjectID);
+                        currentSubject.GetInformationAboutUserFromDB();
+                        <tr>
+                            <td>@currentSubject.Name</td>
+                            <td>@currentLecturer.FullName</td>
+                            <td>@myMarks[i].Date.ToShortDateString()</td>
+                            <td>@myMarks[i].Mark</td>
+                            <td>@myMarks[i].BonusMark</td>
+                            <td>@myMarks[i].MaxMark</td>
+                            <td>@Marks.GetEnumDescription(myMarks[i].TypeMark)</td>
+                        </tr>
+                    }
+                }
+            </table>
+        }
+
+        if (user.Type == Users.UserType.Lecturer)
+        {
+            <table border="1" cellspacing="0">
+                <tr>
+                    <th>Subject</th>
+                    <th>Student</th>
+                    <th>Date</th>
+                    <th>Marks</th>
+                    <th>Bonus mark</th>
+                    <th>Max mark</th>
+                    <th>Type mark</th>
+                </tr>
+                @{
+                    for (int i = 0, end = myMarks.Length; i < end; i++)
+                    {
+                        Student currentStudent = new Student(myMarks[i].StudentID);
+                        currentStudent.GetInformationAboutUserFromDB();
+                        Subject currentSubject = new Subject(myMarks[i].SubjectID);
+                        currentSubject.GetInformationAboutUserFromDB();
+                        <tr>
+                            <td>@currentSubject.Name</td>
+                            <td>@currentStudent.FullName</td>
+                            <td>@myMarks[i].Date.ToShortDateString()</td>
+                            <td>@myMarks[i].Mark</td>
+                            <td>@myMarks[i].BonusMark</td>
+                            <td>@myMarks[i].MaxMark</td>
+                            <td>@Marks.GetEnumDescription(myMarks[i].TypeMark)</td>
+                        </tr>
+                    }
+                }
+            </table>
+        }
     }
-    
+    else
+    {
+        <h3>У вас пока нету оценнок</h3>
+    }
+
     if (user.Type == Users.UserType.Lecturer)
     {
-        <table border="1" cellspacing="0">
-            <tr>
-                <th>Subject</th>
-                <th>Student</th>
-                <th>Date</th>
-                <th>Marks</th>
-                <th>Bonus mark</th>
-                <th>Max mark</th>
-                <th>Type mark</th>
-            </tr>
-            @{
-                for (int i = 0, end = myMarks.Length; i < end; i++)
-                {
-                    Student currentStudent = new Student(myMarks[i].StudentID);
-                    currentStudent.GetInformationAboutUserFromDB();
-                    Subject currentSubject = new Subject(myMarks[0].SubjectID);
-                    currentSubject.GetInformationAboutUserFromDB();
-                    <tr>
-                        <td>@currentSubject.Name</td>
-                        <td>@currentStudent.FullName</td>
-                        <td>@myMarks[0].Date.ToShortDateString()</td>
-                        <td>@myMarks[0].Mark</td>
-                        <td>@myMarks[0].BonusMark</td>
-                        <td>@myMarks[0].MaxMark</td>
-                        <td>@Marks.GetEnumDescription(myMarks[0].TypeMark)</td>
-                    </tr>
-                }   
-            }
-        </table>
         <a href="/AddMark">Add mark</a>
     }
 }
