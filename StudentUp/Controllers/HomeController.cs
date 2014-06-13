@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Web.Mvc;
 using MySql.Data.MySqlClient;
 using StudentUp.Models;
@@ -103,6 +104,35 @@ namespace StudentUp.Controllers
 				return View();
 			}
 			return Redirect("/");
+		}
+
+		public ActionResult PersonalData()
+		{
+			Users user = Login();
+			if (user != null)
+			{
+				ViewData["user"] = user;
+				return View();
+			}
+			return Redirect("/");
+		}
+
+		[HttpPost]
+		public ActionResult EditLecturer(string name, string surname, string secondName, string telephone)
+		{
+			int userID = Convert.ToInt32(Request.Cookies["userID"].Value);
+			DB db = new DB();
+			db.QueryToRespontTable(string.Format("update lecturer set Name = '{0}', Surname = '{1}', Second_name = '{2}', Telephone = '{3}'", name, surname, secondName, telephone));
+			return Redirect("/PersonalData");
+		}
+
+		[HttpPost]
+		public ActionResult EditStudent(string name, string surname, string secondName, string telephone, string address, string contactsParents)
+		{
+			int userID = Convert.ToInt32(Request.Cookies["userID"].Value);
+			DB db = new DB();
+			db.QueryToRespontTable(string.Format("update student set Name = '{0}', Surname = '{1}', Second_name = '{2}', Telephone = '{3}', Address = '{4}', Сontacts_parents = {5};", name, surname, secondName, telephone, address, contactsParents));
+			return Redirect("/PersonalData");
 		}
 
 		/// <summary>

@@ -1,0 +1,55 @@
+﻿@using StudentUp.Models
+
+@{
+    ViewBag.Title = "PersonalData";
+    Layout = "~/Views/MasterPages/HomeMasterPage.cshtml";
+}
+
+@section Title
+{
+    StudentUp - Presonal data
+}
+
+@section Style
+{}
+
+<h2>PersonalData</h2>
+
+@{
+    Users user = ViewData["user"] as Users;
+}
+<form action="@(user.Type==Users.UserType.Student?"/EditStudent":"/EditLecturer")" method="POST" accept-charset="utf-8">
+    @if (user.AccessLevel == 2)
+    {
+        <p>Вы являетесь администратором системы. Мы надеемся на вашу помощь)</p>   
+    }
+    <input type="text" name="surname" value="@(user as Student != null ? ((Student)user).Surname : ((Lecturer)user).Surname)" placeholder="Surname"/>
+    <input type="text" name="name" value="@(user as Student != null ? ((Student)user).Name : ((Lecturer)user).Name)" placeholder="Name"/>
+    <input type="text" name="secondName" value="@(user as Student != null ? ((Student)user).SecondName : ((Lecturer)user).SecondName)" placeholder="Second name"/>
+    <br/>
+    <input type="text" name="telephone" value="@(user as Student != null ? ((Student)user).Telephone : ((Lecturer)user).Telephone)" placeholder="Telephone"/>
+    <p>Email: @user.Email <a href="">Chenge email</a></p>
+    <p><a>Chenge password</a></p>
+    @if (user.Type == Users.UserType.Lecturer)
+    {
+        <p>Ваша должность: @(((Lecturer)user).Position)</p>
+    }
+    else
+    {
+        Student student = (Student)user;
+        <p>Вы учитесь на @(student.CurrentSemester/2) курсе (@student.CurrentSemester семестр)</p>
+        <p>Ваша зачетная книга: @student.RecordBook</p>
+        <p>Тип обучения: @student.TypeEducetion</p>
+        <input type="text" name="address" value="@student.Address" placeholder="Address"/>
+        <br/>
+        <input type="text" name="contactsParents" value="@student.ContactsParents" placeholder="Contacts parents"/>
+        if (student.EmploymentInTheDepartment != "")
+        {
+            <p>Вы учавствует в жизни кафедры: @student.EmploymentInTheDepartment</p>
+        }
+    }
+    <input type="submit" name="CHENGE" value="CHENGE"/>
+</form>
+
+@section Script
+{}

@@ -204,6 +204,9 @@
   <ItemGroup>
     <Content Include="Views\Home\AddMark.cshtml" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\PersonalData.cshtml" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
