@@ -106,6 +106,10 @@ namespace StudentUp.Controllers
 			return Redirect("/");
 		}
 
+		/// <summary>
+		/// Возвращает страницу с персональными данными
+		/// </summary>
+		/// <returns>Страница</returns>
 		public ActionResult PersonalData()
 		{
 			Users user = Login();
@@ -117,6 +121,14 @@ namespace StudentUp.Controllers
 			return Redirect("/");
 		}
 
+		/// <summary>
+		/// Изменяет персональные данные преподователя
+		/// </summary>
+		/// <param name="name">Новое имя преподователя</param>
+		/// <param name="surname">Нова фамилия преподователя</param>
+		/// <param name="secondName">Новое отчество преподователя</param>
+		/// <param name="telephone">Новый телефон преподователя</param>
+		/// <returns>Возвращает страницу с персональными данными</returns>
 		[HttpPost]
 		public ActionResult EditLecturer(string name, string surname, string secondName, string telephone)
 		{
@@ -126,6 +138,16 @@ namespace StudentUp.Controllers
 			return Redirect("/PersonalData");
 		}
 
+		/// <summary>
+		/// Изменяет персональные данные студента
+		/// </summary>
+		/// <param name="name">Новое имя студента</param>
+		/// <param name="surname">Нова фамилия студента</param>
+		/// <param name="secondName">Новое отчество студента</param>
+		/// <param name="telephone">Новый телефон студента</param>
+		/// <param name="address">Новый адрес студента</param>
+		/// <param name="contactsParents">Новые контарты родителей студента</param>
+		/// <returns>Возвращает страницу с персональными данными</returns>
 		[HttpPost]
 		public ActionResult EditStudent(string name, string surname, string secondName, string telephone, string address, string contactsParents)
 		{
