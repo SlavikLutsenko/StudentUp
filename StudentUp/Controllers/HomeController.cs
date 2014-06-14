@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net;
 using System.Runtime.Remoting.Metadata.W3cXsd2001;
+using System.Web;
 using System.Web.Mvc;
 using MySql.Data.MySqlClient;
 using StudentUp.Models;
@@ -334,6 +338,61 @@ namespace StudentUp.Controllers
 		{
 			Group.AddGroup(name, department);
 			Messages messages = new Messages { { Messages.Message.TypeMessage.good, string.Format("Группа {0} добавленна", name) } };
+			TempData["messages"] = messages;
+			return Redirect("/Admin");
+		}
+
+		/// <summary>
+		/// Добавляет всю группу студентов в систему
+		/// </summary>
+		/// <param name="name">Имя группы</param>
+		/// <param name="department">Кафедра группы</param>
+		/// <param name="fileStudent">Файл со списком студентов</param>
+		/// <returns>Страница</returns>
+		public ActionResult AddGroupAndStudent(string name, int department, HttpPostedFileBase fileStudent)
+		{
+			Messages messages = new Messages();
+			if (fileStudent != null)
+			{
+				Group group = Group.AddGroup(name, department);
+				string fileName = Request.PhysicalApplicationPath + "\\Files\\" + fileStudent.FileName;
+				Microsoft.Office.Interop.Excel.Application excelApplication = null;
+				Microsoft.Office.Interop.Excel.Workbooks excelWorkbooks;
+				Microsoft.Office.Interop.Excel.Workbook excelFile = null;
+				Microsoft.Office.Interop.Excel.Worksheet excelWorksheet;
+				try
+				{
+					fileStudent.SaveAs(fileName);
+					excelApplication = new Microsoft.Office.Interop.Excel.Application();
+					excelWorkbooks = excelApplication.Workbooks;
+					excelFile = excelWorkbooks.Open(fileName);
+					excelWorksheet = (Microsoft.Office.Interop.Excel.Worksheet) excelFile.Worksheets.get_Item(1);
+					for (int i = 2;; i++)
+					{
+						Microsoft.Office.Interop.Excel.Range fioStudnt = excelWorksheet.get_Range("A" + i);
+						Microsoft.Office.Interop.Excel.Range emailStudnt = excelWorksheet.get_Range("B" + i);
+						Microsoft.Office.Interop.Excel.Range telephoneStudnt = excelWorksheet.get_Range("C" + i);
+						Microsoft.Office.Interop.Excel.Range addressStudnt = excelWorksheet.get_Range("D" + i);
+						Microsoft.Office.Interop.Excel.Range contactsParentsStudnt = excelWorksheet.get_Range("E" + i);
+						if (fioStudnt.Value2 != null && emailStudnt != null)
+						{
+							string[] fio = ((string) fioStudnt.Value2.ToString()).Split(' ');
+							Student.AddStudent(fio[1], fio[0], fio[2], emailStudnt.Value2.ToString(), telephoneStudnt.Value2 ?? "", group.ID, 1,
+								addressStudnt.Value2 ?? "", group.Name + (i - 1).ToString("D2"), "дена",
+								contactsParentsStudnt.Value2 ?? "", "", false);
+						}
+						else
+							break;
+					}
+				}
+				finally
+				{
+					excelFile.Close();
+					excelApplication.Quit();
+					System.IO.File.Delete(fileName);
+				}
+				messages.Add(Messages.Message.TypeMessage.good, string.Format("Группа {0} добавленна", name));
+			}
 			TempData["messages"] = messages;
 			return Redirect("/Admin");
 		}

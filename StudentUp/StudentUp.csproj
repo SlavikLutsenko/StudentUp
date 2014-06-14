@@ -41,6 +41,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="MySql.Data, Version=6.7.5.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -154,6 +157,7 @@
     <Content Include="Images\logo.mini.png" />
     <Content Include="Images\logo.png" />
     <Content Include="Images\message.png" />
+    <Content Include="Images\sample_file_with_students.PNG" />
     <Content Include="Images\subject.png" />
     <Content Include="JS\all.js" />
     <Content Include="JS\ScriptIndexMasterPage.js" />

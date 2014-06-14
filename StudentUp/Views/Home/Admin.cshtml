@@ -72,12 +72,23 @@ StudentUp - Add
                 }
             }
         </select>
-        <select name="numberStudent">
-            @for (int i = 1; i <= 50; i++)
-            {
-                <option value="@i">@i</option>
+        <input type="submit" value="ADD" name="ADD" />
+    </form>
+    <p>Или вы можете добавить сразу всех студентов загрузив файл с ними. Такое добовление возможно только для первокурсников!!!</p>
+    <p>Файл должен быть формата .xlsx (Excel) и иметь следующую структуру: (Столбци выделенные красным фоном должны быть обязательно заполнены. Очередность столбцов не изменна. Первый столбец овязательно в столбце А)</p>
+    <img src="~/Images/sample_file_with_students.PNG" />
+    <form action="/AddGroupAndStudent" method="POST" accept-charset="utf-8" enctype="multipart/form-data">
+        <input type="text" placeholder="Name" name="name" />
+        <select name="department">
+            @{
+                department.GoToStatrTable();
+                while (department.Read())
+                {
+                <option value="@department["Department_id"]">@department["Name"]</option>
+                }
             }
         </select>
+        <input type="file" name="fileStudent" />
         <input type="submit" value="ADD" name="ADD" />
     </form>
 </div>
@@ -123,7 +134,7 @@ StudentUp - Add
         <select name="group">
             @{
                 resultResponseTable = ViewData["groups"] as DB.ResponseTable;
-                while (resultResponseTable.Read())
+                while (resultResponseTable != null && resultResponseTable.Read())
                 {
                 <option value="@resultResponseTable["Group_id"]">@resultResponseTable["Name"]</option>
                 }
@@ -153,7 +164,7 @@ StudentUp - Add
         <select name="lecturer">
             @{
                 resultResponseTable = ViewData["lecturers"] as DB.ResponseTable;
-                while (resultResponseTable.Read())
+                while (resultResponseTable != null && resultResponseTable.Read())
                 {
                 <option value="@resultResponseTable["Lecturer_id"]">@resultResponseTable["Surname"] @resultResponseTable["Name"] @resultResponseTable["Second_name"]</option>
                 }
@@ -177,7 +188,7 @@ StudentUp - Add
         <select name="subjectID">
             @{
                 resultResponseTable = ViewData["subjects"] as DB.ResponseTable;
-                while (resultResponseTable.Read())
+                while (resultResponseTable != null && resultResponseTable.Read())
                 {
                 <option value="@resultResponseTable["Subject_id"]">@resultResponseTable["Name"]</option>
                 }
@@ -186,7 +197,7 @@ StudentUp - Add
         <select name="students" multiple="multiple">
             @{
                 resultResponseTable = ViewData["students"] as DB.ResponseTable;
-                while (resultResponseTable.Read())
+                while (resultResponseTable != null && resultResponseTable.Read())
                 {
                 <option value="@resultResponseTable["Student_id"]">@resultResponseTable["Surname"] @resultResponseTable["Name"] @resultResponseTable["Second_name"]</option>
                 }
