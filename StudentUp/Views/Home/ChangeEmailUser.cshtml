@@ -1,0 +1,26 @@
+﻿@using StudentUp.Models
+@{
+    ViewBag.Title = "ChangeEmailUser";
+    Layout = "~/Views/MasterPages/HomeMasterPage.cshtml";
+}
+
+@section Title
+{
+    StudentUp - Edit email
+}
+
+@section Style
+{}
+
+<h2>ChangeEmailUser</h2>
+
+@{
+    Messages messages = ViewData["message"] as Messages;
+    if (messages != null)
+    {
+        <p>@messages[0].Value</p>
+    }
+}
+
+@section Script
+{}

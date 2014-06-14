@@ -158,6 +158,101 @@ namespace StudentUp.Controllers
 		}
 
 		/// <summary>
+		/// Возвращает страницу для изменения email
+		/// </summary>
+		/// <returns>Страница</returns>
+		public ActionResult ChangeEmail()
+		{
+			Users user = Login();
+			if (user != null)
+			{
+				ViewData["user"] = user;
+				return View();
+			}
+			return Redirect("/");
+		}
+
+		/// <summary>
+		/// Отправляет подтверждение на изменение email пользователю на текущий email
+		/// </summary>
+		/// <param name="newEmail">Новый email</param>
+		/// <returns>Страница</returns>
+		[HttpPost]
+		public ActionResult ChangeEmail(string newEmail)
+		{
+			Users user = Login();
+			if (user != null)
+			{
+				string idChangeEmail = Validation.StringToMd5Hash(user.Email + user.Password);
+				ViewData["user"] = user;
+				DB db = new DB();
+				db.QueryToRespontTable(string.Format("insert into ChangeEmail (ChangeEmail_id, New_email, User_id) value ('{0}', '{1}', '{2}')", idChangeEmail, newEmail, user.ID));
+				Mail.SendMail("smtp.gmail.com",
+								ConfigurationManager.AppSettings.Get("AIDemail"),
+								ConfigurationManager.AppSettings.Get("AIDpassword"),
+								user.Email,
+								"Изменение email",
+								"Здравствуйте, " + user.Email +
+								"\n\nВы попросили измениеть свой email на сайте studentUp.com. Если вы этого не делали игнорируйте это сообщений.\n\n" +
+								"Для подтверждения изменения своего email перейдите по ниже указзанной ссылке:\n\n" +
+								"http://" + Request.Url.Authority + "/ChangeEmailUser?idChangeEmail=" + idChangeEmail + "\n\n" +
+								"Затем вам на новую почту также придет подтверждение об изменении");
+				ViewData["message"] = new Messages
+				{
+					{
+					Messages.Message.TypeMessage.good,
+					"Вам на почту было отправленно подтверждение об изменении"
+					}
+				};
+				return View();
+			}
+			return Redirect("/");
+		}
+
+		/// <summary>
+		/// Отправляет подтверждение на изменение email пользователю на новую почту email или производит изменение email если такое уже было отправленно
+		/// </summary>
+		/// <param name="idChangeEmail">Идентификатор сессии изменения</param>
+		/// <returns>Страница</returns>
+		public ActionResult ChangeEmailUser(string idChangeEmail)
+		{
+			Users user = Login();
+			if (user != null)
+			{
+				DB db = new DB();
+				DB.ResponseTable changeEmail = db.QueryToRespontTable(string.Format("select * from ChangeEmail where ChangeEmail_id = '{0}'", idChangeEmail));
+				if (changeEmail == null || changeEmail.CountRow != 1) return Redirect("/ChangeEmail");
+				Messages message = new Messages();
+				ViewData["user"] = user;
+				changeEmail.Read();
+				if (Validation.VerifyMd5Hash(user.Email + user.Password + changeEmail["New_email"].ToString(), idChangeEmail))
+				{
+					db.QueryToRespontTable(string.Format("update users set Email = '{0}' where User_id = {1};delete from ChangeEmail where ChangeEmail_id = '{2}';", changeEmail["New_email"].ToString(), user.ID, idChangeEmail));
+					message.Add(Messages.Message.TypeMessage.good, "Ваш email был успешно изменен");
+				}
+				else
+				{
+					idChangeEmail = Validation.StringToMd5Hash(user.Email + user.Password + changeEmail["New_email"].ToString());
+					db.QueryToRespontTable(string.Format("update ChangeEmail set ChangeEmail_id = '{0}' where ChangeEmail_id = '{1}'", idChangeEmail, changeEmail["ChangeEmail_id"].ToString()));
+					ViewData["user"] = user;
+					Mail.SendMail("smtp.gmail.com",
+						ConfigurationManager.AppSettings.Get("AIDemail"),
+						ConfigurationManager.AppSettings.Get("AIDpassword"),
+						changeEmail["New_email"].ToString(),
+						"Изменение email",
+						"Здравствуйте, " + user.Email +
+						"\n\nВы попросили измениеть свой email на сайте studentUp.com. Если вы этого не делали игнорируйте это сообщений.\n\n" +
+						"Для подтверждения изменения своего email перейдите по ниже указзанной ссылке:\n\n" +
+						"http://" + Request.Url.Authority + "/ChangeEmailUser?idChangeEmail=" + idChangeEmail);
+					message.Add(Messages.Message.TypeMessage.good, "Вам на новую почту было высланно подтверждение об изменении email");
+				}
+				ViewData["message"] = message;
+				return View();
+			}
+			return Redirect("/");
+		}
+
+		/// <summary>
 		/// Твраница администрирования сайта
 		/// </summary>
 		/// <returns>Возвращает страницу администрирования если пользователь зарегистрирован иначе перенаправляет на главную страницу</returns>
@@ -438,7 +533,7 @@ namespace StudentUp.Controllers
 				if (!user.IsExistsInDB()) throw new ValidationDataException("no user");
 				user.GetInformationAboutUserFromDB();
 				idRestorePassword = Validation.StringToMd5Hash(user.Email + user.Password);
-				(new DB()).QueryToRespontTable(string.Format("insert into RestorePassword(Id, User_id) value ('{0}', {1});",
+				(new DB()).QueryToRespontTable(string.Format("insert into RestorePassword(RestorePassword_id, User_id) value ('{0}', {1});",
 					idRestorePassword, user.ID));
 				Mail.SendMail("smtp.gmail.com",
 								ConfigurationManager.AppSettings.Get("AIDemail"),
@@ -484,7 +579,7 @@ namespace StudentUp.Controllers
 		/// <returns>Странница</returns>
 		public ActionResult RestorePasswordUser(string idRestorePassword)
 		{
-			if ((new DB()).QueryToRespontTable(string.Format("select User_id from RestorePassword where Id = \"{0}\";", idRestorePassword)) == null)
+			if ((new DB()).QueryToRespontTable(string.Format("select User_id from RestorePassword where RestorePassword_id = \"{0}\";", idRestorePassword)) == null)
 				return Redirect("/restorepassword");
 			ViewData["id"] = idRestorePassword;
 			return View();
@@ -501,7 +596,7 @@ namespace StudentUp.Controllers
 		public ActionResult RestorePasswordUser(string idRestorePassword, string password, string replacePassword)
 		{
 			DB db = new DB();
-			DB.ResponseTable user = db.QueryToRespontTable(string.Format("select User_id from RestorePassword where Id = '{0}';", idRestorePassword));
+			DB.ResponseTable user = db.QueryToRespontTable(string.Format("select User_id from RestorePassword where RestorePassword_id = '{0}';", idRestorePassword));
 			if (user == null) return Redirect("/restorepassword");
 			Messages messages = new Messages();
 			if (password == "") messages.Add(Messages.Message.TypeMessage.error, "Вы не ввели новый пароль");
@@ -511,7 +606,7 @@ namespace StudentUp.Controllers
 				{
 					user.Read();
 					db.QueryToRespontTable(string.Format("update users set Password = '{0}' where User_id = {1};" +
-														 "delete from RestorePassword where Id = '{2}';", password, user["User_id"], idRestorePassword));
+														 "delete from RestorePassword where RestorePassword_id = '{2}';", password, user["User_id"], idRestorePassword));
 					messages.Add(Messages.Message.TypeMessage.good, string.Format("Пароль был востановлен. Авторизируйтесь в системе используя толькочто созданный пароль.<br /> <a href='http://{0}/'>Вход</a>", Request.Url.Authority));
 				}
 			ViewData["messages"] = messages;
@@ -525,8 +620,8 @@ namespace StudentUp.Controllers
 		/// <returns>Сообщение об отправке письма</returns>
 		public ActionResult ResendEmailRestorePassword(string idRestorePassword)
 		{
-			DB.ResponseTable restoreSession = (new DB()).QueryToRespontTable(string.Format("select User_id from RestorePassword where Id = \"{0}\";", idRestorePassword));
-			if ((new DB()).QueryToRespontTable(string.Format("select User_id from RestorePassword where Id = \"{0}\";", idRestorePassword)) == null)
+			DB.ResponseTable restoreSession = (new DB()).QueryToRespontTable(string.Format("select User_id from RestorePassword where RestorePassword_id = \"{0}\";", idRestorePassword));
+			if ((new DB()).QueryToRespontTable(string.Format("select User_id from RestorePassword where RestorePassword_id = \"{0}\";", idRestorePassword)) == null)
 				return Redirect("/restorepassword");
 			restoreSession.Read();
 			Users user = new Users((int)restoreSession["User_id"]);

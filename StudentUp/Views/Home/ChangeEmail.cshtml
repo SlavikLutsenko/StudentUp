@@ -1,0 +1,33 @@
+﻿@using StudentUp.Models
+@{
+    ViewBag.Title = "ChangeEmail";
+    Layout = "~/Views/MasterPages/HomeMasterPage.cshtml";
+}
+
+@section Title
+{
+    StudentUp - Edit email
+}
+
+@section Style
+{}
+
+<h2>EditEmail</h2>
+
+<p>Здесь вы можете поменять свой емайл. Сначало вам на вашу текущую почту прийдет запрос на подтверждение, а за тем на новую прийдет также запрос на подтверждение</p>
+
+<form action="" method="POST" accept-charset="utf-8">
+    <input type="text" name="newEmail" placeholder="New email"/>
+    <input type="submit" name="changeEmail" value="Change email"/>
+</form>
+
+@{
+    Messages messages = ViewData["message"] as Messages;
+    if (messages != null)
+    {
+        <p>@messages[0].Value</p>
+    }
+}
+
+@section Script
+{}
