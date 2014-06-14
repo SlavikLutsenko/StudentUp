@@ -1,11 +1,15 @@
-﻿form {
+﻿div#addGroup, 
+div#addStudent,
+div#addLecturer,
+div#addSubject,
+div#setSubjectForStudent {
     display: none;
 }
 
-input#group[name="typeAdd"]:checked ~ form#addGroup, 
-input#student[name="typeAdd"]:checked ~ form#addStudent,
-input#lecturer[name="typeAdd"]:checked ~ form#addLecturer,
-input#subject[name="typeAdd"]:checked ~ form#addSubject,
-input#studentSubject[name="typeAdd"]:checked ~ form#setSubjectForStudent {
+input#group[name="typeAdd"]:checked ~ div#addGroup, 
+input#student[name="typeAdd"]:checked ~ div#addStudent,
+input#lecturer[name="typeAdd"]:checked ~ div#addLecturer,
+input#subject[name="typeAdd"]:checked ~ div#addSubject,
+input#studentSubject[name="typeAdd"]:checked ~ div#setSubjectForStudent {
     display: block;
 }

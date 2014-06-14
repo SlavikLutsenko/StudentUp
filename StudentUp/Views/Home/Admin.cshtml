@@ -10,7 +10,7 @@
 }
 
 @section Title{
-    StudentUp - Add
+StudentUp - Add
 }
 
 @section Style{
@@ -24,7 +24,7 @@
         {
             foreach (Messages.Message item in messages)
             {
-                <h3 style="color: @(item.Type == Messages.Message.TypeMessage.error ? "red" : "black");">@item.Value</h3>
+        <h3 style="color: @(item.Type == Messages.Message.TypeMessage.error ? "red" : "black");">@item.Value</h3>
             }
         }
     }
@@ -33,158 +33,168 @@
 <label for="group">
     Group
 </label>
-<input id="group" type="radio" name="typeAdd" value="group" checked="checked"/>
-<br/>
+<input id="group" type="radio" name="typeAdd" value="group" checked="checked" />
+<br />
 
 <label for="student">
     Student
 </label>
-<input id="student" type="radio" name="typeAdd" value="student"/>
-<br/>
+<input id="student" type="radio" name="typeAdd" value="student" />
+<br />
 
 <label for="lecturer">
     Lecturer
 </label>
-<input id="lecturer" type="radio" name="typeAdd" value="lecturer"/>
-<br/>
+<input id="lecturer" type="radio" name="typeAdd" value="lecturer" />
+<br />
 
 <label for="subject">
     Subject
 </label>
-<input id="subject" type="radio" name="typeAdd" value="subject"/>
-<br/>
+<input id="subject" type="radio" name="typeAdd" value="subject" />
+<br />
 
 <label for="studentSubject">
     Set subject for student
 </label>
-<input id="studentSubject" type="radio" name="typeAdd" value="subject"/>
-<br/>
+<input id="studentSubject" type="radio" name="typeAdd" value="subject" />
+<br />
 
-<form id="addGroup" action="/AddGroup" method="POST" accept-charset="utf-8">
-    <input type="text" placeholder="Name" name="name"/>
-    <select name="department">
-        @{
-            department.GoToStatrTable();
-            while (department.Read())
-            {
+<div id="addGroup">
+    <form action="/AddGroup" method="POST" accept-charset="utf-8">
+        <input type="text" placeholder="Name" name="name" />
+        <select name="department">
+            @{
+                department.GoToStatrTable();
+                while (department.Read())
+                {
                 <option value="@department["Department_id"]">@department["Name"]</option>
+                }
             }
-        }
-    </select>
-    <select name="numberStudent">
-        @for (int i = 1; i <= 50; i++)
-        {
-            <option value="@i">@i</option>
-        }
-    </select>
-    <input type="submit" value="ADD" name="ADD"/>
-</form>
-
-<form id="addLecturer" action="/AddLecturer" method="POST" accept-charset="utf-8">
-    <input type="text" name="surname" placeholder="Surname"/>
-    <input type="text" name="name" placeholder="Name"/>
-    <input type="text" name="secondName" placeholder="Secon name"/>
-    <input type="text" name="email" placeholder="Email" />
-    <label>
-        Admin
-        <input type="checkbox" name="admin"/>
-    </label>
-    <br/>
-    <input type="text" name="position" placeholder="Position"/>
-    <input type="text" name="telephone" placeholder="Telephone"/>
-    <select name="department">
-        @{
-            department.GoToStatrTable();
-            while (department.Read())
+        </select>
+        <select name="numberStudent">
+            @for (int i = 1; i <= 50; i++)
             {
+                <option value="@i">@i</option>
+            }
+        </select>
+        <input type="submit" value="ADD" name="ADD" />
+    </form>
+</div>
+
+<div id="addLecturer">
+    <form action="/AddLecturer" method="POST" accept-charset="utf-8">
+        <input type="text" name="surname" placeholder="Surname" />
+        <input type="text" name="name" placeholder="Name" />
+        <input type="text" name="secondName" placeholder="Secon name" />
+        <input type="text" name="email" placeholder="Email" />
+        <label>
+            Admin
+        <input type="checkbox" name="admin" />
+        </label>
+        <br />
+        <input type="text" name="position" placeholder="Position" />
+        <input type="text" name="telephone" placeholder="Telephone" />
+        <select name="department">
+            @{
+                department.GoToStatrTable();
+                while (department.Read())
+                {
                 <option value="@department["Department_id"]">@department["Name"]</option>
+                }
             }
-        }
-    </select>
-    <input type="submit" value="ADD" name="ADD"/>
-</form>
+        </select>
+        <input type="submit" value="ADD" name="ADD" />
+    </form>
+</div>
 
-<form id="addStudent" action="/AddStudent" method="POST" accept-charset="utf-8">
-    <input type="text" name="surname" placeholder="Surname"/>
-    <input type="text" name="name" placeholder="Name"/>
-    <input type="text" name="secondName" placeholder="Secon name"/>
-    <input type="text" name="email" placeholder="Email" />
-    <label>
-        Admin
-        <input type="checkbox" name="admin"/>
-    </label>
-    <br/>
-    <input type="text" name="telephone" placeholder="Telephone"/>
-    <select name="group">
-        @{
-            resultResponseTable = ViewData["groups"] as DB.ResponseTable;
-            while (resultResponseTable.Read())
-            {
+<div id="addStudent">
+    <form action="/AddStudent" method="POST" accept-charset="utf-8">
+        <input type="text" name="surname" placeholder="Surname" />
+        <input type="text" name="name" placeholder="Name" />
+        <input type="text" name="secondName" placeholder="Secon name" />
+        <input type="text" name="email" placeholder="Email" />
+        <label>
+            Admin
+        <input type="checkbox" name="admin" />
+        </label>
+        <br />
+        <input type="text" name="telephone" placeholder="Telephone" />
+        <select name="group">
+            @{
+                resultResponseTable = ViewData["groups"] as DB.ResponseTable;
+                while (resultResponseTable.Read())
+                {
                 <option value="@resultResponseTable["Group_id"]">@resultResponseTable["Name"]</option>
+                }
             }
-        }
-    </select>
-    <input type="text" name="currentSemestr" placeholder="Current semestr"/>
-    <input type="text" name="address" placeholder="Address"/>
-    <input type="text" name="recordBook" placeholder="Record book"/>
-    <select name="typeOfEducation">
-        @{
-            typeEnum = ViewData["typeEducation"] as string[];
-            foreach (string item in typeEnum)
-            {
+        </select>
+        <input type="text" name="currentSemestr" placeholder="Current semestr" />
+        <input type="text" name="address" placeholder="Address" />
+        <input type="text" name="recordBook" placeholder="Record book" />
+        <select name="typeOfEducation">
+            @{
+                typeEnum = ViewData["typeEducation"] as string[];
+                foreach (string item in typeEnum)
+                {
                 <option value="@item">@item</option>
+                }
             }
-        }
-    </select>
-    <input type="text" name="contactsParents" placeholder="Сontacts parents"/>
-    <input type="text" name="employmentInTheDepartment" placeholder="Employment in the department"/>
-    <input type="submit" value="ADD" name="ADD"/>
-</form>
+        </select>
+        <input type="text" name="contactsParents" placeholder="Сontacts parents" />
+        <input type="text" name="employmentInTheDepartment" placeholder="Employment in the department" />
+        <input type="submit" value="ADD" name="ADD" />
+    </form>
+</div>
 
-<form id="addSubject" action="/AddSubject" method="POST" accept-charset="utf-8">
-    <input type="text" name="name" placeholder="Name subject"/>
-    <select name="lecturer">
-        @{
-            resultResponseTable = ViewData["lecturers"] as DB.ResponseTable;
-            while (resultResponseTable.Read())
-            {
+<div id="addSubject">
+    <form action="/AddSubject" method="POST" accept-charset="utf-8">
+        <input type="text" name="name" placeholder="Name subject" />
+        <select name="lecturer">
+            @{
+                resultResponseTable = ViewData["lecturers"] as DB.ResponseTable;
+                while (resultResponseTable.Read())
+                {
                 <option value="@resultResponseTable["Lecturer_id"]">@resultResponseTable["Surname"] @resultResponseTable["Name"] @resultResponseTable["Second_name"]</option>
+                }
             }
-        }
-    </select>
-    <select name="examType">
-        @{
-            typeEnum = ViewData["examType"] as string[];
-            foreach (string item in typeEnum)
-            {
+        </select>
+        <select name="examType">
+            @{
+                typeEnum = ViewData["examType"] as string[];
+                foreach (string item in typeEnum)
+                {
                 <option value="@item">@item</option>
+                }
             }
-        }
-    </select>
-    <input type="submit" value="ADD" name="ADD"/>
-</form>
+        </select>
+        <input type="submit" value="ADD" name="ADD" />
+    </form>
+</div>
 
-<form id="setSubjectForStudent" action="/SetSubjectForStudent" method="POST" accept-charset="utf-8">
-    <select name="subjectID">
-        @{
-            resultResponseTable = ViewData["subjects"] as DB.ResponseTable;
-            while (resultResponseTable.Read())
-            {
+<div id="setSubjectForStudent">
+    <form action="/SetSubjectForStudent" method="POST" accept-charset="utf-8">
+        <select name="subjectID">
+            @{
+                resultResponseTable = ViewData["subjects"] as DB.ResponseTable;
+                while (resultResponseTable.Read())
+                {
                 <option value="@resultResponseTable["Subject_id"]">@resultResponseTable["Name"]</option>
+                }
             }
-        }
-    </select>
-    <select name="students" multiple="multiple">
-        @{
-            resultResponseTable = ViewData["students"] as DB.ResponseTable;
-            while (resultResponseTable.Read())
-            {
+        </select>
+        <select name="students" multiple="multiple">
+            @{
+                resultResponseTable = ViewData["students"] as DB.ResponseTable;
+                while (resultResponseTable.Read())
+                {
                 <option value="@resultResponseTable["Student_id"]">@resultResponseTable["Surname"] @resultResponseTable["Name"] @resultResponseTable["Second_name"]</option>
+                }
             }
-        }
-    </select>
-    <input type="submit" value="SET" name="SET"/>
-</form>
+        </select>
+        <input type="submit" value="SET" name="SET" />
+    </form>
+</div>
 
 @section Script{
 }
