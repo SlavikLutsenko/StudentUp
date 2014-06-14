@@ -29,7 +29,7 @@
     <br/>
     <input type="text" name="telephone" value="@(user as Student != null ? ((Student)user).Telephone : ((Lecturer)user).Telephone)" placeholder="Telephone"/>
     <p>Email: @user.Email <a href="/ChangeEmail">Change email</a></p>
-    <p><a>Change password</a></p>
+    <p><a href="/ChangePassword">Change password</a></p>
     @if (user.Type == Users.UserType.Lecturer)
     {
         <p>Ваша должность: @(((Lecturer)user).Position)</p>

@@ -197,7 +197,7 @@ namespace StudentUp.Controllers
 								"Для подтверждения изменения своего email перейдите по ниже указзанной ссылке:\n\n" +
 								"http://" + Request.Url.Authority + "/ChangeEmailUser?idChangeEmail=" + idChangeEmail + "\n\n" +
 								"Затем вам на новую почту также придет подтверждение об изменении");
-				ViewData["message"] = new Messages
+				ViewData["messages"] = new Messages
 				{
 					{
 					Messages.Message.TypeMessage.good,
@@ -222,13 +222,13 @@ namespace StudentUp.Controllers
 				DB db = new DB();
 				DB.ResponseTable changeEmail = db.QueryToRespontTable(string.Format("select * from ChangeEmail where ChangeEmail_id = '{0}'", idChangeEmail));
 				if (changeEmail == null || changeEmail.CountRow != 1) return Redirect("/ChangeEmail");
-				Messages message = new Messages();
+				Messages messages = new Messages();
 				ViewData["user"] = user;
 				changeEmail.Read();
 				if (Validation.VerifyMd5Hash(user.Email + user.Password + changeEmail["New_email"].ToString(), idChangeEmail))
 				{
 					db.QueryToRespontTable(string.Format("update users set Email = '{0}' where User_id = {1};delete from ChangeEmail where ChangeEmail_id = '{2}';", changeEmail["New_email"].ToString(), user.ID, idChangeEmail));
-					message.Add(Messages.Message.TypeMessage.good, "Ваш email был успешно изменен");
+					messages.Add(Messages.Message.TypeMessage.good, "Ваш email был успешно изменен");
 				}
 				else
 				{
@@ -244,9 +244,52 @@ namespace StudentUp.Controllers
 						"\n\nВы попросили измениеть свой email на сайте studentUp.com. Если вы этого не делали игнорируйте это сообщений.\n\n" +
 						"Для подтверждения изменения своего email перейдите по ниже указзанной ссылке:\n\n" +
 						"http://" + Request.Url.Authority + "/ChangeEmailUser?idChangeEmail=" + idChangeEmail);
-					message.Add(Messages.Message.TypeMessage.good, "Вам на новую почту было высланно подтверждение об изменении email");
+					messages.Add(Messages.Message.TypeMessage.good, "Вам на новую почту было высланно подтверждение об изменении email");
 				}
-				ViewData["message"] = message;
+				ViewData["messages"] = messages;
+				return View();
+			}
+			return Redirect("/");
+		}
+
+		/// <summary>
+		/// Возвращает страницу для изменения пароля
+		/// </summary>
+		/// <returns>Страница</returns>
+		public ActionResult ChangePassword()
+		{
+			Users user = Login();
+			if (user != null)
+			{
+				ViewData["user"] = user;
+				return View();
+			}
+			return Redirect("/");
+		}
+
+		/// <summary>
+		/// Изменяет парольпользователя
+		/// </summary>
+		/// <param name="currentPassword">Текущий пароль</param>
+		/// <param name="newPassword">Новый пароль</param>
+		/// <param name="replaceNewPassword">Подтверждение пароля</param>
+		/// <returns>Страница</returns>
+		[HttpPost]
+		public ActionResult ChangePassword(string currentPassword, string newPassword, string replaceNewPassword)
+		{
+			Users user = Login();
+			if (user != null)
+			{
+				ViewData["user"] = user;
+				Messages messages = new Messages();
+				if (user.Password == currentPassword && newPassword == replaceNewPassword)
+				{
+					DB db = new DB();
+					db.QueryToRespontTable(string.Format("update users set Password = '{0}' where User_id = {1};", newPassword, user.ID));
+					messages.Add(Messages.Message.TypeMessage.good, "Пароль был успешно изменен");
+				}
+				else messages.Add(Messages.Message.TypeMessage.error, "Вы ввели не правильный текущий пароль");
+				ViewData["messages"] = messages;
 				return View();
 			}
 			return Redirect("/");

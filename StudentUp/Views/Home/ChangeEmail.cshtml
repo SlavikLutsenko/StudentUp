@@ -22,7 +22,7 @@
 </form>
 
 @{
-    Messages messages = ViewData["message"] as Messages;
+    Messages messages = ViewData["messages"] as Messages;
     if (messages != null)
     {
         <p>@messages[0].Value</p>
