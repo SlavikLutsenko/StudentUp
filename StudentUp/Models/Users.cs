@@ -238,7 +238,7 @@ namespace StudentUp.Models
 		/// <returns>Масив предметов</returns>
 		public Subject[] GetMySubjects()
 		{
-			Subject[] result;
+			Subject[] result = null;
 			DB db = new DB();
 			string query;
 			if (this.userType == UserType.Student)
@@ -246,11 +246,14 @@ namespace StudentUp.Models
 			else
 				query = string.Format("select subject.Subject_id from subject inner join lecturer inner join users on subject.Lecturer_id = lecturer.Lecturer_id and lecturer.Lecturer_id = users.Lecturer_id and users.User_id = {0};", this.userID);
 			DB.ResponseTable subjectsID = db.QueryToRespontTable(query);
-			result = new Subject[subjectsID.CountRow];
-			for (int i = 0, end = result.Length; i < end && subjectsID.Read(); i++)
+			if (subjectsID != null)
 			{
-				result[i] = new Subject(Convert.ToInt32(subjectsID["Subject_id"]));
-				result[i].GetInformationAboutUserFromDB();
+				result = new Subject[subjectsID.CountRow];
+				for (int i = 0, end = result.Length; i < end && subjectsID.Read(); i++)
+				{
+					result[i] = new Subject(Convert.ToInt32(subjectsID["Subject_id"]));
+					result[i].GetInformationAboutUserFromDB();
+				}
 			}
 			return result;
 		}

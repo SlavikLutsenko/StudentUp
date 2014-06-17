@@ -16,17 +16,24 @@
 @{
     Users user = ViewData["user"] as Users;
     Subject[] mySubjects = ViewData["mySubjects"] as Subject[];
-    for (int i = 0, end = mySubjects.Length; i < end; i++)
+    if (mySubjects != null)
     {
-        <p>
-            @mySubjects[i].Name 
-            @if (user.Type == Users.UserType.Student)
-            {
-                Lecturer lecturer = new Lecturer(mySubjects[i].LecturerID);
-                lecturer.GetInformationAboutUserFromDB();
-                @lecturer.FullName
-            }
-        </p>
+        for (int i = 0, end = mySubjects.Length; i < end; i++)
+        {
+            <p>
+                @mySubjects[i].Name 
+                @if (user.Type == Users.UserType.Student)
+                {
+                    Lecturer lecturer = new Lecturer(mySubjects[i].LecturerID);
+                    lecturer.GetInformationAboutUserFromDB();
+                    @lecturer.FullName
+                }
+            </p>
+        }
+    }
+    else
+    {
+        <h3>У вас покищо немає предметів</h3>
     }
 }
 
