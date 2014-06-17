@@ -375,7 +375,7 @@ namespace StudentUp.Controllers
 						string telephoneStudnt = excelWorksheet.Range["C" + i].Value2 ?? "";
 						int currentSemestrStudnt = Convert.ToInt32(excelWorksheet.Range["D" + i].Value2 ?? "1");
 						string addressStudnt = excelWorksheet.Range["E" + i].Value2;
-						string recordBookStudnt = group.Name + excelWorksheet.Range["F" + i].Value2 == null ? Convert.ToInt32(excelWorksheet.Range["F" + i].Value2).ToString("D2") : i.ToString("D2");
+						string recordBookStudnt = group.Name + (excelWorksheet.Range["F" + i].Value2 != null ? Convert.ToInt32(excelWorksheet.Range["F" + i].Value2).ToString("D2") : i.ToString("D2"));
 						Student.TypeOfEducation typeOfEducetionStudnt = Student.ConverStringToEnum(excelWorksheet.Range["G" + i].Value2 ?? "");
 						string contactsParentsStudnt = excelWorksheet.Range["H" + i].Value2 ?? "";
 						string employmentInTheDepartmentStudnt = excelWorksheet.Range["I" + i].Value2 ?? "";
