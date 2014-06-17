@@ -1,0 +1,12 @@
+﻿@using StudentUp.Models
+
+@{
+    Subject[] subjects = ViewData["subjectsLecturer"] as Subject[];
+    if (subjects != null)
+    {
+        for (int i = 0, end = subjects.Length; i < end; i++)
+        {
+            <option value="@subjects[i].ID">@subjects[i].Name</option>
+        }
+    }
+}

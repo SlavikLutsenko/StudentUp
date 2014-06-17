@@ -1,4 +1,5 @@
 ﻿@using StudentUp.Models;
+@using StudentUp.Controllers;
 
 @{
     ViewBag.Title = "Admin";
@@ -135,6 +136,7 @@ StudentUp - Add
         <select name="group">
             @{
                 resultResponseTable = ViewData["groups"] as DB.ResponseTable;
+                resultResponseTable.GoToStatrTable();
                 while (resultResponseTable != null && resultResponseTable.Read())
                 {
                 <option value="@resultResponseTable["Group_id"]">@resultResponseTable["Name"]</option>
@@ -165,6 +167,7 @@ StudentUp - Add
         <select name="lecturer">
             @{
                 resultResponseTable = ViewData["lecturers"] as DB.ResponseTable;
+                resultResponseTable.GoToStatrTable();
                 while (resultResponseTable != null && resultResponseTable.Read())
                 {
                 <option value="@resultResponseTable["Lecturer_id"]">@resultResponseTable["Surname"] @resultResponseTable["Name"] @resultResponseTable["Second_name"]</option>
@@ -186,27 +189,43 @@ StudentUp - Add
 
 <div id="setSubjectForStudent">
     <form action="/SetSubjectForStudent" method="POST" accept-charset="utf-8">
+        <select name="lecturer">
+            @{
+                resultResponseTable = ViewData["lecturers"] as DB.ResponseTable;
+                resultResponseTable.GoToStatrTable();
+                while (resultResponseTable != null && resultResponseTable.Read())
+                {
+                <option value="@resultResponseTable["Lecturer_id"]">@resultResponseTable["Surname"] @resultResponseTable["Name"] @resultResponseTable["Second_name"]</option>
+                }
+            }
+        </select>
         <select name="subjectID">
             @{
                 resultResponseTable = ViewData["subjects"] as DB.ResponseTable;
                 while (resultResponseTable != null && resultResponseTable.Read())
                 {
-                <option value="@resultResponseTable["Subject_id"]">@resultResponseTable["Name"]</option>
+                    <option value="@resultResponseTable["Subject_id"]">@resultResponseTable["Name"]</option>
+                }
+            }
+        </select>
+        <select name="group">
+            @{
+                resultResponseTable = ViewData["groups"] as DB.ResponseTable;
+                resultResponseTable.GoToStatrTable();
+                while (resultResponseTable != null && resultResponseTable.Read())
+                {
+                    <option value="@resultResponseTable["Group_id"]">@resultResponseTable["Name"]</option>
                 }
             }
         </select>
         <select name="students" multiple="multiple">
-            @{
-                resultResponseTable = ViewData["students"] as DB.ResponseTable;
-                while (resultResponseTable != null && resultResponseTable.Read())
-                {
-                <option value="@resultResponseTable["Student_id"]">@resultResponseTable["Surname"] @resultResponseTable["Name"] @resultResponseTable["Second_name"]</option>
-                }
-            }
         </select>
         <input type="submit" value="Втановити предмет студентам" name="SET" />
     </form>
 </div>
 
-@section Script{
+@section Script
+{
+    <script src="~/JS/jquery-2.1.1.min.js"></script>
+    <script src="~/JS/Admin.js"></script>
 }

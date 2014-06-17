@@ -313,7 +313,7 @@ namespace StudentUp.Controllers
 				DB.ResponseTable responseTable;
 				ViewData["user"] = user;
 				ViewData["departments"] = db.QueryToRespontTable("select * from Department;");
-				ViewData["groups"] = db.QueryToRespontTable("select * from Groups;");
+				ViewData["groups"] = db.QueryToRespontTable("select * from Groups order by Name;");
 				responseTable = db.QueryToRespontTable("show columns from Student like 'Type_of_education';");
 				responseTable.Read();
 				ViewData["typeEducation"] = ((string)responseTable["Type"]).Replace("enum('", "").Replace("')", "").Replace("'", "").Split(',');

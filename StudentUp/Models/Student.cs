@@ -94,6 +94,7 @@ namespace StudentUp.Models
 		public Student(int newStudentID)
 		{
 			this.studentID = newStudentID;
+			this.userType = UserType.Student;
 		}
 
 		/// <summary>

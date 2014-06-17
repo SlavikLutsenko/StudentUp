@@ -100,6 +100,27 @@ namespace StudentUp.Models
 		}
 
 		/// <summary>
+		/// Возвращает список студентов которые находятся в этой группе
+		/// </summary>
+		/// <returns>Масиив студентов</returns>
+		public Student[] GetStudent()
+		{
+			Student[] result = null;
+			DB db = new DB();
+			DB.ResponseTable studentID = db.QueryToRespontTable(string.Format("select Student_id from student where Group_id = {0};", groupID));
+			if (studentID != null)
+			{
+				result = new Student[studentID.CountRow];
+				for (int i = 0, end = result.Length; i < end && studentID.Read(); i++)
+				{
+					result[i] = new Student(Convert.ToInt32(studentID["Student_id"]));
+					result[i].GetInformationAboutUserFromDB();
+				}
+			}
+			return result;
+		}
+
+		/// <summary>
 		/// Добавляет группу
 		/// </summary>
 		/// <param name="nameGroup">Код группы</param>

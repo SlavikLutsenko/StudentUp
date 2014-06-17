@@ -1,0 +1,12 @@
+﻿@using StudentUp.Models
+
+@{
+    Student[] students = ViewData["groupOfStudents"] as Student[];
+    if (students != null)
+    {
+        for (int i = 0, end = students.Length; i < end; i++)
+        {
+            <option value="@students[i].ID">@students[i].FullName</option>
+        }
+    }
+}

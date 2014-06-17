@@ -118,6 +118,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -159,7 +160,9 @@
     <Content Include="Images\message.png" />
     <Content Include="Images\sample_file_with_students.PNG" />
     <Content Include="Images\subject.png" />
+    <Content Include="JS\Admin.js" />
     <Content Include="JS\all.js" />
+    <Content Include="JS\jquery-2.1.1.min.js" />
     <Content Include="JS\ScriptIndexMasterPage.js" />
     <Content Include="JS\Validation.js" />
     <Content Include="Web.config" />
@@ -218,6 +221,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Home\ChangePassword.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Search\GetGroupOfStudents.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Search\GetSubjectsLecturer.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

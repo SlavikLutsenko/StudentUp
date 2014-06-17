@@ -49,6 +49,7 @@ namespace StudentUp.Models
 		public Lecturer(int newLecturerID)
 		{
 			this.lecturerID = newLecturerID;
+			this.userType = UserType.Lecturer;
 		}
 
 		/// <summary>
