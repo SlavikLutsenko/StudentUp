@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Net;
-using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Web;
 using System.Web.Mvc;
 using MySql.Data.MySqlClient;
@@ -516,6 +511,14 @@ namespace StudentUp.Controllers
 			return Redirect("/Admin");
 		}
 
+		public ActionResult SelectElder(int group, int elder)
+		{
+			(new Group(group)).SetElder(elder);
+			Messages messages = new Messages { { Messages.Message.TypeMessage.good, "OK" } };
+			TempData["messages"] = messages;
+			return Redirect("/Admin");
+		}
+		
 		/// <summary>
 		/// Возващает страницу с предметами пользователя
 		/// </summary>

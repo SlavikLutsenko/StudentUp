@@ -1,25 +1,37 @@
-﻿var lecturerSelector = document.querySelector("#setSubjectForStudent select[name='lecturer']"),
-    subjectSelector = document.querySelector("#setSubjectForStudent select[name='subjectID']"),
-    groupSelector = document.querySelector("#setSubjectForStudent select[name='group']"),
-    studentSelector = document.querySelector("#setSubjectForStudent select[name='students']");
+﻿var lecturerSelector_SubjectForStudent = document.querySelector("#setSubjectForStudent select[name='lecturer']"),
+    subjectSelector_SubjectForStudent = document.querySelector("#setSubjectForStudent select[name='subjectID']"),
+    groupSelector_SubjectForStudent = document.querySelector("#setSubjectForStudent select[name='group']"),
+    studentSelector_SubjectForStudent = document.querySelector("#setSubjectForStudent select[name='students']"),
+
+    groupSelector_selectElder = document.querySelector("#selectElder select[name='group']"),
+    elderSelector_selectElder = document.querySelector("#selectElder select[name='elder']");
 
 $(document).ready(function () {
-    $.post("/Search/GetSubjectsLecturer", { lecturerID: lecturerSelector.value }, function (data) {
-        subjectSelector.innerHTML = data;
+    $.post("/Search/GetSubjectsLecturer", { lecturerID: lecturerSelector_SubjectForStudent.value }, function (data) {
+        subjectSelector_SubjectForStudent.innerHTML = data;
     });
-    $.post("/Search/GetGroupOfStudents", { groupID: groupSelector.value }, function (data) {
-        studentSelector.innerHTML = data;
+    $.post("/Search/GetGroupOfStudents", { groupID: groupSelector_SubjectForStudent.value }, function (data) {
+        studentSelector_SubjectForStudent.innerHTML = data;
+    });
+    $.post("/Search/GetGroupOfStudents", { groupID: groupSelector_selectElder.value }, function (data) {
+        elderSelector_selectElder.innerHTML = data;
     });
 });
 
-lecturerSelector.addEventListener("change", function () {
-    $.post("/Search/GetSubjectsLecturer", { lecturerID: lecturerSelector.value }, function (data) {
-        subjectSelector.innerHTML = data;
+lecturerSelector_SubjectForStudent.addEventListener("change", function () {
+    $.post("/Search/GetSubjectsLecturer", { lecturerID: lecturerSelector_SubjectForStudent.value }, function (data) {
+        subjectSelector_SubjectForStudent.innerHTML = data;
     });
 }, false);
 
-groupSelector.addEventListener("change", function () {
-    $.post("/Search/GetGroupOfStudents", { groupID: groupSelector.value }, function (data) {
-        studentSelector.innerHTML = data;
+groupSelector_SubjectForStudent.addEventListener("change", function () {
+    $.post("/Search/GetGroupOfStudents", { groupID: groupSelector_SubjectForStudent.value }, function (data) {
+        studentSelector_SubjectForStudent.innerHTML = data;
+    });
+}, false);
+
+groupSelector_selectElder.addEventListener("change", function () {
+    $.post("/Search/GetGroupOfStudents", { groupID: groupSelector_selectElder.value }, function (data) {
+        elderSelector_selectElder.innerHTML = data;
     });
 }, false);

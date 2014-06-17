@@ -2,7 +2,8 @@
 div#addStudent,
 div#addLecturer,
 div#addSubject,
-div#setSubjectForStudent {
+div#setSubjectForStudent,
+div#selectElder {
     display: none;
 }
 
@@ -10,6 +11,7 @@ input#group[name="typeAdd"]:checked ~ div#addGroup,
 input#student[name="typeAdd"]:checked ~ div#addStudent,
 input#lecturer[name="typeAdd"]:checked ~ div#addLecturer,
 input#subject[name="typeAdd"]:checked ~ div#addSubject,
-input#studentSubject[name="typeAdd"]:checked ~ div#setSubjectForStudent {
+input#studentSubject[name="typeAdd"]:checked ~ div#setSubjectForStudent,
+input#selectElder[name="typeAdd"]:checked ~ div#selectElder {
     display: block;
 }

@@ -61,6 +61,12 @@ StudentUp - Add
 <input id="studentSubject" type="radio" name="typeAdd" value="subject" />
 <br />
 
+<label for="selectElder">
+    Встановити студентам групи старосту
+</label>
+<input id="selectElder" type="radio" name="typeAdd" value="subject" />
+<br />
+
 <div id="addGroup">
     <form action="/AddGroup" method="POST" accept-charset="utf-8">
         <input type="text" placeholder="Назва групи" name="name" />
@@ -195,18 +201,11 @@ StudentUp - Add
                 resultResponseTable.GoToStatrTable();
                 while (resultResponseTable != null && resultResponseTable.Read())
                 {
-                <option value="@resultResponseTable["Lecturer_id"]">@resultResponseTable["Surname"] @resultResponseTable["Name"] @resultResponseTable["Second_name"]</option>
+                    <option value="@resultResponseTable["Lecturer_id"]">@resultResponseTable["Surname"] @resultResponseTable["Name"] @resultResponseTable["Second_name"]</option>
                 }
             }
         </select>
         <select name="subjectID">
-            @{
-                resultResponseTable = ViewData["subjects"] as DB.ResponseTable;
-                while (resultResponseTable != null && resultResponseTable.Read())
-                {
-                    <option value="@resultResponseTable["Subject_id"]">@resultResponseTable["Name"]</option>
-                }
-            }
         </select>
         <select name="group">
             @{
@@ -221,6 +220,24 @@ StudentUp - Add
         <select name="students" multiple="multiple">
         </select>
         <input type="submit" value="Втановити предмет студентам" name="SET" />
+    </form>
+</div>
+
+<div id="selectElder">
+    <form action="/SelectElder" method="POST" accept-charset="utf-8">
+        <select name="group">
+            @{
+                resultResponseTable = ViewData["groups"] as DB.ResponseTable;
+                resultResponseTable.GoToStatrTable();
+                while (resultResponseTable != null && resultResponseTable.Read())
+                {
+                    <option value="@resultResponseTable["Group_id"]">@resultResponseTable["Name"]</option>
+                }
+            }
+        </select>
+        <select name="elder">
+        </select>
+        <input type="submit" value="Встановити студентам групи старосту" name="selectElder"/>
     </form>
 </div>
 

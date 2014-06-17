@@ -120,6 +120,13 @@ namespace StudentUp.Models
 			return result;
 		}
 
+		public Student SetElder(int studentID)
+		{
+			DB db = new DB();
+			db.QueryToRespontTable(string.Format("update groups set Elder_id = {0} where Group_id = {1};", studentID, this.ID));
+			return new Student(studentID);
+		}
+
 		/// <summary>
 		/// Добавляет группу
 		/// </summary>
