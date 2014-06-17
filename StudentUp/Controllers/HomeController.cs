@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Runtime.Remoting.Metadata.W3cXsd2001;
@@ -369,20 +370,21 @@ namespace StudentUp.Controllers
 					excelWorksheet = (Microsoft.Office.Interop.Excel.Worksheet) excelFile.Worksheets.get_Item(1);
 					for (int i = 2;; i++)
 					{
-						Microsoft.Office.Interop.Excel.Range fioStudnt = excelWorksheet.get_Range("A" + i);
-						Microsoft.Office.Interop.Excel.Range emailStudnt = excelWorksheet.get_Range("B" + i);
-						Microsoft.Office.Interop.Excel.Range telephoneStudnt = excelWorksheet.get_Range("C" + i);
-						Microsoft.Office.Interop.Excel.Range addressStudnt = excelWorksheet.get_Range("D" + i);
-						Microsoft.Office.Interop.Excel.Range contactsParentsStudnt = excelWorksheet.get_Range("E" + i);
-						if (fioStudnt.Value2 != null && emailStudnt != null)
+						Microsoft.Office.Interop.Excel.Range fioStudnt = excelWorksheet.Range["A" + i];
+						Microsoft.Office.Interop.Excel.Range emailStudnt = excelWorksheet.Range["B" + i];
+						string telephoneStudnt = excelWorksheet.Range["C" + i].Value2 ?? "";
+						int currentSemestrStudnt = Convert.ToInt32(excelWorksheet.Range["D" + i].Value2 ?? "1");
+						string addressStudnt = excelWorksheet.Range["E" + i].Value2;
+						string recordBookStudnt = group.Name + excelWorksheet.Range["F" + i].Value2 == null ? Convert.ToInt32(excelWorksheet.Range["F" + i].Value2).ToString("D2") : i.ToString("D2");
+						Student.TypeOfEducation typeOfEducetionStudnt = Student.ConverStringToEnum(excelWorksheet.Range["G" + i].Value2 ?? "");
+						string contactsParentsStudnt = excelWorksheet.Range["H" + i].Value2 ?? "";
+						string employmentInTheDepartmentStudnt = excelWorksheet.Range["I" + i].Value2 ?? "";
+						if (fioStudnt.Value2 != null || emailStudnt.Value2 != null)
 						{
 							string[] fio = ((string) fioStudnt.Value2.ToString()).Split(' ');
-							Student.AddStudent(fio[0], fio[1], fio[2], emailStudnt.Value2.ToString(), telephoneStudnt.Value2 ?? "", group.ID, 1,
-								addressStudnt.Value2 ?? "", group.Name + (i - 1).ToString("D2"), Student.TypeOfEducation.dayBudget,
-								contactsParentsStudnt.Value2 ?? "", "", false);
+							Student.AddStudent(fio[0], fio[1], fio[2], emailStudnt.Value2.ToString(), telephoneStudnt, group.ID, currentSemestrStudnt, addressStudnt, recordBookStudnt, typeOfEducetionStudnt, contactsParentsStudnt, employmentInTheDepartmentStudnt, false);
 						}
-						else
-							break;
+						else break;
 					}
 				}
 				finally

@@ -7,7 +7,7 @@
 
 @section Title
 {
-    StudentUp - My mark
+    StudentUp - Мої оцінки
 }
 
 @section Style
@@ -24,13 +24,13 @@
         {
             <table border="1" cellspacing="0">
                 <tr>
-                    <th>Subject</th>
-                    <th>Lecturer</th>
-                    <th>Date</th>
-                    <th>Marks</th>
-                    <th>Bonus mark</th>
-                    <th>Max mark</th>
-                    <th>Type mark</th>
+                    <th>Предмет</th>
+                    <th>Викладач</th>
+                    <th>Дата</th>
+                    <th>Оцінка</th>
+                    <th>Бонісні бали</th>
+                    <th>Максимальна оцінка</th>
+                    <th>Тип оцінки</th>
                 </tr>
                 @{
                     for (int i = 0, end = myMarks.Length; i < end; i++)
@@ -57,13 +57,13 @@
         {
             <table border="1" cellspacing="0">
                 <tr>
-                    <th>Subject</th>
-                    <th>Student</th>
-                    <th>Date</th>
-                    <th>Marks</th>
-                    <th>Bonus mark</th>
-                    <th>Max mark</th>
-                    <th>Type mark</th>
+                    <th>Предмет</th>
+                    <th>Студент</th>
+                    <th>Дата</th>
+                    <th>Оцінка</th>
+                    <th>Бонісні бали</th>
+                    <th>Максимальна оцінка</th>
+                    <th>Тип оцінки</th>
                 </tr>
                 @{
                     for (int i = 0, end = myMarks.Length; i < end; i++)
@@ -88,12 +88,12 @@
     }
     else
     {
-        <h3>У вас пока нету оценнок</h3>
+        <h3>У вас покищо немає оцінок</h3>
     }
 
     if (user.Type == Users.UserType.Lecturer)
     {
-        <a href="/AddMark">Add mark</a>
+        <a href="/AddMark">Поставити оцінку</a>
     }
 }
 

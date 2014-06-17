@@ -31,51 +31,52 @@ StudentUp - Add
 </div>
 
 <label for="group">
-    Group
+    Додати групу
 </label>
 <input id="group" type="radio" name="typeAdd" value="group" checked="checked" />
 <br />
 
 <label for="student">
-    Student
+    Додати студента
 </label>
 <input id="student" type="radio" name="typeAdd" value="student" />
 <br />
 
 <label for="lecturer">
-    Lecturer
+    Додати викладача
 </label>
 <input id="lecturer" type="radio" name="typeAdd" value="lecturer" />
 <br />
 
 <label for="subject">
-    Subject
+    Додати предмет
 </label>
 <input id="subject" type="radio" name="typeAdd" value="subject" />
 <br />
 
 <label for="studentSubject">
-    Set subject for student
+    Встановити студентам предмети
 </label>
 <input id="studentSubject" type="radio" name="typeAdd" value="subject" />
 <br />
 
 <div id="addGroup">
     <form action="/AddGroup" method="POST" accept-charset="utf-8">
-        <input type="text" placeholder="Name" name="name" />
+        <input type="text" placeholder="Назва групи" name="name" />
         <select name="department">
             @{
                 department.GoToStatrTable();
                 while (department.Read())
                 {
-                <option value="@department["Department_id"]">@department["Name"]</option>
+                    <option value="@department["Department_id"]">@department["Name"]</option>
                 }
             }
         </select>
-        <input type="submit" value="ADD" name="ADD" />
+        <input type="submit" value="Додати групу" name="ADD" />
     </form>
-    <p>Или вы можете добавить сразу всех студентов загрузив файл с ними. Такое добовление возможно только для первокурсников!!!</p>
-    <p>Файл должен быть формата .xlsx (Excel) и иметь следующую структуру: (Столбци выделенные красным фоном должны быть обязательно заполнены. Очередность столбцов не изменна. Первый столбец овязательно в столбце А)</p>
+    <p>Або ви можете додати водночас всіх студентів цієї групи завантаживши файл з інформацією про них</p>
+    <p>Файл пофинен бути у форматі .xlsx (Excel) та мати наступну структуру: </p>
+    <p>(Стовпці виділені червоним фоном повинні бути обов'язково заповенні. Черговість стовпців не повина змінюватись. Перший стовпець повинен бути в стовпці А. Якщо номер семестру не вказаний то буде автоматично виставлений як перший семетср навчання. Якщо номер заліковки не вказан він буде присвоєн автоматично. Варіанти заповнення форми навчання: денна - бюджет, денна - контракт, заочна. Якщо форма навчання не вказана буде автоматично встановленна денна - бюджетна.)</p>
     <img src="~/Images/sample_file_with_students.PNG" />
     <form action="/AddGroupAndStudent" method="POST" accept-charset="utf-8" enctype="multipart/form-data">
         <input type="text" placeholder="Name" name="name" />
@@ -89,23 +90,23 @@ StudentUp - Add
             }
         </select>
         <input type="file" name="fileStudent" />
-        <input type="submit" value="ADD" name="ADD" />
+        <input type="submit" value="Додати групу" name="ADD" />
     </form>
 </div>
 
 <div id="addLecturer">
     <form action="/AddLecturer" method="POST" accept-charset="utf-8">
-        <input type="text" name="surname" placeholder="Surname" />
-        <input type="text" name="name" placeholder="Name" />
-        <input type="text" name="secondName" placeholder="Secon name" />
+        <input type="text" name="surname" placeholder="Прізвище" />
+        <input type="text" name="name" placeholder="Ім'я" />
+        <input type="text" name="secondName" placeholder="По батькові" />
         <input type="text" name="email" placeholder="Email" />
         <label>
-            Admin
-        <input type="checkbox" name="admin" />
+            Адміністратор
+            <input type="checkbox" name="admin" />
         </label>
         <br />
-        <input type="text" name="position" placeholder="Position" />
-        <input type="text" name="telephone" placeholder="Telephone" />
+        <input type="text" name="position" placeholder="Посада" />
+        <input type="text" name="telephone" placeholder="Телефон" />
         <select name="department">
             @{
                 department.GoToStatrTable();
@@ -115,22 +116,22 @@ StudentUp - Add
                 }
             }
         </select>
-        <input type="submit" value="ADD" name="ADD" />
+        <input type="submit" value="Дадати викладача" name="ADD" />
     </form>
 </div>
 
 <div id="addStudent">
     <form action="/AddStudent" method="POST" accept-charset="utf-8">
-        <input type="text" name="surname" placeholder="Surname" />
-        <input type="text" name="name" placeholder="Name" />
-        <input type="text" name="secondName" placeholder="Secon name" />
+        <input type="text" name="surname" placeholder="Прізвище" />
+        <input type="text" name="name" placeholder="Ім'я" />
+        <input type="text" name="secondName" placeholder="По батькові" />
         <input type="text" name="email" placeholder="Email" />
         <label>
-            Admin
+            Адміністратор
         <input type="checkbox" name="admin" />
         </label>
         <br />
-        <input type="text" name="telephone" placeholder="Telephone" />
+        <input type="text" name="telephone" placeholder="Телефон" />
         <select name="group">
             @{
                 resultResponseTable = ViewData["groups"] as DB.ResponseTable;
@@ -140,9 +141,9 @@ StudentUp - Add
                 }
             }
         </select>
-        <input type="text" name="currentSemestr" placeholder="Current semestr" />
-        <input type="text" name="address" placeholder="Address" />
-        <input type="text" name="recordBook" placeholder="Record book" />
+        <input type="text" name="currentSemestr" placeholder="Семестр навчаня" />
+        <input type="text" name="address" placeholder="Адреса" />
+        <input type="text" name="recordBook" placeholder="Номер залікової книжки" />
         <select name="typeOfEducation">
             @{
                 typeEnum = ViewData["typeEducation"] as string[];
@@ -152,15 +153,15 @@ StudentUp - Add
                 }
             }
         </select>
-        <input type="text" name="contactsParents" placeholder="Сontacts parents" />
-        <input type="text" name="employmentInTheDepartment" placeholder="Employment in the department" />
-        <input type="submit" value="ADD" name="ADD" />
+        <input type="text" name="contactsParents" placeholder="Контакти батьків" />
+        <input type="text" name="employmentInTheDepartment" placeholder="Діяльність на кафедрі" />
+        <input type="submit" value="Додати студента" name="ADD" />
     </form>
 </div>
 
 <div id="addSubject">
     <form action="/AddSubject" method="POST" accept-charset="utf-8">
-        <input type="text" name="name" placeholder="Name subject" />
+        <input type="text" name="name" placeholder="Назва предмета" />
         <select name="lecturer">
             @{
                 resultResponseTable = ViewData["lecturers"] as DB.ResponseTable;
@@ -179,7 +180,7 @@ StudentUp - Add
                 }
             }
         </select>
-        <input type="submit" value="ADD" name="ADD" />
+        <input type="submit" value="Додати предмет" name="ADD" />
     </form>
 </div>
 
@@ -203,7 +204,7 @@ StudentUp - Add
                 }
             }
         </select>
-        <input type="submit" value="SET" name="SET" />
+        <input type="submit" value="Втановити предмет студентам" name="SET" />
     </form>
 </div>
 
