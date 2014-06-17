@@ -377,8 +377,8 @@ namespace StudentUp.Controllers
 						if (fioStudnt.Value2 != null && emailStudnt != null)
 						{
 							string[] fio = ((string) fioStudnt.Value2.ToString()).Split(' ');
-							Student.AddStudent(fio[1], fio[0], fio[2], emailStudnt.Value2.ToString(), telephoneStudnt.Value2 ?? "", group.ID, 1,
-								addressStudnt.Value2 ?? "", group.Name + (i - 1).ToString("D2"), "дена",
+							Student.AddStudent(fio[0], fio[1], fio[2], emailStudnt.Value2.ToString(), telephoneStudnt.Value2 ?? "", group.ID, 1,
+								addressStudnt.Value2 ?? "", group.Name + (i - 1).ToString("D2"), Student.TypeOfEducation.dayBudget,
 								contactsParentsStudnt.Value2 ?? "", "", false);
 						}
 						else
@@ -438,8 +438,8 @@ namespace StudentUp.Controllers
 		/// <summary>
 		/// Добавление студента
 		/// </summary>
-		/// <param name="name">Имя студента</param>
 		/// <param name="surname">Фамилия студента</param>
+		/// <param name="name">Имя студента</param>
 		/// <param name="secondName">Отчество студента</param>
 		/// <param name="email">Email студента</param>
 		/// <param name="telephone">Телефон студента</param>
@@ -453,13 +453,13 @@ namespace StudentUp.Controllers
 		/// <param name="admin">Является ли студент администраторм системы</param>
 		/// <returns>Возвращает страницу администрирования и сообщения про добавленных пользователей</returns>
 		[HttpPost]
-		public ActionResult AddStudent(string name, string surname, string secondName, string email, string telephone, int group, int currentSemestr, string address, string recordBook, string typeOfEducation, string contactsParents, string employmentInTheDepartment, string admin = "off")
+		public ActionResult AddStudent(string surname, string name, string secondName, string email, string telephone, int group, int currentSemestr, string address, string recordBook, string typeOfEducation, string contactsParents, string employmentInTheDepartment, string admin = "off")
 		{
 			Messages messages = new Messages();
 			try
 			{
-				Student.AddStudent(name, surname, secondName, email, telephone, group, currentSemestr, address, recordBook,
-					typeOfEducation, contactsParents, employmentInTheDepartment, admin == "on");
+				Student.AddStudent(surname, name, secondName, email, telephone, group, currentSemestr, address, recordBook,
+					Student.ConverStringToEnum(typeOfEducation), contactsParents, employmentInTheDepartment, admin == "on");
 				messages.Add(Messages.Message.TypeMessage.good, string.Format("Пользователь {0} {1} {2} был добавлен", name, surname, secondName));
 			}
 			catch (ValidationDataException error)

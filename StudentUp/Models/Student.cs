@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Web;
 
 namespace StudentUp.Models
 {
@@ -13,13 +14,17 @@ namespace StudentUp.Models
 		public enum TypeOfEducation
 		{
 			/// <summary>
-			/// Дневная форма обучения
+			/// Дневная форма обучения - бюджет
 			/// </summary>
-			дена,
+			dayBudget,
+			/// <summary>
+			/// Дневная форма обучения - контракт
+			/// </summary>
+			dayContract,
 			/// <summary>
 			/// Заочная форма обучения
 			/// </summary>
-			заочна
+			extramural
 		}
 
 		/// <summary>
@@ -194,32 +199,28 @@ namespace StudentUp.Models
 		/// Производит вход пользователя в систему
 		/// </summary>
 		/// <returns></returns>
-		public bool Login()
+		public bool Login(HttpResponseBase Response)
 		{
 			DB db = new DB();
 			DB.ResponseTable users = db.QueryToRespontTable(string.Format("select * from Student inner join Users on Student.Student_id = Users.Student_id where Email='{0}' and Password='{1}';", this.Email, this.Password));
 			if (users != null && users.CountRow == 1)
 			{
 				users.Read();
-				this.userID = (int)users["User_id"];
-				this.groupID = (int)users["Group_id"];
-				this.accessLevel = (int)users["Access_level"];
-				this.studentID = (int)users["Student_id"];
+				this.userID = Convert.ToInt32(users["User_id"]);
+				this.accessLevel = Convert.ToInt32(users["Access_level"]);
+				this.studentID = Convert.ToInt32(users["Student_id"]);
+				this.groupID = Convert.ToInt32(users["Group_id"]);
 				this.name = (string)users["Name"];
 				this.surname = (string)users["Surname"];
 				this.secondName = (string)users["Second_name"];
-				this.currentSemester = (int)users["Semester"];
+				this.currentSemester = Convert.ToInt32(users["Semester"]);
 				this.address = (string)users["Address"];
 				this.telephone = (string)users["Telephone"];
 				this.recordBook = (string)users["Record_book"];
-				this.typeOfEducetion = (Student.TypeOfEducation)Enum.Parse(typeof(Student.TypeOfEducation), (string)users["Type_of_education"]);
+				this.typeOfEducetion = Student.ConverStringToEnum((string)users["Type_of_education"]);
 				this.contactsParents = (string)users["ontacts_parents"];
 				this.employmentInTheDepartment = (string)users["Employment_in_the_department"];
-
-				/*
-				 * Создаем сесию и куки
-				 * */
-
+				base.CreateSession(Response);
 				return true;
 			}
 			return false;
@@ -246,23 +247,22 @@ namespace StudentUp.Models
 			if (users != null && users.CountRow == 1)
 			{
 				users.Read();
-				this.userID = (int)users["User_id"];
+				this.userID = Convert.ToInt32(users["User_id"]);
 				this.email = (string)users["Email"];
 				this.passwodr = (string)users["Password"];
-				this.accessLevel = (int)users["Access_level"];
-				this.studentID = (int)users["Student_id"];
-				this.groupID = (int)users["Group_id"];
+				this.accessLevel = Convert.ToInt32(users["Access_level"]);
+				this.studentID = Convert.ToInt32(users["Student_id"]);
+				this.groupID = Convert.ToInt32(users["Group_id"]);
 				this.name = (string)users["Name"];
 				this.surname = (string)users["Surname"];
 				this.secondName = (string)users["Second_name"];
-				this.currentSemester = (int)users["Semester"];
+				this.currentSemester = Convert.ToInt32(users["Semester"]);
 				this.address = (string)users["Address"];
 				this.telephone = (string)users["Telephone"];
 				this.recordBook = (string)users["Record_book"];
-				this.typeOfEducetion = (Student.TypeOfEducation)Enum.Parse(typeof(Student.TypeOfEducation), (string)users["Type_of_education"]);
+				this.typeOfEducetion = Student.ConverStringToEnum((string)users["Type_of_education"]);
 				this.contactsParents = (string)users["ontacts_parents"];
 				this.employmentInTheDepartment = (string)users["Employment_in_the_department"];
-				this.userType = UserType.Student;
 				return true;
 			}
 			return false;
@@ -285,17 +285,55 @@ namespace StudentUp.Models
 		/// <param name="employmentInTheDepartment">Чем занимается студент на кафедре</param>
 		/// <param name="admin">Является ли студент администраторм системы</param>
 		/// <returns>Новый студент</returns>
-		public static Student AddStudent(string name, string surname, string secondName, string email, string telephone,
-			int group, int currentSemestr, string address, string recordBook, string typeOfEducation, string contactsParents,
+		public static Student AddStudent(string surname, string name, string secondName, string email, string telephone,
+			int group, int currentSemestr, string address, string recordBook, Student.TypeOfEducation typeOfEducation, string contactsParents,
 			string employmentInTheDepartment, bool admin)
 		{
 			DB db = new DB();
-			db.QueryToRespontTable(string.Format("insert into Student(Group_id, Name, Surname, Second_name, Semester, Address, Telephone, Record_book, Type_of_education, Сontacts_parents, Employment_in_the_department) values ({0}, '{1}', '{2}', '{3}', {4}, '{5}', '{6}', '{7}', '{8}', '{9}', '{10}');", group, name, surname, secondName, currentSemestr, address, telephone, recordBook, typeOfEducation, contactsParents, employmentInTheDepartment));
+			db.QueryToRespontTable(string.Format("insert into Student(Group_id, Surname, Name, Second_name, Semester, Address, Telephone, Record_book, Type_of_education, Сontacts_parents, Employment_in_the_department) values ({0}, '{1}', '{2}', '{3}', {4}, '{5}', '{6}', '{7}', '{8}', '{9}', '{10}');", group, surname, name, secondName, currentSemestr, address, telephone, recordBook, Student.GetEnumDescription(typeOfEducation), contactsParents, employmentInTheDepartment));
 			DB.ResponseTable userIdTable = db.QueryToRespontTable("select LAST_INSERT_ID() as id;");
 			userIdTable.Read();
 			Student user = new Student(Users.AddStudentUsers(email, admin ? 2 : 0, Convert.ToInt32(userIdTable["id"])));
 			user.GetInformationAboutUserFromDB();
 			return user;
+		}
+
+		/// <summary>
+		/// Преобразовывает элемент перчисления в строку
+		/// </summary>
+		/// <param name="value">Элемент перечисления</param>
+		/// <returns>Строковая интерпритация элемнта перечисления</returns>
+		public static string GetEnumDescription(Student.TypeOfEducation value)
+		{
+			switch (value)
+			{
+				case TypeOfEducation.dayBudget:
+					return "денна - бюджет";
+				case TypeOfEducation.dayContract:
+					return "денна - контракт";
+				case TypeOfEducation.extramural:
+					return "заочна";
+			}
+			return null;
+		}
+
+		/// <summary>
+		/// Преобразовывает строку в элемент перчисления
+		/// </summary>
+		/// <param name="value">Строковая интерпритация элемнта перечисления</param>
+		/// <returns>Элемент перечисления</returns>
+		public static Student.TypeOfEducation ConverStringToEnum(string value)
+		{
+			switch (value)
+			{
+				case "денна - бюджет":
+					return TypeOfEducation.dayBudget;
+				case "денна - контракт":
+					return TypeOfEducation.dayContract;
+				case "заочна":
+					return TypeOfEducation.extramural;
+			}
+			return Student.TypeOfEducation.dayBudget;
 		}
 	}
 }
