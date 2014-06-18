@@ -190,6 +190,51 @@ namespace StudentUp.Models
 			return false;
 		}
 
+		public Group[] GetMyGroups()
+		{
+			this.GetInformationAboutUserFromDB();
+			Group[] result = null;
+			DB db = new DB();
+			Subject[] subjects = this.GetMySubjects();
+			string subjectsID = "(";
+			for (int i = 0, end = subjects.Length; i < end; i++)
+				subjectsID += subjects[i].ID + (i != end - 1 ? "," : "");
+			subjectsID += ")";
+			DB.ResponseTable groupID = db.QueryToRespontTable(string.Format("select groups.Group_id from groups inner join student inner join StudentSubject on groups.Group_id = student.Group_id and student.Student_id = StudentSubject.Student_id and StudentSubject.Subject_id in {0} Group by groups.Group_id order by groups.Name;", subjectsID));
+			if (groupID != null)
+			{
+				result = new Group[groupID.CountRow];
+				for (int i = 0, end = result.Length; i < end && groupID.Read(); i++)
+				{
+					result[i] = new Group(Convert.ToInt32(groupID["Group_id"]));
+					result[i].GetInformationAboutUserFromDB();
+				}
+			}
+			return result;
+		}
+
+		public Student[] GetMyStudents(Group[] groups)
+		{
+			this.GetInformationAboutUserFromDB();
+			Student[] result = null;
+			DB db = new DB();
+			string groupssID = "(";
+			for (int i = 0, end = groups.Length; i < end; i++)
+				groupssID += groups[i].ID + (i != end - 1 ? "," : "");
+			groupssID += ")";
+			DB.ResponseTable studentID = db.QueryToRespontTable(string.Format("select student.Student_id from student inner join groups on student.Group_id = groups.Group_id and student.Group_id in {0} order by groups.Name;", groupssID));
+			if (studentID != null)
+			{
+				result = new Student[studentID.CountRow];
+				for (int i = 0, end = result.Length; i < end && studentID.Read(); i++)
+				{
+					result[i] = new Student(Convert.ToInt32(studentID["Student_id"]));
+					result[i].GetInformationAboutUserFromDB();
+				}
+			}
+			return result;
+		}
+
 		/// <summary>
 		/// Добовляет нового преподователя
 		/// </summary>

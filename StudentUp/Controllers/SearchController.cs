@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web.Mvc;
 using StudentUp.Models;
 
 namespace StudentUp.Controllers
@@ -6,8 +7,8 @@ namespace StudentUp.Controllers
 	/// <summary>
 	/// Предназначен для выборки разной информации из БД
 	/// </summary>
-    public class SearchController : Controller
-    {
+	public class SearchController : Controller
+	{
 		/// <summary>
 		/// Возвращает страницу на которой выведены все студенты группы
 		/// </summary>
@@ -40,8 +41,21 @@ namespace StudentUp.Controllers
 
 		public ActionResult GetStudentsFromGroupOnTheSubject(int groupID, int subjectID)
 		{
-			ViewData["studentsFromGroupOnTheSubject"] = (new Subject(subjectID)).GetStudentsFromGroup(groupID);
+			ViewData["studentsFromGroupOnTheSubject"] = subjectID == -1 ? (new Group(groupID)).GetStudent() : (new Subject(subjectID)).GetStudentsFromGroup(groupID);
 			return View();
 		}
-    }
+
+		public ActionResult GetGroupsOnTheLecturer(int userID)
+		{
+			ViewData["groupsOnTheLecturer"] = (new Lecturer(new Users(userID))).GetMyGroups();
+			return View();
+		}
+
+		public ActionResult GetStudentsOnTheLecturer(int userID, int subjectID)
+		{
+			Group[] groups = subjectID == -1 ? (new Lecturer(new Users(userID))).GetMyGroups() : (new Subject(subjectID)).GetGroups();
+			ViewData["studentsOnTheLecturer"] = (new Lecturer(new Users(userID))).GetMyStudents(groups);
+			return View();
+		}
+	}
 }

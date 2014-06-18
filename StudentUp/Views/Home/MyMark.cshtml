@@ -16,6 +16,28 @@
 }
 
 @{
+    int currentSubjectID = Convert.ToInt32(ViewData["currentSubject"]);
+}
+
+<form>
+    <select name="subject">
+        <option value='-1'>Усі</option>
+        @{
+            Subject[] mySubjects = ViewData["mySubjects"] as Subject[];
+            for (int i = 0, end = mySubjects.Length; i < end; i++)
+            {
+                <option value="@mySubjects[i].ID" @(currentSubjectID==mySubjects[i].ID?"selected":"")>@mySubjects[i].Name</option>
+            }
+        }
+    </select>
+    <select name="group">
+    </select>
+    <select name="student">
+    </select>
+    <input type="button" name="showMark" value="Показати оцінки"/>
+</form>
+
+@{
     Users user = ViewData["user"] as Users;
     Marks[] myMarks = ViewData["myMarks"] as Marks[];
     if (myMarks != null)
@@ -65,5 +87,6 @@
 
 @section Script
 {
-    
+    <script src="~/JS/jquery-2.1.1.min.js"></script>
+    <script src="~/JS/MyMark.js"></script>
 }

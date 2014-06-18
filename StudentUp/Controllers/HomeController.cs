@@ -538,15 +538,17 @@ namespace StudentUp.Controllers
 		/// <summary>
 		/// Выводит страничку с оценками пользователя
 		/// </summary>
-		/// <param name="subjectID">Идентификатор предмета по которому нужно вывести оценки</param>
+		/// <param name="currentSubject">Идентификатор предмета по которому нужно вывести оценки</param>
 		/// <returns>Страница</returns>
-		public ActionResult MyMark(int subjectID = 0)
+		public ActionResult MyMark(int currentSubject = -1)
 		{
 			Users user = Login();
 			if (user != null)
 			{
 				ViewData["user"] = user;
 				ViewData["myMarks"] = user.GetMyMarks();
+				ViewData["mySubjects"] = user.GetMySubjects();
+				ViewData["currentSubject"] = currentSubject;
 				return View();
 			}
 			return Redirect("/");

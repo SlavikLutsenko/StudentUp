@@ -38,10 +38,10 @@ StudentUp - Мої предмети
                     }
                     <td>@mySubjects[i].Name</td>
                     <td>
-                        <a href="#">Подивитися оцінки</a> 
+                        <a href="/MyMark?currentSubject=@mySubjects[i].ID">Подивитися оцінки</a> 
                         @if (user.Type == Users.UserType.Lecturer)
                         {
-                            <a href="/AddMark?currentSubject=@mySubjects[i].ID">Виставити оцінку</a> <a href="#">Подивитись студентів</a>
+                            <a href="/AddMark?currentSubject=@mySubjects[i].ID">Виставити оцінку</a>
                         }
                     </td>
                 </tr>
