@@ -31,5 +31,17 @@ namespace StudentUp.Controllers
 			ViewData["subjectsLecturer"] = lecturer.GetMySubjects();
 			return View();
 		}
+
+		public ActionResult GetGroupsOnTheSubject(int subjectID)
+		{
+			ViewData["groupsOnTheSubject"] = (new Subject(subjectID)).GetGroups();
+			return View();
+		}
+
+		public ActionResult GetStudentsFromGroupOnTheSubject(int groupID, int subjectID)
+		{
+			ViewData["studentsFromGroupOnTheSubject"] = (new Subject(subjectID)).GetStudentsFromGroup(groupID);
+			return View();
+		}
     }
 }

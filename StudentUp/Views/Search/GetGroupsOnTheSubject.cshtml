@@ -1,0 +1,12 @@
+﻿@using StudentUp.Models
+
+@{
+    Group[] groups = ViewData["groupsOnTheSubject"] as Group[];
+    if (groups != null)
+    {
+        for (int i = 0, end = groups.Length; i < end; i++)
+        {
+            <option value="@groups[i].ID">@groups[i].Name</option>
+        }
+    }
+}

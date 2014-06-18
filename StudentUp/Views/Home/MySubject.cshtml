@@ -7,7 +7,7 @@
 
 @section Title
 {
-    StudentUp - Мої предмети
+StudentUp - Мої предмети
 }
 
 @section Style
@@ -16,24 +16,41 @@
 @{
     Users user = ViewData["user"] as Users;
     Subject[] mySubjects = ViewData["mySubjects"] as Subject[];
-    if (mySubjects != null)
+    if (mySubjects != null && user != null)
     {
-        for (int i = 0, end = mySubjects.Length; i < end; i++)
-        {
-            <p>
-                @mySubjects[i].Name 
+        <table border="1" cellspacing="0">
+            <tr>
                 @if (user.Type == Users.UserType.Student)
                 {
-                    Lecturer lecturer = new Lecturer(mySubjects[i].LecturerID);
-                    lecturer.GetInformationAboutUserFromDB();
-                    @lecturer.FullName
+                    <th>Викладач</th>
                 }
-            </p>
-        }
+                <th>Назва предмету</th>
+                <th>Функції</th>
+            </tr>
+            @for (int i = 0, end = mySubjects.Length; i < end; i++)
+            {
+                <tr>
+                    @if (user.Type == Users.UserType.Student)
+                    {
+                        Lecturer lecturer = new Lecturer(mySubjects[i].LecturerID);
+                        lecturer.GetInformationAboutUserFromDB();
+                        <td>@lecturer.FullName</td>
+                    }
+                    <td>@mySubjects[i].Name</td>
+                    <td>
+                        <a href="#">Подивитися оцінки</a> 
+                        @if (user.Type == Users.UserType.Lecturer)
+                        {
+                            <a href="/AddMark?currentSubject=@mySubjects[i].ID">Виставити оцінку</a> <a href="#">Подивитись студентів</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </table>
     }
     else
     {
-        <h3>У вас покищо немає предметів</h3>
+    <h3>У вас покищо немає предметів</h3>
     }
 }
 

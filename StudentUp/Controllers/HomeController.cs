@@ -556,7 +556,7 @@ namespace StudentUp.Controllers
 		/// Выводит страницу для добавления оценки
 		/// </summary>
 		/// <returns>Страница</returns>
-		public ActionResult AddMark()
+		public ActionResult AddMark(int currentSubject = -1)
 		{
 			Users user = Login();
 			if (user != null)
@@ -567,7 +567,7 @@ namespace StudentUp.Controllers
 					DB.ResponseTable responseTable;
 					ViewData["user"] = user;
 					ViewData["mySubjects"] = user.GetMySubjects();
-					ViewData["myStudents"] = db.QueryToRespontTable(string.Format("select student.Student_id, student.Group_id, student.Name, student.Surname, student.Second_name from student inner join studentsubject inner join subject on student.Student_id = studentsubject.Student_id and subject.Subject_id = studentsubject.Subject_id and subject.Lecturer_id = {0};", user.LecturerID));
+					ViewData["currentSubject"] = currentSubject;
 					responseTable = db.QueryToRespontTable("show columns from Marks like 'Type_marks';");
 					responseTable.Read();
 					ViewData["typeMarks"] = ((string)responseTable["Type"]).Replace("enum('", "").Replace("')", "").Replace("'", "").Split(',');

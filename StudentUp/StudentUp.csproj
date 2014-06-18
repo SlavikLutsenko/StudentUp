@@ -160,6 +160,7 @@
     <Content Include="Images\message.png" />
     <Content Include="Images\sample_file_with_students.PNG" />
     <Content Include="Images\subject.png" />
+    <Content Include="JS\AddMark.js" />
     <Content Include="JS\Admin.js" />
     <Content Include="JS\all.js" />
     <Content Include="JS\jquery-2.1.1.min.js" />
@@ -227,6 +228,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Search\GetSubjectsLecturer.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Search\GetGroupsOnTheSubject.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Search\GetStudentsFromGroupOnTheSubject.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

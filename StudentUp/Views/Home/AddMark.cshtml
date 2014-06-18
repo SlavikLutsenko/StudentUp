@@ -14,27 +14,28 @@
 {}
 
 @{
-    DB.ResponseTable resultResponseTable;
+    int currentSubject = Convert.ToInt32(ViewData["currentSubject"]);
 }
 
 <form action="/AddMark" method="POST" accept-charset="ust-8">
-    <select name="subject">
-    @{
-        Subject[] mySubjects = ViewData["mySubjects"] as Subject[];
-        for (int i = 0, end = mySubjects.Length; i < end; i++)
-        {
-            <option value="@mySubjects[i].ID">@mySubjects[0].Name</option>
-        }
+    @if (currentSubject != -1)
+    {
+        Subject subject = new Subject(currentSubject);
+        subject.GetInformationAboutUserFromDB();
+        <p>Оцінка по предмету: @subject.Name</p>
     }
-    </select>
-    <select name="student">
+    <select name="subject" @(currentSubject!=-1?"disabled style=display:none;":"")>
         @{
-            resultResponseTable = ViewData["myStudents"] as DB.ResponseTable;
-            while (resultResponseTable.Read())
+            Subject[] mySubjects = ViewData["mySubjects"] as Subject[];
+            for (int i = 0, end = mySubjects.Length; i < end; i++)
             {
-                <option value="@resultResponseTable["Student_id"]">@resultResponseTable["Surname"] @resultResponseTable["Name"] @resultResponseTable["Second_name"]</option>
+                <option value="@mySubjects[i].ID" @(currentSubject==mySubjects[i].ID?"selected":"")>@mySubjects[i].Name</option>
             }
         }
+    </select>
+    <select name="group">
+    </select>
+    <select name="student">
     </select>
     <input type="date" name="date"/>
     <input type="number" name="mark" placeholder="Оцінка"/>
@@ -53,4 +54,7 @@
 </form>
 
 @section Script
-{}
+{
+    <script src="~/JS/jquery-2.1.1.min.js"></script>
+    <script src="~/JS/AddMark.js"></script>
+}

@@ -152,6 +152,40 @@ namespace StudentUp.Models
 			return Subject.ExamType.nothing;
 		}
 
+		public Group[] GetGroups()
+		{
+			Group[] result = null;
+			DB db = new DB();
+			DB.ResponseTable groupID = db.QueryToRespontTable(string.Format("select groups.Group_id from groups inner join student inner join StudentSubject inner join subject on groups.Group_id = student.Group_id and student.Student_id = StudentSubject.Student_id and StudentSubject.Subject_id = subject.Subject_id and subject.Subject_id = {0} Group by groups.Group_id order by groups.Name;", this.subjectID));
+			if (groupID != null)
+			{
+				result = new Group[groupID.CountRow];
+				for (int i = 0, end = result.Length; i < end && groupID.Read(); i++)
+				{
+					result[i] = new Group(Convert.ToInt32(groupID["Group_id"]));
+					result[i].GetInformationAboutUserFromDB();
+				}
+			}
+			return result;
+		}
+
+		public Student[] GetStudentsFromGroup(int groupID)
+		{
+			Student[] result = null;
+			DB db = new DB();
+			DB.ResponseTable studentID = db.QueryToRespontTable(string.Format("select student.Student_id from groups inner join student inner join StudentSubject inner join subject on groups.Group_id = student.Group_id and groups.Group_id = {0} and student.Student_id = StudentSubject.Student_id and StudentSubject.Subject_id = subject.Subject_id and subject.Subject_id = {1};", groupID, this.subjectID));
+			if (studentID != null)
+			{
+				result = new Student[studentID.CountRow];
+				for (int i = 0, end = result.Length; i < end && studentID.Read(); i++)
+				{
+					result[i] = new Student(Convert.ToInt32(studentID["Student_id"]));
+					result[i].GetInformationAboutUserFromDB();
+				}
+			}
+			return result;
+		}
+
 		/// <summary>
 		/// Устанавливает студентов на этот предмет
 		/// </summary>
