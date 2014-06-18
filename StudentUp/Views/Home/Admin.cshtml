@@ -7,6 +7,8 @@
     DB db = new DB();
     DB.ResponseTable resultResponseTable;
     DB.ResponseTable department = ViewData["departments"] as DB.ResponseTable;
+    DB.ResponseTable group = ViewData["groups"] as DB.ResponseTable;
+    DB.ResponseTable lecturer = ViewData["lecturers"] as DB.ResponseTable;
     string[] typeEnum;
 }
 
@@ -141,11 +143,10 @@ StudentUp - Add
         <input type="text" name="telephone" placeholder="Телефон" />
         <select name="group">
             @{
-                resultResponseTable = ViewData["groups"] as DB.ResponseTable;
-                resultResponseTable.GoToStatrTable();
-                while (resultResponseTable != null && resultResponseTable.Read())
+                group.GoToStatrTable();
+                while (group != null && group.Read())
                 {
-                <option value="@resultResponseTable["Group_id"]">@resultResponseTable["Name"]</option>
+                <option value="@group["Group_id"]">@group["Name"]</option>
                 }
             }
         </select>
@@ -172,11 +173,10 @@ StudentUp - Add
         <input type="text" name="name" placeholder="Назва предмета" />
         <select name="lecturer">
             @{
-                resultResponseTable = ViewData["lecturers"] as DB.ResponseTable;
-                resultResponseTable.GoToStatrTable();
-                while (resultResponseTable != null && resultResponseTable.Read())
+                lecturer.GoToStatrTable();
+                while (lecturer != null && lecturer.Read())
                 {
-                <option value="@resultResponseTable["Lecturer_id"]">@resultResponseTable["Surname"] @resultResponseTable["Name"] @resultResponseTable["Second_name"]</option>
+                <option value="@lecturer["Lecturer_id"]">@lecturer["Surname"] @lecturer["Name"] @lecturer["Second_name"]</option>
                 }
             }
         </select>
@@ -197,11 +197,10 @@ StudentUp - Add
     <form action="/SetSubjectForStudent" method="POST" accept-charset="utf-8">
         <select name="lecturer">
             @{
-                resultResponseTable = ViewData["lecturers"] as DB.ResponseTable;
-                resultResponseTable.GoToStatrTable();
-                while (resultResponseTable != null && resultResponseTable.Read())
+                lecturer.GoToStatrTable();
+                while (lecturer != null && lecturer.Read())
                 {
-                    <option value="@resultResponseTable["Lecturer_id"]">@resultResponseTable["Surname"] @resultResponseTable["Name"] @resultResponseTable["Second_name"]</option>
+                    <option value="@lecturer["Lecturer_id"]">@lecturer["Surname"] @lecturer["Name"] @lecturer["Second_name"]</option>
                 }
             }
         </select>
@@ -209,11 +208,10 @@ StudentUp - Add
         </select>
         <select name="group">
             @{
-                resultResponseTable = ViewData["groups"] as DB.ResponseTable;
-                resultResponseTable.GoToStatrTable();
-                while (resultResponseTable != null && resultResponseTable.Read())
+                group.GoToStatrTable();
+                while (group != null && group.Read())
                 {
-                    <option value="@resultResponseTable["Group_id"]">@resultResponseTable["Name"]</option>
+                    <option value="@group["Group_id"]">@group["Name"]</option>
                 }
             }
         </select>
@@ -227,11 +225,10 @@ StudentUp - Add
     <form action="/SelectElder" method="POST" accept-charset="utf-8">
         <select name="group">
             @{
-                resultResponseTable = ViewData["groups"] as DB.ResponseTable;
-                resultResponseTable.GoToStatrTable();
-                while (resultResponseTable != null && resultResponseTable.Read())
+                group.GoToStatrTable();
+                while (group != null && group.Read())
                 {
-                    <option value="@resultResponseTable["Group_id"]">@resultResponseTable["Name"]</option>
+                    <option value="@group["Group_id"]">@group["Name"]</option>
                 }
             }
         </select>

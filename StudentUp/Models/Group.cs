@@ -120,6 +120,11 @@ namespace StudentUp.Models
 			return result;
 		}
 
+		/// <summary>
+		/// Устанавливает старосту группе
+		/// </summary>
+		/// <param name="studentID">Идентификатор студента</param>
+		/// <returns>Студент который стал старостой</returns>
 		public Student SetElder(int studentID)
 		{
 			DB db = new DB();

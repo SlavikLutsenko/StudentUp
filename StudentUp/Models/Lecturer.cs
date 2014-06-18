@@ -142,11 +142,6 @@ namespace StudentUp.Models
 				this.secondName = (string)users["Second_name"];
 				this.position = (string)users["Position"];
 				this.telephone = (string)users["Telephone"];
-
-				/*
-				 * Создаем сесию и куки
-				 * */
-
 				return true;
 			}
 			return false;
@@ -190,6 +185,10 @@ namespace StudentUp.Models
 			return false;
 		}
 
+		/// <summary>
+		/// Возвращает все группы которым преподает текущий преподователь
+		/// </summary>
+		/// <returns>Масив групп</returns>
 		public Group[] GetMyGroups()
 		{
 			this.GetInformationAboutUserFromDB();
@@ -213,6 +212,11 @@ namespace StudentUp.Models
 			return result;
 		}
 
+		/// <summary>
+		/// Возвращает всех студентов тех групп которым перподает текущий перподаватель
+		/// </summary>
+		/// <param name="groups">Масив идентификаторов группы</param>
+		/// <returns>Масив студентов</returns>
 		public Student[] GetMyStudents(Group[] groups)
 		{
 			this.GetInformationAboutUserFromDB();

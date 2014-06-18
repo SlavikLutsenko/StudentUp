@@ -152,6 +152,10 @@ namespace StudentUp.Models
 			return Subject.ExamType.nothing;
 		}
 
+		/// <summary>
+		/// Возвращает все группы студентов которые изучают этот предмет
+		/// </summary>
+		/// <returns>Масив групп</returns>
 		public Group[] GetGroups()
 		{
 			Group[] result = null;
@@ -169,6 +173,11 @@ namespace StudentUp.Models
 			return result;
 		}
 
+		/// <summary>
+		/// Возвращает всех студентов группы которые изучают этот предмет
+		/// </summary>
+		/// <param name="groupID">Идентификатор группы</param>
+		/// <returns>Масив студентов</returns>
 		public Student[] GetStudentsFromGroup(int groupID)
 		{
 			Student[] result = null;

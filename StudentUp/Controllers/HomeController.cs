@@ -234,7 +234,6 @@ namespace StudentUp.Controllers
 				{
 					idChangeEmail = Validation.StringToMd5Hash(user.Email + user.Password + changeEmail["New_email"].ToString());
 					db.QueryToRespontTable(string.Format("update ChangeEmail set ChangeEmail_id = '{0}' where ChangeEmail_id = '{1}'", idChangeEmail, changeEmail["ChangeEmail_id"].ToString()));
-					ViewData["user"] = user;
 					Mail.SendMail("smtp.gmail.com",
 						ConfigurationManager.AppSettings.Get("AIDemail"),
 						ConfigurationManager.AppSettings.Get("AIDpassword"),
@@ -316,8 +315,6 @@ namespace StudentUp.Controllers
 				responseTable = db.QueryToRespontTable("show columns from Subject like 'Exam_type';");
 				responseTable.Read();
 				ViewData["examType"] = ((string)responseTable["Type"]).Replace("enum('", "").Replace("')", "").Replace("'", "").Split(',');
-				ViewData["students"] = db.QueryToRespontTable("select * from Student;");
-				ViewData["subjects"] = db.QueryToRespontTable("select * from Subject;");
 				return View();
 			}
 			return Redirect("/");
@@ -546,7 +543,6 @@ namespace StudentUp.Controllers
 			if (user != null)
 			{
 				ViewData["user"] = user;
-				ViewData["myMarks"] = user.GetMyMarks();
 				ViewData["mySubjects"] = user.GetMySubjects();
 				ViewData["currentSubject"] = currentSubject;
 				return View();

@@ -33,24 +33,46 @@ namespace StudentUp.Controllers
 			return View();
 		}
 
+		/// <summary>
+		/// Возвращает все группы у которых преподается определенный предмет
+		/// </summary>
+		/// <param name="subjectID">Идентификатор предмета</param>
+		/// <returns>Частичное представление</returns>
 		public ActionResult GetGroupsOnTheSubject(int subjectID)
 		{
 			ViewData["groupsOnTheSubject"] = (new Subject(subjectID)).GetGroups();
 			return View();
 		}
 
+		/// <summary>
+		/// Возвращает всех студентов группы у которых преподается определенный предмет
+		/// </summary>
+		/// <param name="groupID">Идентификатор группы</param>
+		/// <param name="subjectID">Идентификатор предмета</param>
+		/// <returns>Частичное представление</returns>
 		public ActionResult GetStudentsFromGroupOnTheSubject(int groupID, int subjectID)
 		{
 			ViewData["studentsFromGroupOnTheSubject"] = subjectID == -1 ? (new Group(groupID)).GetStudent() : (new Subject(subjectID)).GetStudentsFromGroup(groupID);
 			return View();
 		}
 
+		/// <summary>
+		/// Возвращает все группы которым преподает определенны преподаватель
+		/// </summary>
+		/// <param name="userID">Идентификатор пользователя - преподователя</param>
+		/// <returns>Частичное представление</returns>
 		public ActionResult GetGroupsOnTheLecturer(int userID)
 		{
 			ViewData["groupsOnTheLecturer"] = (new Lecturer(new Users(userID))).GetMyGroups();
 			return View();
 		}
 
+		/// <summary>
+		/// Возвращает всех студентов которым определенны преподователь преподает определенный предмет
+		/// </summary>
+		/// <param name="userID">Идентификатор пользователя - преподователя</param>
+		/// <param name="subjectID">Идентификатор предмета. Если он равен -1 то выборка будет осуществлена по всем предметам преподователя</param>
+		/// <returns>Частичное представление</returns>
 		public ActionResult GetStudentsOnTheLecturer(int userID, int subjectID)
 		{
 			Group[] groups = subjectID == -1 ? (new Lecturer(new Users(userID))).GetMyGroups() : (new Subject(subjectID)).GetGroups();
@@ -58,6 +80,14 @@ namespace StudentUp.Controllers
 			return View();
 		}
 
+		/// <summary>
+		/// Возвращает все оценки выставленные преподователем
+		/// </summary>
+		/// <param name="userID">Идентификатор пользователя - преподователя</param>
+		/// <param name="subjectsID">Идентификаторы предметов</param>
+		/// <param name="groupsID">Идентификаторы групп</param>
+		/// <param name="studentsID">Идентификаторы студентов</param>
+		/// <returns>Частичное представление</returns>
 		public ActionResult ShowMarkLecturer(int userID, string subjectsID, string groupsID, string studentsID)
 		{
 			Marks[] result = null;
@@ -76,6 +106,12 @@ namespace StudentUp.Controllers
 			return View();
 		}
 
+		/// <summary>
+		/// Возвращает все оценки полученные студентом
+		/// </summary>
+		/// <param name="userID">Идентификатор пользователя - студента</param>
+		/// <param name="subjectsID">Идентификаторы предметов</param>
+		/// <returns>Частичное представление</returns>
 		public ActionResult ShowMarkStudent(int userID, string subjectsID)
 		{
 			Marks[] result = null;

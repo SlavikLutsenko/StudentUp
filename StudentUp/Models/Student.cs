@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Web;
 
 namespace StudentUp.Models
 {
@@ -199,8 +198,8 @@ namespace StudentUp.Models
 		/// <summary>
 		/// Производит вход пользователя в систему
 		/// </summary>
-		/// <returns></returns>
-		public bool Login(HttpResponseBase Response)
+		/// <returns>true - залогинен, false - не залогинен</returns>
+		public bool Login()
 		{
 			DB db = new DB();
 			DB.ResponseTable users = db.QueryToRespontTable(string.Format("select * from Student inner join Users on Student.Student_id = Users.Student_id where Email='{0}' and Password='{1}';", this.Email, this.Password));
@@ -221,7 +220,6 @@ namespace StudentUp.Models
 				this.typeOfEducetion = Student.ConverStringToEnum((string)users["Type_of_education"]);
 				this.contactsParents = (string)users["ontacts_parents"];
 				this.employmentInTheDepartment = (string)users["Employment_in_the_department"];
-				base.CreateSession(Response);
 				return true;
 			}
 			return false;

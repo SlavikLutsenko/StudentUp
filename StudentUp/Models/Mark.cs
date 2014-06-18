@@ -79,7 +79,7 @@ namespace StudentUp.Models
 		Marks.TypeMarks typeMark;
 
 		/// <summary>
-		/// КОнструктор класса
+		/// Конструктор класса
 		/// </summary>
 		/// <param name="newMarkID">Индетификатор оценки</param>
 		public Marks(int newMarkID)
