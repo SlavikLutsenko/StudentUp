@@ -31,7 +31,7 @@ function ShowMark() {
     subject += ")";
     group += ")";
     student += ")";
-    $.post("/Search/ShowMark", {userID: Number(getCookie("userID")), subjectsID: subject, groupsID: group, studentsID: student}, function (data) {
+    $.post("/Search/ShowMarkLecturer", {userID: Number(getCookie("userID")), subjectsID: subject, groupsID: group, studentsID: student}, function (data) {
         myMark.innerHTML = data;
     });
 }

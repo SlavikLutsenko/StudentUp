@@ -16,6 +16,7 @@
 }
 
 @{
+    Users user = ViewData["user"] as Users;
     int currentSubjectID = Convert.ToInt32(ViewData["currentSubject"]);
 }
 
@@ -30,10 +31,13 @@
             }
         }
     </select>
-    <select name="group">
-    </select>
-    <select name="student">
-    </select>
+    @if (user.Type == Users.UserType.Lecturer)
+    {
+        <select name="group">
+        </select>
+        <select name="student">
+        </select>
+    }
     <input type="button" name="showMark" value="Показати оцінки"/>
 </form>
 
@@ -43,5 +47,12 @@
 @section Script
 {
     <script src="~/JS/jquery-2.1.1.min.js"></script>
-    <script src="~/JS/MyMark.js"></script>
+    @if (user.Type == Users.UserType.Lecturer)
+    {
+        <script src="~/JS/MyMarkLecturer.js"></script>
+    }
+    else
+    {
+        <script src="~/JS/MyMarkStudent.js"></script>
+    }
 }

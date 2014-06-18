@@ -44,35 +44,6 @@
             </tr>
         }
         @Html.Raw("</table>")
-        @*<table border="1" cellspacing="0">
-            <tr>
-                <th>Студент</th>
-                <th>Предмет</th>
-                <th>Дата</th>
-                <th>Оцінка</th>
-                <th>Бонісні бали</th>
-                <th>Максимальна оцінка</th>
-                <th>Тип оцінки</th>
-            </tr>
-            @{
-                for (int i = 0, end = myMarks.Length; i < end; i++)
-                {
-                    Subject currentSubject = new Subject(myMarks[i].SubjectID);
-                    currentSubject.GetInformationAboutUserFromDB();
-                    Student currentStudent = new Student(myMarks[i].StudentID);
-                    currentStudent.GetInformationAboutUserFromDB();
-                    <tr>
-                        <td>@currentStudent.FullName</td>
-                        <td>@currentSubject.Name</td>
-                        <td>@myMarks[i].Date.ToShortDateString()</td>
-                        <td>@myMarks[i].Mark</td>
-                        <td>@myMarks[i].BonusMark</td>
-                        <td>@myMarks[i].MaxMark</td>
-                        <td>@Marks.GetEnumDescription(myMarks[i].TypeMark)</td>
-                    </tr>
-                }
-            }
-        </table>*@
     }
     else
     {
