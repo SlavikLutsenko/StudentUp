@@ -56,22 +56,22 @@
         </a>
         <a href="/MySubject" class="subject element @(typePage == 3? "action" : "")">
             <span class="icon"></span>
-            <span class="name">Мои предметы</span>
+            <span class="name">Мої предмети</span>
         </a>
         <a href="/MyMark" class="graph element @(typePage == 4? "action" : "")">
             <span class="icon"></span>
-            <span class="name">Мои оценки</span>
+            <span class="name">Мої оцінки</span>
         </a>
         @if (user.AccessLevel == 2)
         {
             <a href="/Admin" class="add element @(typePage == 2? "action" : "")">
                 <span class="icon"></span>
-                <span class="name">Администрирование</span>
+                <span class="name">Адміністрування</span>
             </a> 
         }
         <a class="exit element" href="/Exit">
             <span class="icon"></span>
-            <span class="name">Выход</span>
+            <span class="name">Вихід</span>
         </a>
     </div>
 
@@ -80,9 +80,9 @@
             @RenderBody()
         </div>
         <div class="b-footer">
-            <a href="#">Поддержка</a>
+            <a href="#">Підтримка</a>
             <a href="#">Об авторах</a>
-            <p>Все права защищены НТУУ КПИ.  &copy; 2014</p>
+            <p>Всі права захищені НТУУ "КПІ".  &copy; 2014</p>
         </div>
     </div>
 </body>

@@ -21,7 +21,7 @@
 <form action="@(user.Type==Users.UserType.Student?"/EditStudent":"/EditLecturer")" method="POST" accept-charset="utf-8">
     @if (user.AccessLevel == 2)
     {
-        <p>Ви є адміністратором нашої системи. Ми вдячні за вашу допомогу.</p>   
+        <p>Ви адміністратор нашої системи. Ми вдячні за вашу допомогу.</p>   
     }
     <input type="text" name="surname" value="@(user as Student != null ? ((Student)user).Surname : ((Lecturer)user).Surname)" placeholder="Прізвище"/>
     <input type="text" name="name" value="@(user as Student != null ? ((Student)user).Name : ((Lecturer)user).Name)" placeholder="Ім'я"/>
