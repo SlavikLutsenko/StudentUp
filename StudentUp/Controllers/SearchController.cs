@@ -57,5 +57,23 @@ namespace StudentUp.Controllers
 			ViewData["studentsOnTheLecturer"] = (new Lecturer(new Users(userID))).GetMyStudents(groups);
 			return View();
 		}
+
+		public ActionResult ShowMark(int userID, string subjectsID, string groupsID, string studentsID)
+		{
+			Marks[] result = null;
+			DB db = new DB();
+			DB.ResponseTable marksTable = db.QueryToRespontTable(string.Format("select marks.Mark_id from groups inner join student inner join studentsubject inner join marks on groups.Group_id = student.Group_id and student.Student_id = studentsubject.Student_id and marks.StudentSubject_id = studentsubject.StudentSubject_id and groups.Group_id in {0} and student.Student_id in {1} and studentsubject.Subject_id in {2} order by groups.Name;", groupsID, studentsID, subjectsID));
+			if (marksTable != null && marksTable.CountRow != 0)
+			{
+				result = new Marks[marksTable.CountRow];
+				for (int i = 0, end = result.Length; i < end && marksTable.Read(); i++)
+				{
+					result[i] = new Marks(Convert.ToInt32(marksTable["Mark_id"]));
+					result[i].GetInformationAboutUserFromDB();
+				}
+			}
+			ViewData["showMark"] = result;
+			return View();
+		}
 	}
 }

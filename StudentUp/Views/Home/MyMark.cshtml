@@ -37,53 +37,8 @@
     <input type="button" name="showMark" value="Показати оцінки"/>
 </form>
 
-@{
-    Users user = ViewData["user"] as Users;
-    Marks[] myMarks = ViewData["myMarks"] as Marks[];
-    if (myMarks != null)
-    {
-        <table border="1" cellspacing="0">
-            <tr>
-                <th>@(user.Type == Users.UserType.Student ? "Викладач" : "Студент")</th>
-                <th>Предмет</th>
-                <th>Дата</th>
-                <th>Оцінка</th>
-                <th>Бонісні бали</th>
-                <th>Максимальна оцінка</th>
-                <th>Тип оцінки</th>
-            </tr>
-            @{
-                for (int i = 0, end = myMarks.Length; i < end; i++)
-                {
-                    Subject currentSubject = new Subject(myMarks[i].SubjectID);
-                    currentSubject.GetInformationAboutUserFromDB();
-                    Lecturer currentLecturer = new Lecturer(currentSubject.LecturerID);
-                    currentLecturer.GetInformationAboutUserFromDB();
-                    Student currentStudent = new Student(myMarks[i].StudentID);
-                    currentStudent.GetInformationAboutUserFromDB();
-                    <tr>
-                        <td>@(user.Type == Users.UserType.Student ? currentLecturer.FullName : currentStudent.FullName)</td>
-                        <td>@currentSubject.Name</td>
-                        <td>@myMarks[i].Date.ToShortDateString()</td>
-                        <td>@myMarks[i].Mark</td>
-                        <td>@myMarks[i].BonusMark</td>
-                        <td>@myMarks[i].MaxMark</td>
-                        <td>@Marks.GetEnumDescription(myMarks[i].TypeMark)</td>
-                    </tr>
-                }
-            }
-        </table>
-    }
-    else
-    {
-        <h3>У вас покищо немає оцінок</h3>
-    }
-
-    if (user.Type == Users.UserType.Lecturer)
-    {
-        <a href="/AddMark">Поставити оцінку</a>
-    }
-}
+<div class="myMark">
+</div>
 
 @section Script
 {
