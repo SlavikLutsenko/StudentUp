@@ -18,13 +18,7 @@
 }
 
 <form action="/AddMark" method="POST" accept-charset="ust-8">
-    @if (currentSubject != -1)
-    {
-        Subject subject = new Subject(currentSubject);
-        subject.GetInformationAboutUserFromDB();
-        <p>Оцінка по предмету: @subject.Name</p>
-    }
-    <select name="subject" @(currentSubject!=-1?"disabled style=display:none;":"")>
+    <select name="subject">
         @{
             Subject[] mySubjects = ViewData["mySubjects"] as Subject[];
             for (int i = 0, end = mySubjects.Length; i < end; i++)
