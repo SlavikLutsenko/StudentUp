@@ -38,8 +38,8 @@
                 <form class="setAttestation">
                     <span>Мінімальна кількість балів для атестації: </span>
                     <input type="number" name="minMark" />
-                    <input type="number" name="subject" value="@subjects[i].ID" readonly="readonly"/>
-                    <input type="number" name="group" value="@groups[j].ID" readonly="readonly"/>
+                    <input type="number" name="subject" value="@subjects[i].ID" readonly="readonly" style="display: none"/>
+                    <input type="number" name="group" value="@groups[j].ID" readonly="readonly" style="display: none"/>
                     <input type="button" name="setAttestation" value="Виставити атестацію" />
                 </form>
             }
