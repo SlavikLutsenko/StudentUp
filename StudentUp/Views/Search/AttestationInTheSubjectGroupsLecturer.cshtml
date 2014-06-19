@@ -1,0 +1,60 @@
+﻿@using StudentUp.Models
+
+@{
+    Examination[] attestation = ViewData["attestation"] as Examination[];
+    Subject[] subjects = ViewData["subjects"] as Subject[];
+    Group[] groups = ViewData["groups"] as Group[];
+    int numberAttestation = Convert.ToInt32(ViewData["numberAttestation"]);
+    int currentAttestation = 0;
+    for (int i = 0, endSubject = subjects.Length; i < endSubject; i++)
+    {
+        <h2>@subjects[i].Name</h2>
+        for (int j = 0, endGroup = groups.Length; j < endGroup; j++)
+        {
+            <h3>@groups[j].Name</h3>
+            string result = "";
+            if (attestation != null && attestation.Length != 0)
+            {
+                for (int endAttestation = attestation.Length; currentAttestation < endAttestation; currentAttestation++)
+                {
+                    Student currentStudent = new Student(attestation[currentAttestation].StudentID);
+                    currentStudent.GetInformationAboutUserFromDB();
+                    Group currentGroup = new Group(currentStudent.GroupID);
+                    currentGroup.GetInformationAboutUserFromDB();
+                    if (groups[j].ID == currentGroup.ID && attestation[currentAttestation].SubjectID == subjects[i].ID)
+                    {
+                        result += string.Format("<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td></tr>", currentStudent.FullName, attestation[currentAttestation].Mark, attestation[currentAttestation].MinMark, (attestation[currentAttestation].Mark < attestation[currentAttestation].MinMark ? "не атестований" : "атестований"));
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+            if(result == "")
+            {
+                <p>У цієї групи по цьому предмету ще не виставлена атестація № @numberAttestation</p>
+                <p>Ви можете її виставити заповнивши наступну форму</p>
+                <form class="setAttestation">
+                    <span>Мінімальна кількість балів для атестації: </span>
+                    <input type="number" name="minMark" />
+                    <input type="number" name="subject" value="@subjects[i].ID" readonly="readonly"/>
+                    <input type="number" name="group" value="@groups[j].ID" readonly="readonly"/>
+                    <input type="button" name="setAttestation" value="Виставити атестацію" />
+                </form>
+            }
+            else
+            {
+                <table border="1" cellspacing="0">
+                    <tr>
+                        <th>Студент</th>
+                        <th>Набрані бали</th>
+                        <th>Мінімальна кількість балів для атестації</th>
+                        <th>Атечтація № @numberAttestation</th>
+                    </tr>
+                    @Html.Raw(result)
+                </table>
+            }
+        }
+    }
+}

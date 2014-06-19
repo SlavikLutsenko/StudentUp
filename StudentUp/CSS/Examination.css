@@ -1,0 +1,7 @@
+﻿div#myAttestation {
+    display: none;
+}
+
+input#attestation[name="typeExam"]:checked ~ div#myAttestation {
+    display: block;
+}

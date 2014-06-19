@@ -129,5 +129,69 @@ namespace StudentUp.Controllers
 			ViewData["showMark"] = result;
 			return View();
 		}
+
+		/// <summary>
+		/// Возвращает список атестаций
+		/// </summary>
+		/// <param name="numberAttestation">Номер атестации</param>
+		/// <returns>Страница</returns>
+		public ActionResult AttestationInTheSubjectGroupsLecturer(int numberAttestation)
+		{
+			Examination[] result = new Examination[0];
+			string[] tempEl = Request.Form["subjectsID"].Split(',');
+			Subject[] subjects = new Subject[tempEl.Length];
+			for (int i = 0; i < tempEl.Length; i++)
+			{
+				subjects[i] = new Subject(Convert.ToInt32(tempEl[i]));
+				subjects[i].GetInformationAboutUserFromDB();
+			}
+			tempEl = Request.Form["groupsID"].Split(',');
+			Group[] groups = new Group[tempEl.Length];
+			int[] groupsID = new int[groups.Length];
+			for (int i = 0; i < tempEl.Length; i++)
+			{
+				groups[i] = new Group(Convert.ToInt32(tempEl[i]));
+				groupsID[i] = groups[i].ID;
+				groups[i].GetInformationAboutUserFromDB();
+			}
+			for (int i = 0, end = subjects.Length; i < end; i++)
+			{
+				Examination[] temp = subjects[i].GetAttestation(numberAttestation, groupsID);
+				if (temp != null)
+				{
+					int lastEl = result.Length;
+					Array.Resize(ref result, result.Length + temp.Length);
+					Array.Copy(temp, 0, result, lastEl, temp.Length);
+				}
+			}
+			ViewData["attestation"] = result;
+			ViewData["subjects"] = subjects;
+			ViewData["groups"] = groups;
+			ViewData["numberAttestation"] = numberAttestation;
+			return View();
+		}
+
+		/// <summary>
+		/// Возвращает список атестаций студента
+		/// </summary>
+		/// <param name="userID">Идентификатор пользователя - студента</param>
+		/// <param name="numberAttestation">Номер атестации</param>
+		/// <returns>Страница</returns>
+		public ActionResult AttestationInTheSubjectGroupsStudent(int userID, int numberAttestation)
+		{
+			string[] tempEl = Request.Form["subjectsID"].Split(',');
+			Subject[] subjects = new Subject[tempEl.Length];
+			int[] subjectsID = new int[tempEl.Length];
+			for (int i = 0; i < tempEl.Length; i++)
+			{
+				subjects[i] = new Subject(Convert.ToInt32(tempEl[i]));
+				subjectsID[i] = subjects[i].ID;
+				subjects[i].GetInformationAboutUserFromDB();
+			}
+			ViewData["attestation"] = (new Student(new Users(userID))).GetAttestation(numberAttestation, subjectsID);
+			ViewData["subjects"] = subjects;
+			ViewData["numberAttestation"] = numberAttestation;
+			return View();
+		}
 	}
 }

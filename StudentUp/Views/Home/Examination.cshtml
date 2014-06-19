@@ -1,0 +1,77 @@
+﻿@using StudentUp.Models
+
+@{
+    ViewBag.Title = "Examination";
+    Layout = "~/Views/MasterPages/HomeMasterPage.cshtml";
+}
+
+@section Title
+{
+    StudentUp - Екзаменування
+}
+
+@section Style
+{
+    <link href="~/CSS/Examination.css" rel="stylesheet" />
+}
+
+@{
+    Users user = ViewData["user"] as Users;
+}
+
+<div class="messages">
+    @{
+        Messages messages = TempData["messages"] as Messages;
+        if (messages != null)
+        {
+            foreach (Messages.Message item in messages)
+            {
+                <h3 style="color: @(item.Type == Messages.Message.TypeMessage.error ? "red" : "black");">@item.Value</h3>
+            }
+        }
+    }
+</div>
+
+<label for="attestation">
+    Атестації
+</label>
+<input id="attestation" type="radio" name="typeExam" value="attestation" checked="checked" />
+<br />
+
+<div id="myAttestation">
+    <select name="numberAttestation">
+        <option value="1">Перша атестація</option>
+        <option value="2">Друга атестація</option>
+    </select>
+    <select name="subject">
+        <option value='-1'>Усі</option>
+        @{
+            Subject[] mySubjects = ViewData["mySubjects"] as Subject[];
+            for (int i = 0, end = mySubjects.Length; i < end; i++)
+            {
+                <option value="@mySubjects[i].ID">@mySubjects[i].Name</option>
+            }
+        }
+    </select>
+    @if (user.Type == Users.UserType.Lecturer)
+    {
+        <select name="group">
+        </select>
+    }
+    <input type="button" name="showMark" value="Показати атестації"/>
+    
+    <div class="myAttestation"></div>
+</div>
+
+@section Script
+{
+    <script src="~/JS/jquery-2.1.1.min.js"></script>
+    @if (user.Type == Users.UserType.Lecturer)
+    {
+        <script src="~/JS/ExaminationLecturer.js"></script>
+    }
+    else
+    {
+        <script src="~/JS/ExaminationStudent.js"></script>
+    }
+}

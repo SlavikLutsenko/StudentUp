@@ -285,6 +285,33 @@ namespace StudentUp.Models
 		}
 
 		/// <summary>
+		/// Возвращает оценки пользователя по определенному предмету
+		/// </summary>
+		/// <param name="subjectID">Идентификатор предмета</param>
+		/// <returns>Масив оценок</returns>
+		public Marks[] GetMyMarks(int subjectID)
+		{
+			Marks[] result = null;
+			DB db = new DB();
+			string query;
+			if (this.userType == UserType.Student)
+				query = string.Format("select marks.Mark_id from marks inner join studentsubject inner join student inner join users on marks.StudentSubject_id = studentsubject.StudentSubject_id and studentsubject.Student_id = student.Student_id and student.Student_id = users.Student_id and users.User_id = {0} and studentsubject.Subject_id = {1}  order by marks.Date;", this.userID, subjectID);
+			else
+				query = string.Format("select marks.Mark_id from marks inner join studentsubject inner join subject inner join lecturer inner join users on marks.StudentSubject_id = studentsubject.StudentSubject_id and studentsubject.Subject_id = subject.Subject_id and subject.Lecturer_id = lecturer.Lecturer_id and lecturer.Lecturer_id = users.Lecturer_id and users.User_id = {0}  and studentsubject.Subject_id = {1} order by marks.Date;", this.userID, subjectID);
+			DB.ResponseTable markID = db.QueryToRespontTable(query);
+			if (markID != null && markID.CountRow > 0)
+			{
+				result = new Marks[markID.CountRow];
+				for (int i = 0, end = result.Length; i < end && markID.Read(); i++)
+				{
+					result[i] = new Marks(Convert.ToInt32(markID["Mark_id"]));
+					result[i].GetInformationAboutUserFromDB();
+				}
+			}
+			return result;
+		}
+
+		/// <summary>
 		/// Создает сессию для текущего пользователя
 		/// </summary>
 		/// <param name="Response">Необходим для вставки в coocke-файл пользователя идентификатор сессии</param>

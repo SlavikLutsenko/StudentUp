@@ -122,6 +122,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Examination.cs" />
     <Compile Include="Models\Mark.cs" />
     <Compile Include="Models\Сommon functionality\DB.cs" />
     <Compile Include="Models\Department.cs" />
@@ -142,6 +143,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Content Include="CSS\Admin.css" />
     <Content Include="CSS\all.css" />
+    <Content Include="CSS\Examination.css" />
     <Content Include="CSS\StyleHomeMasterPage.css" />
     <Content Include="CSS\StyleIndexMasterPage.css" />
     <Content Include="CSS\Validation.css" />
@@ -150,6 +152,7 @@
     <Content Include="Images\add.png" />
     <Content Include="Images\avatar_female.png" />
     <Content Include="Images\avatar_male.png" />
+    <Content Include="Images\exam.png" />
     <Content Include="Images\exit.png" />
     <Content Include="Images\feedback.png" />
     <Content Include="Images\friend.png" />
@@ -163,6 +166,8 @@
     <Content Include="JS\AddMark.js" />
     <Content Include="JS\Admin.js" />
     <Content Include="JS\all.js" />
+    <Content Include="JS\ExaminationLecturer.js" />
+    <Content Include="JS\ExaminationStudent.js" />
     <Content Include="JS\jquery-2.1.1.min.js" />
     <Content Include="JS\MyMarkLecturer.js" />
     <Content Include="JS\MyMarkStudent.js" />
@@ -248,6 +253,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Search\ShowMarkStudent.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\Examination.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Search\AttestationInTheSubjectGroupsLecturer.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Search\AttestationInTheSubjectGroupsStudent.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

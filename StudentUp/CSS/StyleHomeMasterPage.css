@@ -78,6 +78,10 @@ body {
             background: url("../images/feedback.png") no-repeat;
         }
 
+        .b-menu .element.exam > .icon {
+            background: url("../images/exam.png") no-repeat;
+        }
+
         .b-menu .element.add > .icon {
             background: url("../images/add.png") no-repeat;
         }

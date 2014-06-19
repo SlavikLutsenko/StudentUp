@@ -1,0 +1,44 @@
+﻿@using StudentUp.Models
+
+@{
+    Examination[] attestation = ViewData["attestation"] as Examination[];
+    Subject[] subjects = ViewData["subjects"] as Subject[];
+    int numberAttestation = Convert.ToInt32(ViewData["numberAttestation"]);
+    int currentAttestation = 0;
+    for (int i = 0, endSubject = subjects.Length; i < endSubject; i++)
+    {
+        Lecturer currentLecturer = new Lecturer(subjects[i].LecturerID);
+        currentLecturer.GetInformationAboutUserFromDB();
+        <h3>@currentLecturer.FullName - @subjects[i].Name</h3>
+        string result = "";
+        if (attestation != null && attestation.Length != 0)
+        {
+            for (int endAttestation = attestation.Length; currentAttestation < endAttestation; currentAttestation++)
+            {
+                if (attestation[currentAttestation].SubjectID == subjects[i].ID)
+                {
+                    result += string.Format("<tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>", attestation[currentAttestation].Mark, attestation[currentAttestation].MinMark, (attestation[currentAttestation].Mark < attestation[currentAttestation].MinMark ? "не атестований" : "атестований"));
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+        if(result == "")
+        {
+            <p>Викладач ще не виставив атечтацію № @numberAttestation по цьому предмету</p>
+        }
+        else
+        {
+            <table border="1" cellspacing="0">
+                <tr>
+                    <th>Набрані бали</th>
+                    <th>Мінімальна кількість балів для атестації</th>
+                    <th>Атечтація № @numberAttestation</th>
+                </tr>
+                @Html.Raw(result)
+            </table>
+        }
+    }
+}

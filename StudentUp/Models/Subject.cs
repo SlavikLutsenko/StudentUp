@@ -230,5 +230,33 @@ namespace StudentUp.Models
 			subject.GetInformationAboutUserFromDB();
 			return subject;
 		}
+
+		/// <summary>
+		/// Возвращает атестации по текущиму предмету
+		/// </summary>
+		/// <param name="numberAttestation">Номер атестации</param>
+		/// <param name="groupsID">Масив идентификаторов груп</param>
+		/// <returns>Масив результктов атестации</returns>
+		public Examination[] GetAttestation(int numberAttestation, int[] groupsID)
+		{
+			Examination[] result = null;
+			string groups = "(";
+			for (int i = 0, end = groupsID.Length; i < end; i++)
+				groups += groupsID[i] + (i != end - 1 ? "," : "");
+			if (groups.Length == 1) groups += -1;
+			groups += ")";
+			DB db = new DB();
+			DB.ResponseTable attestationID = db.QueryToRespontTable(string.Format("select examination.Examination_id from examination inner join studentsubject inner join student inner join groups on examination.StudentSubject_id = studentsubject.StudentSubject_id and student.Student_id = studentsubject.Student_id and student.Group_id = groups.Group_id where studentsubject.Subject_id = {0} and examination.Exam_type = '{1}' and student.Group_id in {2}  order by groups.Name, student.Surname;", this.subjectID, "атестація" + numberAttestation, groups));
+			if (attestationID != null)
+			{
+				result = new Examination[attestationID.CountRow];
+				for (int i = 0, end = result.Length; i < end && attestationID.Read(); i++)
+				{
+					result[i] = new Examination(Convert.ToInt32(attestationID["Examination_id"]));
+					result[i].GetInformationAboutUserFromDB();
+				}
+			}
+			return result;
+		}
 	}
 }

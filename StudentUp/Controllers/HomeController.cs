@@ -295,6 +295,45 @@ namespace StudentUp.Controllers
 		}
 
 		/// <summary>
+		/// Возвращает страницу где расположенны списки атестаций, экзаменов, зачетов
+		/// </summary>
+		/// <returns>Страница</returns>
+		public ActionResult Examination()
+		{
+			Users user = Login();
+			if (user != null)
+			{
+				ViewData["user"] = user;
+				ViewData["mySubjects"] = user.GetMySubjects();
+				return View();
+			}
+			return Redirect("/");
+		}
+
+		/// <summary>
+		/// Выставляет атестацию
+		/// </summary>
+		/// <param name="numberAttestation">Номер атестации</param>
+		/// <param name="subjectID">Идентификатор предмета по которому выставляется атестация</param>
+		/// <param name="groupID">Идентификатор группы которой выставляется атестация</param>
+		/// <param name="minMark">Минимальное количество бало, которое необходимо для атестации студента</param>
+		/// <returns>Сообщение о результате выполнения</returns>
+		public string SetAttestation(int numberAttestation, int subjectID, int groupID, int minMark)
+		{
+			Student[] students = (new Group(groupID)).GetStudent();
+			for (int i = 0, endStudent = students.Length; i < endStudent; i++)
+			{
+				Marks[] currentMarks = students[i].GetMyMarks(subjectID);
+				int totalMark = 0;
+				if(currentMarks != null)
+					for (int j = 0, endMark = currentMarks.Length; j < endMark; j++)
+						totalMark += currentMarks[j].Mark + currentMarks[j].BonusMark;
+				(new DB()).QueryToRespontTable(string.Format("insert into examination(StudentSubject_id, Date, Mark, Min_mark, Exam_type) value ((select studentsubject.StudentSubject_id from student inner join studentsubject on student.Student_id = studentsubject.Student_id and student.Student_id = {0} and studentsubject.Subject_id = {1}),'{2}',{3},{4},'{5}');", students[i].ID, subjectID, DateTime.Today.ToString("yyyy-MM-dd"), totalMark, minMark, "атестація" + numberAttestation));
+			}
+			return "Атестація виставлена";
+		}
+
+		/// <summary>
 		/// Твраница администрирования сайта
 		/// </summary>
 		/// <returns>Возвращает страницу администрирования если пользователь зарегистрирован иначе перенаправляет на главную страницу</returns>
