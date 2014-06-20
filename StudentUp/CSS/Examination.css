@@ -1,7 +1,9 @@
-﻿div#myAttestation {
+﻿div#myAttestation,
+div#mySession {
     display: none;
 }
 
-input#attestation[name="typeExam"]:checked ~ div#myAttestation {
+input#attestation[name="typeExam"]:checked ~ div#myAttestation,
+input#session[name="typeExam"]:checked ~ div#mySession {
     display: block;
 }

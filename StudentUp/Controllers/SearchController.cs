@@ -269,5 +269,55 @@ namespace StudentUp.Controllers
 			ViewData["groups"] = groups;
 			return View();
 		}
+
+		public ActionResult SessionResult(int subjectID, int groupID, string typeSession)
+		{
+			Examination[] result = null;
+			DB.ResponseTable examID = (new DB()).QueryToRespontTable(string.Format("select examination.Examination_id from student inner join studentsubject inner join examination on student.Student_id = studentsubject.Student_id and studentsubject.StudentSubject_id = examination.StudentSubject_id where student.Group_id = {0} and studentsubject.Subject_id = {1} and examination.Exam_type = '{2}';", groupID, subjectID, typeSession));
+			if (examID != null)
+			{
+				result = new Examination[examID.CountRow];
+				for (int i = 0; i < result.Length && examID.Read(); i++)
+				{
+					result[i] = new Examination(Convert.ToInt32(examID["Examination_id"]));
+					result[i].GetInformationAboutUserFromDB();
+				}
+			}
+			ViewData["sessionResult"] = result;
+			return View();
+		}
+
+		public ActionResult ShowSetSession(int subjectID, int groupID, string typeSession)
+		{
+			string limit;
+			Student[] result = null;
+			switch (typeSession)
+			{
+				case "іспит":
+					limit = "('іспит')";
+					break;
+				case "пересдача1":
+					limit = "('іспит', 'пересдача1')";
+					break;
+				case "пересдача2":
+					limit = "('іспит', 'пересдача1', 'пересдача2')";
+					break;
+				default:
+					limit = "('іспит')";
+					break;
+			}
+			DB.ResponseTable studentsID = (new DB()).QueryToRespontTable(string.Format("select student.Student_id from student inner join studentsubject on student.Student_id = studentsubject.Student_id where student.Group_id = {0} and studentsubject.Subject_id = {1} and student.Student_id not in (select student.Student_id from student inner join studentsubject inner join examination on student.Student_id = studentsubject.Student_id and studentsubject.StudentSubject_id = examination.StudentSubject_id where student.Group_id = {0} and studentsubject.Subject_id = {1} and examination.Exam_type in {2});", groupID, subjectID, limit));
+			if (studentsID != null)
+			{
+				result = new Student[studentsID.CountRow];
+				for (int i = 0; i < studentsID.CountRow && studentsID.Read(); i++)
+				{
+					result[i] = new Student(Convert.ToInt32(studentsID["Student_id"]));
+					result[i].GetInformationAboutUserFromDB();
+				}
+			}
+			ViewData["students"] = result;
+			return View();
+		}
 	}
 }

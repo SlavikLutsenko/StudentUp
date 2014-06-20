@@ -349,6 +349,18 @@ namespace StudentUp.Controllers
 			return "Атестація виставлена";
 		}
 
+		public string SetSession(int subjectID, string typeSession)
+		{
+			string[] students = Request.Form["studentsID"].Split(','),
+					 marks = Request.Form["marks"].Split(',');
+			DB db = new DB();
+			for (int i = 0; i < students.Length; i++)
+			{
+				db.QueryToRespontTable(string.Format("insert into examination(StudentSubject_id, Date, Mark, Min_mark, Exam_type) value ((select studentsubject.StudentSubject_id from student inner join studentsubject on student.Student_id = studentsubject.Student_id and student.Student_id = {0} and studentsubject.Subject_id = {1}),'{2}',{3},{4},'{5}');", Convert.ToInt32(students[i]), subjectID, DateTime.Today.ToString("yyyy-MM-dd"), Convert.ToInt32(marks[i]), 100, typeSession));
+			}
+			return "Сессія по цьму предмету виставлена";
+		}
+
 		/// <summary>
 		/// Твраница администрирования сайта
 		/// </summary>

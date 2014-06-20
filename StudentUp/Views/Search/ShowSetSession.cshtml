@@ -1,0 +1,18 @@
+﻿@using StudentUp.Models
+@{
+    Student[] students = ViewData["students"] as Student[];
+    if (students != null)
+    {
+        <form>
+            @for (int i = 0; i < students.Length; i++)
+            {
+                <p class="studentResult">@students[i].FullName : <input type="number" name="studentID" readonly="readonly" value="@students[i].ID" style="display: none"/><input type="number" name="mark" placeholder="Отримані бали" /></p>
+            }
+            <input type="button" name="setSession" value="Виставити сесію"/>
+        </form>
+    }
+    else
+    {
+        <p>За заданим предметом вже виставленна сессія</p>
+    }
+}

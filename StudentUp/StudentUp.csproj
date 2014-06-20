@@ -181,7 +181,9 @@
     <Content Include="JS\MyStudent.js" />
     <Content Include="JS\ScriptIndexMasterPage.js" />
     <Content Include="JS\Validation.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -276,6 +278,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Search\SearchStudent.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Search\SessionResult.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Search\ShowSetSession.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

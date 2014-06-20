@@ -38,12 +38,18 @@
 <input id="attestation" type="radio" name="typeExam" value="attestation" checked="checked" />
 <br />
 
+<label for="session">
+    Сесія
+</label>
+<input id="session" type="radio" name="typeExam" value="attestation"/>
+<br />
+
 <div id="myAttestation">
     <select name="numberAttestation">
         <option value="1">Перша атестація</option>
         <option value="2">Друга атестація</option>
     </select>
-    <select name="subject">
+    <select name="subjectAttestation">
         <option value='-1'>Усі</option>
         @{
             Subject[] mySubjects = ViewData["mySubjects"] as Subject[];
@@ -55,12 +61,37 @@
     </select>
     @if (user.Type == Users.UserType.Lecturer)
     {
-        <select name="group">
+        <select name="groupAttestation">
         </select>
     }
-    <input type="button" name="showMark" value="Показати атестації"/>
+    <input type="button" name="showAttestation" value="Показати атестації"/>
     
     <div class="myAttestation"></div>
+</div>
+
+<div id="mySession">
+    <select name="typeSession">
+        <option value="іспит">Сесія</option>
+        <option value="пересдача1">Перша пересдача</option>
+        <option value="пересдача2">Друга пересдача</option>
+    </select>
+    <select name="subjectSession">
+        @{
+            mySubjects = ViewData["mySubjects"] as Subject[];
+            for (int i = 0, end = mySubjects.Length; i < end; i++)
+            {
+                <option value="@mySubjects[i].ID">@mySubjects[i].Name</option>
+            }
+        }
+    </select>
+    @if (user.Type == Users.UserType.Lecturer)
+    {
+        <select name="groupSession">
+        </select>
+    }
+    <input type="button" name="showSession" value="Показати результати сесії"/>
+    
+    <div class="mySession"></div>
 </div>
 
 @section Script

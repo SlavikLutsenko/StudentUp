@@ -1,7 +1,7 @@
 ﻿var attestationSelect = document.querySelector("select[name='numberAttestation']"),
-    subjectSelect = document.querySelector("select[name='subject']"),
-    groupSelect = document.querySelector("select[name='group']"),
-    showButton = document.querySelector("input[type='button'][name='showMark']"),
+    subjectSelectAttestation = document.querySelector("select[name='subjectAttestation']"),
+    groupSelectAttestation = document.querySelector("select[name='groupAttestation']"),
+    showButtonAttestation = document.querySelector("input[type='button'][name='showAttestation']"),
     myAttestation = document.querySelector(".myAttestation");
 
 var setAttestationButton;
@@ -10,23 +10,23 @@ function ShowAttestation() {
     var subject = new Array(),
         group = new Array(),
         option;
-    if (subjectSelect.value != "-1")
-        subject.push(Number(subjectSelect.value));
+    if (subjectSelectAttestation.value != "-1")
+        subject.push(Number(subjectSelectAttestation.value));
     else {
-        option = subjectSelect.querySelectorAll("option");
+        option = subjectSelectAttestation.querySelectorAll("option");
         for (var i = 0, end = option.length; i < end; i++)
-            if (option[i].value != "-1") 
+            if (option[i].value != "-1")
                 subject.push(Number(option[i].value));
     }
-    if (groupSelect.value != "-1")
-        group.push(Number(groupSelect.value));
+    if (groupSelectAttestation.value != "-1")
+        group.push(Number(groupSelectAttestation.value));
     else {
-        option = groupSelect.querySelectorAll("option");
+        option = groupSelectAttestation.querySelectorAll("option");
         for (var i = 0, end = option.length; i < end; i++)
             if (option[i].value != "-1")
                 group.push(Number(option[i].value));
     }
-    $.post("/Search/AttestationInTheSubjectGroupsLecturer", "numberAttestation="+attestationSelect.value+"&subjectsID="+subject+"&groupsID="+group, function (data) {
+    $.post("/Search/AttestationInTheSubjectGroupsLecturer", "numberAttestation=" + attestationSelect.value + "&subjectsID=" + subject + "&groupsID=" + group, function (data) {
         myAttestation.innerHTML = data;
         setAttestationButton = document.querySelectorAll("input[type='button'][name='setAttestation']");
         for (var i = 0; i < setAttestationButton.length; i++) {
@@ -46,22 +46,73 @@ function ShowAttestation() {
 
 $(document).ready(function () {
     $.post("/Search/GetGroupsOnTheLecturer", { userID: Number(getCookie("userID")) }, function (data) {
-        groupSelect.innerHTML = "<option value='-1'>Усі</option>" + data;
+        groupSelectAttestation.innerHTML = "<option value='-1'>Усі</option>" + data;
     });
 });
 
-subjectSelect.addEventListener("change", function () {
+subjectSelectAttestation.addEventListener("change", function () {
     var url, params;
-    if (subjectSelect.value == -1) {
+    if (subjectSelectAttestation.value == -1) {
         url = "/Search/GetGroupsOnTheLecturer";
         params = { userID: Number(getCookie("userID")) };
     } else {
         url = "/Search/GetGroupsOnTheSubject";
-        params = { subjectID: subjectSelect.value };
+        params = { subjectID: subjectSelectAttestation.value };
     }
     $.post(url, params, function (data) {
-        groupSelect.innerHTML = "<option value='-1'>Усі</option>" + data;
+        groupSelectAttestation.innerHTML = "<option value='-1'>Усі</option>" + data;
     });
 }, false);
 
-showButton.addEventListener("click", ShowAttestation, false);
+showButtonAttestation.addEventListener("click", ShowAttestation, false);
+
+
+/*=================================================*/
+
+var typeSession = document.querySelector("select[name='typeSession']"),
+    subjectSelectSession = document.querySelector("select[name='subjectSession']"),
+    groupSelectSession = document.querySelector("select[name='groupSession']"),
+    showButtonSession = document.querySelector("input[type='button'][name='showSession']"),
+    mySession = document.querySelector(".mySession");
+
+function ShowSession() {
+    $.post("/Search/SessionResult", { subjectID: subjectSelectSession.value, groupID: groupSelectSession.value, typeSession: typeSession.value }, function (data) {
+        mySession.innerHTML = "<h3>" + subjectSelectSession.selectedOptions[0].innerHTML + ":" + groupSelectSession.selectedOptions[0].innerHTML + "</h3>" + data + "<br/><input type='button' value='Виставити сесію' name='showSetSession'/>";
+        mySession.querySelector("input[type='button'][name='showSetSession']").addEventListener('click', function() {
+            $.post("/Search/ShowSetSession", { subjectID: subjectSelectSession.value, groupID: groupSelectSession.value, typeSession: typeSession.value }, function (data) {
+                mySession.innerHTML = data;
+                mySession.querySelector("input[type='button'][name='setSession']").addEventListener("click", function() {
+                    var students = new Array(),
+                        marks = new Array();
+                    var studentResult = mySession.querySelectorAll(".studentResult");
+                    for (var i = 0; i < studentResult.length; i++) {
+                        students.push(studentResult[i].querySelector("input[name='studentID']").value);
+                        marks.push(studentResult[i].querySelector("input[name='mark']").value);
+                    }
+                    $.post("/SetSession", "subjectID=" + subjectSelectSession.value + "&studentsID=" + students + "&marks=" + marks + "&typeSession=" + typeSession.value, function (data) {
+                        alert(data);
+                        ShowSession();
+                    });
+                }, false);
+            });
+        }, false);
+    });
+}
+
+$(document).ready(function () {
+    $.post("/Search/GetGroupsOnTheLecturer", { userID: Number(getCookie("userID")) }, function (data) {
+        groupSelectSession.innerHTML = data;
+    });
+});
+
+subjectSelectSession.addEventListener("change", function () {
+    $.post("/Search/GetGroupsOnTheSubject", { subjectID: subjectSelectSession.value }, function (data) {
+        groupSelectSession.innerHTML = data;
+    });
+}, false);
+
+showButtonSession.addEventListener("click", ShowSession, false);
+
+
+
+

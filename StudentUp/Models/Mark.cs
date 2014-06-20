@@ -233,5 +233,32 @@ namespace StudentUp.Models
 			currentMark.GetInformationAboutUserFromDB();
 			return currentMark;
 		}
+
+		public static string ToBolognaSystem(int mark, int maxMark)
+		{
+			double percent = (double) mark/maxMark;
+			if (percent >= 0.95) return "A";
+			if (percent >= 0.85) return "B";
+			if (percent >= 0.75) return "C";
+			if (percent >= 0.65) return "D";
+			if (percent >= 0.60) return "E";
+			if (percent >= 0.40) return "Fx";
+			return "F";
+		}
+
+		public static string ToTraditional(string markBologna)
+		{
+			switch (markBologna)
+			{
+				case "A": return "відмінно";
+				case "B": return "дуже добре";
+				case "C": return "добре";
+				case "D":
+				case "E": return "задовільно";
+				case "Fx": return "не задовільно";
+				case "F": return "не допущен";
+				default: return "";
+			}
+		}
 	}
 }
