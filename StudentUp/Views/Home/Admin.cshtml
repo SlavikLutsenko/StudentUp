@@ -3,7 +3,6 @@
 @{
     ViewBag.Title = "Admin";
     Layout = "~/Views/MasterPages/HomeMasterPage.cshtml";
-    DB db = new DB();
     DB.ResponseTable resultResponseTable;
     DB.ResponseTable department = ViewData["departments"] as DB.ResponseTable;
     DB.ResponseTable group = ViewData["groups"] as DB.ResponseTable;
@@ -66,6 +65,12 @@ StudentUp - Add
     Встановити студентам групи старосту
 </label>
 <input id="selectElder" type="radio" name="typeAdd" value="subject" />
+<br />
+
+<label for="kickedAttestation">
+    Список студентів - кандедети на відрахування за результатом атестацій
+</label>
+<input id="kickedAttestation" type="radio" name="typeAdd" value="subject" />
 <br />
 
 <div id="addGroup">
@@ -237,8 +242,37 @@ StudentUp - Add
     </form>
 </div>
 
+<div id="b-kickedAttestation">
+</div>
+
 @section Script
 {
     <script src="~/JS/jquery-2.1.1.min.js"></script>
     <script src="~/JS/Admin.js"></script>
+    <script>
+        var groupID = "(";
+        var subjects = new Array();
+        @{ 
+            group.GoToStatrTable();
+            string groupID = "";
+            for (int i = 0; i < group.CountRow && group.Read(); i++)
+            {
+                groupID += @group["Group_id"] + (i == group.CountRow - 1 ? "" : ",");
+            }
+            DB db = new DB();
+            DB.ResponseTable subjectID = db.QueryToRespontTable("select subject.Subject_id from subject;");
+            while (subjectID.Read())
+            {
+                <text>
+        subjects.push(@Convert.ToInt32(subjectID["Subject_id"]));                
+                </text>    
+            }
+        }
+        groupID = "@groupID";
+        for (var i = 0; i < subjects.length; i++) {
+            $.post("/Search/SearchStudent", "searchType=" + 2 + "&subjectsID=" + subjects[i] + "&groupsID=" + groupID, function (data) {
+                document.querySelector("#b-kickedAttestation").innerHTML += data;
+            });
+        }
+    </script>
 }

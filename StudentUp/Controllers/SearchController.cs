@@ -250,9 +250,9 @@ namespace StudentUp.Controllers
 				}
 				ViewData["examinations"] = examinations;
 			}
-			studentsID.GoToStatrTable();
 			if (studentsID != null)
 			{
+				studentsID.GoToStatrTable();
 				result = new Student[studentsID.CountRow];
 				for (int i = 0, end = result.Length; i < end && studentsID.Read(); i++)
 				{

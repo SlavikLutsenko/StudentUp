@@ -3,7 +3,8 @@ div#addStudent,
 div#addLecturer,
 div#addSubject,
 div#setSubjectForStudent,
-div#selectElder {
+div#selectElder,
+div#b-kickedAttestation {
     display: none;
 }
 
@@ -12,6 +13,7 @@ input#student[name="typeAdd"]:checked ~ div#addStudent,
 input#lecturer[name="typeAdd"]:checked ~ div#addLecturer,
 input#subject[name="typeAdd"]:checked ~ div#addSubject,
 input#studentSubject[name="typeAdd"]:checked ~ div#setSubjectForStudent,
-input#selectElder[name="typeAdd"]:checked ~ div#selectElder {
+input#selectElder[name="typeAdd"]:checked ~ div#selectElder,
+input#kickedAttestation[name="typeAdd"]:checked ~ div#b-kickedAttestation {
     display: block;
 }
