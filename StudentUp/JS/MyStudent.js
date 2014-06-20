@@ -38,8 +38,24 @@ $(document).ready(function () {
 searchSelect.addEventListener("change", function() {
     switch (this.value) {
         case "1":
+            subjectSelect.style.display = "block";
+            subjectSelect.querySelector("option[value='-1']").style.display = "block";
+            var url, params;
+            if (subjectSelect.value == -1) {
+                url = "/Search/GetGroupsOnTheLecturer";
+                params = { userID: Number(getCookie("userID")) };
+            } else {
+                url = "/Search/GetGroupsOnTheSubject";
+                params = { subjectID: subjectSelect.value };
+            }
+            $.post(url, params, function (data) {
+                groupSelect.innerHTML = "<option value='-1'>Усі</option>" + data;
+            });
+            break;
         case "2":
             subjectSelect.style.display = "block";
+            subjectSelect.querySelector("option[value='-1']").style.display = "none";
+            subjectSelect.querySelector("option[value='-1']+option").setAttribute("selected", "selected");
             var url, params;
             if (subjectSelect.value == -1) {
                 url = "/Search/GetGroupsOnTheLecturer";

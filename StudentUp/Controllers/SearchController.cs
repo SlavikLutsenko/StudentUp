@@ -233,13 +233,24 @@ namespace StudentUp.Controllers
 					}
 					break;
 				case 2:
-					query = string.Format("");
+					query = string.Format("select t1.Student_id, t1.Subject_id, t1.Examination_id from (select student.Student_id, student.Surname, studentsubject.Subject_id, examination.Examination_id, groups.Name from groups inner join student inner join studentsubject inner join examination on groups.Group_id =  student.Group_id and student.Student_id = studentsubject.Student_id and studentsubject.StudentSubject_id = examination.StudentSubject_id where groups.Group_id in {0} and studentsubject.Subject_id in {1} and examination.Exam_type = 'атестація1' and examination.Mark < examination.Min_mark order by student.Student_id, studentsubject.Subject_id, examination.Examination_id) as t1 inner join (select student.Student_id, student.Surname, studentsubject.Subject_id, examination.Examination_id, groups.Name from groups inner join student inner join studentsubject inner join examination on groups.Group_id = student.Group_id and student.Student_id = studentsubject.Student_id and studentsubject.StudentSubject_id = examination.StudentSubject_id where groups.Group_id in {0} and studentsubject.Subject_id in {1} and examination.Exam_type = 'атестація2' and examination.Mark < examination.Min_mark order by student.Student_id, studentsubject.Subject_id, examination.Examination_id) as t2 on t1.Student_id = t2.Student_id and t1.Subject_id = t2.Subject_id order by t1.Name, t1.Surname;", groupsID, subjectsID);
 					break;
 				case 3:
 					query = string.Format("select student.Student_id from student inner join groups on student.Group_id = groups.Group_id where student.Employment_in_the_department <> '' and groups.Group_id in {0} order by groups.Name, student.Surname;", groupsID);
 					break;
 			}
 			DB.ResponseTable studentsID = (new DB()).QueryToRespontTable(query);
+			if (searchType == 2 && studentsID != null)
+			{
+				Examination[] examinations = new Examination[studentsID.CountRow];
+				for (int i = 0, end = examinations.Length; i < end && studentsID.Read(); i++)
+				{
+					examinations[i] = new Examination(Convert.ToInt32(studentsID["Examination_id"]));
+					examinations[i].GetInformationAboutUserFromDB();
+				}
+				ViewData["examinations"] = examinations;
+			}
+			studentsID.GoToStatrTable();
 			if (studentsID != null)
 			{
 				result = new Student[studentsID.CountRow];
