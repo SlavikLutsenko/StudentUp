@@ -311,6 +311,22 @@ namespace StudentUp.Controllers
 		}
 
 		/// <summary>
+		/// Выводит студентов преподователя
+		/// </summary>
+		/// <returns>Станица</returns>
+		public ActionResult MyStudents()
+		{
+			Users user = Login();
+			if (user != null && user.Type == Users.UserType.Lecturer)
+			{
+				ViewData["user"] = user;
+				ViewData["mySubjects"] = user.GetMySubjects();
+				return View();
+			}
+			return Redirect("/");
+		}
+
+		/// <summary>
 		/// Выставляет атестацию
 		/// </summary>
 		/// <param name="numberAttestation">Номер атестации</param>

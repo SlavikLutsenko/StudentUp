@@ -29,6 +29,9 @@
         case "Examination":
             typePage = 5;
             break;
+        case "MyStudents":
+            typePage = 6;
+            break;
     }
 }
 
@@ -65,6 +68,13 @@
             <span class="icon"></span>
             <span class="name">Мої оцінки</span>
         </a>
+        @if(user.Type == Users.UserType.Lecturer)
+        {
+            <a href="/MyStudents" class="graph element @(typePage == 6? "action" : "")">
+                <span class="icon"></span>
+                <span class="name">Мої студенти</span>
+            </a>
+        }
         <a href="/Examination" class="exam element @(typePage == 5? "action" : "")">
             <span class="icon"></span>
             <span class="name">Екзаменування</span>

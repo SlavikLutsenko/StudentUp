@@ -134,7 +134,7 @@ namespace StudentUp.Controllers
 		/// Возвращает список атестаций
 		/// </summary>
 		/// <param name="numberAttestation">Номер атестации</param>
-		/// <returns>Страница</returns>
+		/// <returns>Частичное представление</returns>
 		public ActionResult AttestationInTheSubjectGroupsLecturer(int numberAttestation)
 		{
 			Examination[] result = new Examination[0];
@@ -176,7 +176,7 @@ namespace StudentUp.Controllers
 		/// </summary>
 		/// <param name="userID">Идентификатор пользователя - студента</param>
 		/// <param name="numberAttestation">Номер атестации</param>
-		/// <returns>Страница</returns>
+		/// <returns>Частичное представление</returns>
 		public ActionResult AttestationInTheSubjectGroupsStudent(int userID, int numberAttestation)
 		{
 			string[] tempEl = Request.Form["subjectsID"].Split(',');
@@ -191,6 +191,68 @@ namespace StudentUp.Controllers
 			ViewData["attestation"] = (new Student(new Users(userID))).GetAttestation(numberAttestation, subjectsID);
 			ViewData["subjects"] = subjects;
 			ViewData["numberAttestation"] = numberAttestation;
+			return View();
+		}
+
+		/// <summary>
+		/// Выводит всех студентов соответствующийх запросу
+		/// </summary>
+		/// <param name="searchType">Тип запроса</param>
+		/// <returns>Частичное представление</returns>
+		public ActionResult SearchStudent(int searchType)
+		{
+			Student[] result = null;
+			string[] tempEl = Request.Form["subjectsID"].Split(',');
+			Subject[] subjects = new Subject[tempEl.Length];
+			string subjectsID = "(";
+			for (int i = 0; i < tempEl.Length; i++)
+			{
+				subjects[i] = new Subject(Convert.ToInt32(tempEl[i]));
+				subjectsID += subjects[i].ID + (i == tempEl.Length - 1 ? "" : ",");
+				subjects[i].GetInformationAboutUserFromDB();
+			}
+			tempEl = Request.Form["groupsID"].Split(',');
+			Group[] groups = new Group[tempEl.Length];
+			string groupsID = "(";
+			for (int i = 0; i < tempEl.Length; i++)
+			{
+				groups[i] = new Group(Convert.ToInt32(tempEl[i]));
+				groupsID += groups[i].ID + (i == tempEl.Length - 1 ? "" : ",");
+				groups[i].GetInformationAboutUserFromDB();
+			}
+			groupsID += ")";
+			subjectsID += ")";
+			string query = "";
+			switch (searchType)
+			{
+				case 1:
+					query = string.Format("(select student.Student_id from groups inner join student inner join studentsubject on groups.Group_id = student.Group_id and student.Student_id = studentsubject.Student_id where groups.Group_id in {0} and studentsubject.Subject_id = {1} order by groups.Name, student.Surname limit 10000)", groupsID, subjects[0].ID);
+					for (int i = 1; i < subjects.Length; i++)
+					{
+						query += "union all" + string.Format("(select student.Student_id from groups inner join student inner join studentsubject on groups.Group_id = student.Group_id and student.Student_id = studentsubject.Student_id where groups.Group_id in {0} and studentsubject.Subject_id = {1} order by groups.Name, student.Surname limit 10000)",groupsID, subjects[i].ID);
+					}
+					break;
+				case 2:
+					query = string.Format("");
+					break;
+				case 3:
+					query = string.Format("select student.Student_id from student inner join groups on student.Group_id = groups.Group_id where student.Employment_in_the_department <> '' and groups.Group_id in {0} order by groups.Name, student.Surname;", groupsID);
+					break;
+			}
+			DB.ResponseTable studentsID = (new DB()).QueryToRespontTable(query);
+			if (studentsID != null)
+			{
+				result = new Student[studentsID.CountRow];
+				for (int i = 0, end = result.Length; i < end && studentsID.Read(); i++)
+				{
+					result[i] = new Student(Convert.ToInt32(studentsID["Student_id"]));
+					result[i].GetInformationAboutUserFromDB();
+				}
+			}
+			ViewData["searchType"] = searchType;
+			ViewData["students"] = result;
+			ViewData["subjects"] = subjects;
+			ViewData["groups"] = groups;
 			return View();
 		}
 	}

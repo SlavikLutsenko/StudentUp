@@ -178,6 +178,7 @@
     <Content Include="JS\jquery-2.1.1.min.js" />
     <Content Include="JS\MyMarkLecturer.js" />
     <Content Include="JS\MyMarkStudent.js" />
+    <Content Include="JS\MyStudent.js" />
     <Content Include="JS\ScriptIndexMasterPage.js" />
     <Content Include="JS\Validation.js" />
     <Content Include="Web.config" />
@@ -269,6 +270,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Search\AttestationInTheSubjectGroupsStudent.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\MyStudents.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Search\SearchStudent.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

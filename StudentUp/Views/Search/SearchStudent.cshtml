@@ -1,0 +1,76 @@
+﻿@using StudentUp.Models
+
+@{
+    Student[] students = ViewData["students"] as Student[];
+    Subject[] subjects = ViewData["subjects"] as Subject[];
+    Group[] groups = ViewData["groups"] as Group[];
+    int searchType = Convert.ToInt32(ViewData["searchType"]);
+    if (students != null)
+    {
+        int currernStudent = 0;
+        switch (searchType)
+        {
+            case 1:
+                for (int i = 0; i < subjects.Length && currernStudent < students.Length; i++)
+                {
+                    <h3>@subjects[i].Name</h3>
+                    for (int j = 0; j < groups.Length && currernStudent < students.Length; j++)
+                    {
+                        if (groups[j].ID == students[currernStudent].GroupID)
+                        {
+                            <h4>@groups[j].Name</h4>
+                            <table border="1" cellspacing="0">
+                                <tr>
+                                    <th>ФІО</th>
+                                </tr>
+                                @for (; currernStudent < students.Length; currernStudent++)
+                                {
+                                    if (groups[j].ID != students[currernStudent].GroupID)
+                                    {
+                                        break;
+                                    }
+                                    <tr>
+                                        <td>@students[currernStudent].FullName</td>
+                                    </tr>
+                                }
+                            </table>
+                        }
+                    }
+                }
+                break;
+            case 2:
+
+                break;
+            case 3:
+                for (int i = 0; i < groups.Length && currernStudent < students.Length; i++)
+                {
+                    if (groups[i].ID == students[currernStudent].GroupID)
+                    {
+                        <h4>@groups[i].Name</h4>
+                        <table border="1" cellspacing="0">
+                            <tr>
+                                <th>ФІО</th>
+                                <th>Род діяльності на кафедрі</th>
+                            </tr>
+                            @for (; currernStudent < students.Length; currernStudent++)
+                            {
+                                if (groups[i].ID != students[currernStudent].GroupID)
+                                {
+                                    break;
+                                }
+                                <tr>
+                                    <td>@students[currernStudent].FullName</td>
+                                    <td>@students[currernStudent].EmploymentInTheDepartment</td>
+                                </tr>
+                            }
+                        </table>
+                    }
+                }
+                break;
+        }
+    }
+    else
+    {
+        <p>За заданими параметрами у вас немає студентів</p>
+    }
+}

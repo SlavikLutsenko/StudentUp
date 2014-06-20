@@ -1,0 +1,48 @@
+﻿@using StudentUp.Models
+
+@{
+    ViewBag.Title = "MyStudents";
+    Layout = "~/Views/MasterPages/HomeMasterPage.cshtml";
+}
+
+@section Title
+{
+    StudentUp - Мої студенти
+}
+
+@section Style
+{}
+
+@{
+    Users user = ViewData["user"] as Users;
+}
+
+<select name="searchType">
+    <option value="1">Усі студенти</option>
+    <option value="2">Наскрізні неатестації</option>
+    <option value="3">Студенти що працюють на кафедру</option>
+</select>
+<select name="subject">
+    <option value='-1'>Усі</option>
+    @{
+        Subject[] mySubjects = ViewData["mySubjects"] as Subject[];
+        for (int i = 0, end = mySubjects.Length; i < end; i++)
+        {
+            <option value="@mySubjects[i].ID">@mySubjects[i].Name</option>
+        }
+    }
+</select>
+@if (user.Type == Users.UserType.Lecturer)
+{
+    <select name="group">
+    </select>
+}
+<input type="button" name="showMark" value="Показати атестації"/>
+
+<div class="myStudent"></div>
+
+@section Script
+{
+    <script src="~/JS/jquery-2.1.1.min.js"></script>
+    <script src="~/JS/MyStudent.js"></script>
+}
