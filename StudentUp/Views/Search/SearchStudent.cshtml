@@ -90,9 +90,33 @@
                     }
                 }
                 break;
+            case 4:
+                for (int i = 0; i < groups.Length && currernStudent < students.Length; i++)
+                {
+                    if (groups[i].ID == students[currernStudent].GroupID)
+                    {
+                        <h4>@groups[i].Name</h4>
+                        <table border="1" cellspacing="0">
+                            <tr>
+                                <th>ФІО</th>
+                            </tr>
+                            @for (; currernStudent < students.Length; currernStudent++)
+                            {
+                                if (groups[i].ID != students[currernStudent].GroupID)
+                                {
+                                    break;
+                                }
+                                <tr>
+                                    <td>@students[currernStudent].FullName</td>
+                                </tr>
+                            }
+                        </table>
+                    }
+                }
+                break;
         }
     }
-    if(students == null && searchType == 3)
+    if (students == null && (searchType == 3 || searchType == 4))
     {
         <p>За заданими параметрами у вас немає студентів</p>
     }

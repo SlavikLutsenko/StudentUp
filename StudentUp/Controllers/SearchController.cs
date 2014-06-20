@@ -238,6 +238,9 @@ namespace StudentUp.Controllers
 				case 3:
 					query = string.Format("select student.Student_id from student inner join groups on student.Group_id = groups.Group_id where student.Employment_in_the_department <> '' and groups.Group_id in {0} order by groups.Name, student.Surname;", groupsID);
 					break;
+				case 4:
+					query = string.Format("select student.Student_id from student inner join studentsubject inner join marks on student.Student_id = studentsubject.Student_id and studentsubject.StudentSubject_id = marks.StudentSubject_id where student.Student_id not in (select studentsubject.Student_id from marks inner join studentsubject on marks.StudentSubject_id = studentsubject.StudentSubject_id where marks.Mark <> marks.Max_mark)  and student.Group_id in {0};", groupsID);
+					break;
 			}
 			DB.ResponseTable studentsID = (new DB()).QueryToRespontTable(query);
 			if (searchType == 2 && studentsID != null)
