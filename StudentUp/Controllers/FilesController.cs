@@ -48,17 +48,31 @@ namespace StudentUp.Controllers
 			}
 		}
 
+		/// <summary>
+		/// Дает пользователю загрузить файл с сервера
+		/// </summary>
+		/// <param name="fileName">Имя файла</param>
+		/// <returns>Файл</returns>
 		public ActionResult Download(string fileName)
 		{
 			string fullPath = Path.Combine(Server.MapPath("~/Files"), fileName);
 			return File(fullPath, GetFileExtension("." + fileName.Split('.')[1]), fileName);
 		}
 
+		/// <summary>
+		/// Удаляет файл с сервера
+		/// </summary>
+		/// <param name="fileName">Имя файла</param>
 		public void DeleteFile(string fileName)
 		{
 			System.IO.File.Delete(Server.MapPath("~/Files") + "\\" + fileName);
 		}
 
+		/// <summary>
+		/// Создает файл с атестациями и отправляет его пользователю
+		/// </summary>
+		/// <param name="numberAttestation">Номер атестации</param>
+		/// <returns>Имя файла для загрузки</returns>
 		public string Attestation(int numberAttestation)
 		{
 			string fileName = "attestation" + numberAttestation + "_" + DateTime.Now.ToString("dd_MM_yyyy") + ".xlsx";
@@ -141,22 +155,30 @@ namespace StudentUp.Controllers
 			return fileName;
 		}
 
-		public string Session(int groupID)
+		/// <summary>
+		/// Создает и отправляет пользоваетеляю файл с результатами сесии группы
+		/// </summary>
+		/// <param name="subjectID">Идентификатор предмета</param>
+		/// <param name="groupID">Идентификатор группы</param>
+		/// <returns>Имя файла для загрузки</returns>
+		public string Session(int subjectID, int groupID)
 		{
 			string fileName = "session" + "_" + DateTime.Now.ToString("dd_MM_yyyy") + ".docx";
 			DeleteFile(fileName);
-			DB db = new DB();
 			Group @group = new Group(groupID);
 			group.GetInformationAboutUserFromDB();
 			Student[] students = group.GetStudent();
-			Subject[] subjectsStudents = group.GetSubjects();
-			Examination[] examinations = subjectsStudents[0].GetSession(group.ID);
-			if (examinations == null) return "Цій групі ще не витавили сесію";
+			Subject subject = new Subject(subjectID);
+			subject.GetInformationAboutUserFromDB();
+			Lecturer lecturer = new Lecturer(subject.LecturerID);
+			lecturer.GetInformationAboutUserFromDB();
+			Examination[] examinations = subject.GetSession(group.ID);
+			if (examinations == null) return null;
 			Microsoft.Office.Interop.Word.Application applicationWord = new Microsoft.Office.Interop.Word.Application();
 
 			applicationWord.Documents.Add(Type.Missing, false, Microsoft.Office.Interop.Word.WdNewDocumentType.wdNewBlankDocument, false);
 
-			Microsoft.Office.Interop.Word.Document documentWord = (Microsoft.Office.Interop.Word.Document)applicationWord.Documents.get_Item(1);
+			Microsoft.Office.Interop.Word.Document documentWord = applicationWord.Documents.get_Item(1);
 			documentWord.Activate();
 
 			//applicationWord.Visible = true;
@@ -190,7 +212,7 @@ namespace StudentUp.Controllers
 			documentParagraph.Range.ParagraphFormat.Alignment = Microsoft.Office.Interop.Word.WdParagraphAlignment.wdAlignParagraphLeft;
 			documentParagraph.Range.Font.Bold = 0;
 			documentParagraph.Range.Font.Underline = Microsoft.Office.Interop.Word.WdUnderline.wdUnderlineSingle;
-			documentParagraph.Range.Text = subjectsStudents[0].Name;
+			documentParagraph.Range.Text = subject.Name;
 
 			documentParagraph = documentWord.Paragraphs.Add().Next();
 			documentParagraph.Range.ParagraphFormat.Alignment = Microsoft.Office.Interop.Word.WdParagraphAlignment.wdAlignParagraphLeft;
@@ -201,7 +223,7 @@ namespace StudentUp.Controllers
 			documentParagraph = documentWord.Paragraphs.Add().Next();
 			documentParagraph.Range.ParagraphFormat.Alignment = Microsoft.Office.Interop.Word.WdParagraphAlignment.wdAlignParagraphLeft;
 			documentParagraph.Range.Font.Bold = 0;
-			documentParagraph.Range.Text = "Екзаменатор  !!!yfgbcfnb!!!";
+			documentParagraph.Range.Text = "Екзаменатор  " + lecturer.ShortName;
 
 			documentParagraph = documentWord.Paragraphs.Add().Next();
 			Microsoft.Office.Interop.Word.Table table = documentWord.Tables.Add(documentParagraph.Range, students.Length + 2, 7);
@@ -249,6 +271,7 @@ namespace StudentUp.Controllers
 			}
 
 			documentWord.SaveAs(Server.MapPath("~/Files") + "\\" + fileName);
+			documentWord.Close();
 			applicationWord.Quit();
 			return fileName;
 		}

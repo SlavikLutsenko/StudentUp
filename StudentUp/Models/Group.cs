@@ -120,6 +120,10 @@ namespace StudentUp.Models
 			return result;
 		}
 
+		/// <summary>
+		/// Возвращает список предметов группы
+		/// </summary>
+		/// <returns>масив предметов</returns>
 		public Subject[] GetSubjects()
 		{
 			Subject[] result = null;

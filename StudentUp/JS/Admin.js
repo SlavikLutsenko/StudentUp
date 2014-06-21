@@ -48,12 +48,3 @@ document.querySelector("input[type='button'][name='attestation2']").addEventList
         window.location = '/Files/Download?fileName=' + fileName;
     });
 }, false);
-
-var groupSelectSession = document.querySelector("#b-statement select[name='groupSession']");
-
-document.querySelector("input[type='button'][name='session']").addEventListener('click', function () {
-    $.post("/Files/Session", { groupID: groupSelectSession.value }, function (fileName) {
-        //if (fileName.search(".docx") == -1) alert(fileName);
-         window.location = '/Files/Download?fileName=' + fileName;
-    });
-}, false);

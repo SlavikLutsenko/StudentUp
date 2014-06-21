@@ -77,25 +77,34 @@ var typeSession = document.querySelector("select[name='typeSession']"),
 
 function ShowSession() {
     $.post("/Search/SessionResultLecturer", { subjectID: subjectSelectSession.value, groupID: groupSelectSession.value, typeSession: typeSession.value }, function (data) {
-        mySession.innerHTML = "<h3>" + subjectSelectSession.selectedOptions[0].innerHTML + ":" + groupSelectSession.selectedOptions[0].innerHTML + "</h3>" + data + "<br/><input type='button' value='Виставити сесію' name='showSetSession'/>";
-        mySession.querySelector("input[type='button'][name='showSetSession']").addEventListener('click', function() {
-            $.post("/Search/ShowSetSession", { subjectID: subjectSelectSession.value, groupID: groupSelectSession.value, typeSession: typeSession.value }, function (data) {
-                mySession.innerHTML = data;
-                mySession.querySelector("input[type='button'][name='setSession']").addEventListener("click", function() {
-                    var students = new Array(),
-                        marks = new Array();
-                    var studentResult = mySession.querySelectorAll(".studentResult");
-                    for (var i = 0; i < studentResult.length; i++) {
-                        students.push(studentResult[i].querySelector("input[name='studentID']").value);
-                        marks.push(studentResult[i].querySelector("input[name='mark']").value);
-                    }
-                    $.post("/SetSession", "subjectID=" + subjectSelectSession.value + "&studentsID=" + students + "&marks=" + marks + "&typeSession=" + typeSession.value, function (data) {
-                        alert(data);
-                        ShowSession();
-                    });
-                }, false);
-            });
-        }, false);
+        mySession.innerHTML = "<h3>" + subjectSelectSession.selectedOptions[0].innerHTML + ":" + groupSelectSession.selectedOptions[0].innerHTML + "</h3>" + data;
+        var button = mySession.querySelector("input[type='button'][name='showSetSession']") || mySession.querySelector("input[type='button'][name='createExam']");
+        if (button.getAttribute("name") == "showSetSession")
+            button.addEventListener('click', function() {
+                $.post("/Search/ShowSetSession", { subjectID: subjectSelectSession.value, groupID: groupSelectSession.value, typeSession: typeSession.value }, function (data) {
+                    mySession.innerHTML = data;
+                    mySession.querySelector("input[type='button'][name='setSession']").addEventListener("click", function() {
+                        var students = new Array(),
+                            marks = new Array();
+                        var studentResult = mySession.querySelectorAll(".studentResult");
+                        for (var i = 0; i < studentResult.length; i++) {
+                            students.push(studentResult[i].querySelector("input[name='studentID']").value);
+                            marks.push(studentResult[i].querySelector("input[name='mark']").value);
+                        }
+                        $.post("/SetSession", "subjectID=" + subjectSelectSession.value + "&studentsID=" + students + "&marks=" + marks + "&typeSession=" + typeSession.value, function (data) {
+                            alert(data);
+                            ShowSession();
+                        });
+                    }, false);
+                });
+            }, false);
+        else 
+            button.addEventListener("click", function() {
+                $.post("/Files/Session", { subjectID: subjectSelectSession.value, groupID: groupSelectSession.value }, function (fileName) {
+                    if (fileName == null) alert("Цій групі ще не витавили сесію");
+                    else window.location = '/Files/Download?fileName=' + fileName;
+                });
+            }, false);
     });
 }
 

@@ -581,6 +581,12 @@ namespace StudentUp.Controllers
 			return Redirect("/Admin");
 		}
 
+		/// <summary>
+		/// Устанавливает старосту группе
+		/// </summary>
+		/// <param name="group">Идентификатор группы</param>
+		/// <param name="elder">Идентификатор старосты</param>
+		/// <returns>Страница</returns>
 		public ActionResult SelectElder(int group, int elder)
 		{
 			(new Group(group)).SetElder(elder);

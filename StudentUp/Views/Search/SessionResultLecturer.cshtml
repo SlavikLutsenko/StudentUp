@@ -3,6 +3,7 @@
     Examination[] sessionResult = ViewData["sessionResult"] as Examination[];
     if (sessionResult != null)
     {
+        <input type='button' value='Створити відомость' name='createExam'/>
         <table border="1" cellspacing="0">
             <tr>
                 <th>Студент</th>
@@ -26,5 +27,6 @@
     else
     {
         <p>За заданим предметом ще не виставленна сессія</p>
+        <input type='button' value='Виставити сесію' name='showSetSession'/>
     }
 }

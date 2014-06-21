@@ -259,6 +259,11 @@ namespace StudentUp.Models
 			return result;
 		}
 
+		/// <summary>
+		/// Возвращает результаты сессии по определенной группе
+		/// </summary>
+		/// <param name="groupID">дентификатор группы</param>
+		/// <returns>Масив оценок</returns>
 		public Examination[] GetSession(int groupID)
 		{
 			Examination[] result = null;
