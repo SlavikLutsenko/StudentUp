@@ -54,9 +54,9 @@ namespace StudentUp.Controllers
 			System.IO.File.Delete(Server.MapPath("~/Files") + "\\" + fileName);
 		}
 
-		public string Attestation1()
+		public string Attestation(int numberAttestation)
 		{
-			string fileName = "attestation1_" + DateTime.Now.ToString("dd_MM_yyyy") + ".xlsx";
+			string fileName = "attestation" + numberAttestation + "_" + DateTime.Now.ToString("dd_MM_yyyy") + ".xlsx";
 			DeleteFile(fileName);
 			DB db = new DB();
 			DB.ResponseTable groupsID = db.QueryToRespontTable("select groups.Group_id from groups order by groups.Name;");
@@ -112,7 +112,7 @@ namespace StudentUp.Controllers
 						else
 						{
 							currentWorksheet.Range[(char)(65 + numberExam - 1) + "4"].Value2 = subjectsStudents[j].Name;
-							Examination[] examinations = subjectsStudents[j].GetAttestation(1, new[] { currentGroup.ID });
+							Examination[] examinations = subjectsStudents[j].GetAttestation(numberAttestation, new[] { currentGroup.ID });
 							if (examinations != null)
 								for (int k = 0; k < examinations.Length; k++)
 									currentWorksheet.Range[(char)(65 + numberExam - 1) + (5 + k).ToString()].Value2 = examinations[k].Mark < examinations[k].MinMark ? "н/з" : "з";

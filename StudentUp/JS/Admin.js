@@ -37,29 +37,18 @@ groupSelect_selectElder.addEventListener("change", function () {
 }, false);
 
 
-document.querySelector("input[type='button'][name='attestation1']").addEventListener('click', function() {
-    //$.ajax({
-    //    type: 'POST',
-    //    url: "/Files/Attestation1", 
-    //    contentType: 'application/json; charset=utf-8',
-    //    dataType: 'json',
-    //    success: function (returnValue) {
-    //        alert(returnValue);
-    //        window.location = '/Files/Download?file=' + returnValue;
-    //    },
-    //    error: function(e) {
-    //        alert("error");
-    //    }
-    //});
-    $.post("/Files/Attestation1", function (fileName) {
-         window.location = '/Files/Download?fileName=' + fileName;
+document.querySelector("input[type='button'][name='attestation1']").addEventListener('click', function () {
+    $.post("/Files/Attestation", { numberAttestation: 1 }, function (fileName) {
+        window.location = '/Files/Download?fileName=' + fileName;
     });
 }, false);
 
-document.querySelector("input[type='button'][name='attestation2']").addEventListener('click', function() {
-    alert(2);
+document.querySelector("input[type='button'][name='attestation2']").addEventListener('click', function () {
+    $.post("/Files/Attestation", { numberAttestation: 2 }, function (fileName) {
+        window.location = '/Files/Download?fileName=' + fileName;
+    });
 }, false);
 
-document.querySelector("input[type='button'][name='session']").addEventListener('click', function() {
+document.querySelector("input[type='button'][name='session']").addEventListener('click', function () {
     alert(3);
 }, false);
