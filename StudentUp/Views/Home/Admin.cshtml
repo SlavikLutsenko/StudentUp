@@ -262,6 +262,16 @@ StudentUp - Add
 <div id="b-statement">
     <input type="button" name="attestation1" value="Створити відомость по першій атестації"/>
     <input type="button" name="attestation2" value="Створити відомость по другій атестації"/>
+    <br/>
+    <select name="groupSession">
+        @{
+            group.GoToStatrTable();
+            while (group.Read())
+            {
+                <option value="@group["Group_id"]">@group["Name"]</option>
+            }
+        }
+    </select>
     <input type="button" name="session" value="Створити відомость по сесії"/>
 </div>
 

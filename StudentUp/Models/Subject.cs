@@ -258,5 +258,21 @@ namespace StudentUp.Models
 			}
 			return result;
 		}
+
+		public Examination[] GetSession(int groupID)
+		{
+			Examination[] result = null;
+			DB.ResponseTable attestationID = (new DB()).QueryToRespontTable(string.Format("select examination.Examination_id from student inner join studentsubject inner join examination on student.Student_id = studentsubject.Student_id and studentsubject.StudentSubject_id = examination.StudentSubject_id where student.Group_id = {0} and studentsubject.Subject_id = {1} and examination.Exam_type = 'іспит';", groupID, this.subjectID));
+			if (attestationID != null)
+			{
+				result = new Examination[attestationID.CountRow];
+				for (int i = 0, end = result.Length; i < end && attestationID.Read(); i++)
+				{
+					result[i] = new Examination(Convert.ToInt32(attestationID["Examination_id"]));
+					result[i].GetInformationAboutUserFromDB();
+				}
+			}
+			return result;
+		}
 	}
 }

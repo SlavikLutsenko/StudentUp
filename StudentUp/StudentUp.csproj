@@ -47,6 +47,11 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
       <HintPath>dll\Microsoft.Office.Interop.Excel.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Office.Interop.Word, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>dll\Microsoft.Office.Interop.Word.dll</HintPath>
+    </Reference>
     <Reference Include="MySql.Data, Version=6.7.5.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>dll\MySql.Data.dll</HintPath>
@@ -154,6 +159,7 @@
     <Content Include="CSS\StyleIndexMasterPage.css" />
     <Content Include="CSS\Validation.css" />
     <Content Include="dll\Microsoft.Office.Interop.Excel.dll" />
+    <Content Include="dll\Microsoft.Office.Interop.Word.dll" />
     <Content Include="dll\MySql.Data.dll" />
     <Content Include="Global.asax" />
     <Content Include="icon.ico" />

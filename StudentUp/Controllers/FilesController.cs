@@ -4,6 +4,9 @@ using System.Web.Mvc;
 using Microsoft.Office.Interop.Excel;
 using StudentUp.Models;
 
+using Microsoft.Office.Interop.Excel;
+using Microsoft.Office.Interop.Word;
+
 namespace StudentUp.Controllers
 {
 	/// <summary>
@@ -27,10 +30,12 @@ namespace StudentUp.Controllers
 				case ".txt":
 					return "text/plain";
 				case ".doc":
+				case ".docx":
 					return "application/ms-word";
 				case ".zip":
 					return "application/zip";
 				case ".xls":
+				case ".xlsx":
 				case ".csv":
 					return "application/vnd.ms-excel";
 				case ".pdf":
@@ -46,7 +51,7 @@ namespace StudentUp.Controllers
 		public ActionResult Download(string fileName)
 		{
 			string fullPath = Path.Combine(Server.MapPath("~/Files"), fileName);
-			return File(fullPath, GetFileExtension(fileName), fileName);
+			return File(fullPath, GetFileExtension("." + fileName.Split('.')[1]), fileName);
 		}
 
 		public void DeleteFile(string fileName)
@@ -133,6 +138,118 @@ namespace StudentUp.Controllers
 				ObjExcel.Quit();
 				return fileName;
 			}
+			return fileName;
+		}
+
+		public string Session(int groupID)
+		{
+			string fileName = "session" + "_" + DateTime.Now.ToString("dd_MM_yyyy") + ".docx";
+			DeleteFile(fileName);
+			DB db = new DB();
+			Group @group = new Group(groupID);
+			group.GetInformationAboutUserFromDB();
+			Student[] students = group.GetStudent();
+			Subject[] subjectsStudents = group.GetSubjects();
+			Examination[] examinations = subjectsStudents[0].GetSession(group.ID);
+			if (examinations == null) return "Цій групі ще не витавили сесію";
+			Microsoft.Office.Interop.Word.Application applicationWord = new Microsoft.Office.Interop.Word.Application();
+
+			applicationWord.Documents.Add(Type.Missing, false, Microsoft.Office.Interop.Word.WdNewDocumentType.wdNewBlankDocument, false);
+
+			Microsoft.Office.Interop.Word.Document documentWord = (Microsoft.Office.Interop.Word.Document)applicationWord.Documents.get_Item(1);
+			documentWord.Activate();
+
+			//applicationWord.Visible = true;
+
+			Microsoft.Office.Interop.Word.Paragraph documentParagraph = documentWord.Paragraphs.First;
+			documentParagraph.Range.ParagraphFormat.Alignment = Microsoft.Office.Interop.Word.WdParagraphAlignment.wdAlignParagraphRight;
+			documentParagraph.Range.Font.Bold = 1;
+			documentParagraph.Range.Text = "Іспит";
+
+			documentParagraph = documentWord.Paragraphs.Add().Next();
+			documentParagraph.Range.ParagraphFormat.Alignment = Microsoft.Office.Interop.Word.WdParagraphAlignment.wdAlignParagraphCenter;
+			documentParagraph.Range.Font.Bold = 0;
+			documentParagraph.Range.Text = "Національний технічний університет України \"Київський політехнічний інститут\"";
+
+			documentParagraph = documentWord.Paragraphs.Add().Next();
+			documentParagraph.Range.ParagraphFormat.Alignment = Microsoft.Office.Interop.Word.WdParagraphAlignment.wdAlignParagraphCenter;
+			documentParagraph.Range.Font.Bold = 1;
+			documentParagraph.Range.Text = "Факультет інформатики та обчислювальної техніки";
+
+			documentParagraph = documentWord.Paragraphs.Add().Next();
+			documentParagraph.Range.ParagraphFormat.Alignment = Microsoft.Office.Interop.Word.WdParagraphAlignment.wdAlignParagraphCenter;
+			documentParagraph.Range.Font.Bold = 0;
+			documentParagraph.Range.Text = group.Name;
+
+			documentParagraph = documentWord.Paragraphs.Add().Next();
+			documentParagraph.Range.ParagraphFormat.Alignment = Microsoft.Office.Interop.Word.WdParagraphAlignment.wdAlignParagraphCenter;
+			documentParagraph.Range.Font.Bold = 1;
+			documentParagraph.Range.Text = "Заліково-екзаменаційна відомость № " + (new Random()).Next(20, 700);
+
+			documentParagraph = documentWord.Paragraphs.Add().Next();
+			documentParagraph.Range.ParagraphFormat.Alignment = Microsoft.Office.Interop.Word.WdParagraphAlignment.wdAlignParagraphLeft;
+			documentParagraph.Range.Font.Bold = 0;
+			documentParagraph.Range.Font.Underline = Microsoft.Office.Interop.Word.WdUnderline.wdUnderlineSingle;
+			documentParagraph.Range.Text = subjectsStudents[0].Name;
+
+			documentParagraph = documentWord.Paragraphs.Add().Next();
+			documentParagraph.Range.ParagraphFormat.Alignment = Microsoft.Office.Interop.Word.WdParagraphAlignment.wdAlignParagraphLeft;
+			documentParagraph.Range.Font.Bold = 0;
+			documentParagraph.Range.Font.Underline = Microsoft.Office.Interop.Word.WdUnderline.wdUnderlineNone;
+			documentParagraph.Range.Text = "за " + students[0].CurrentSemester + " навчальний семетр" + "\t\t Дата _____________";
+
+			documentParagraph = documentWord.Paragraphs.Add().Next();
+			documentParagraph.Range.ParagraphFormat.Alignment = Microsoft.Office.Interop.Word.WdParagraphAlignment.wdAlignParagraphLeft;
+			documentParagraph.Range.Font.Bold = 0;
+			documentParagraph.Range.Text = "Екзаменатор  !!!yfgbcfnb!!!";
+
+			documentParagraph = documentWord.Paragraphs.Add().Next();
+			Microsoft.Office.Interop.Word.Table table = documentWord.Tables.Add(documentParagraph.Range, students.Length + 2, 7);
+			Microsoft.Office.Interop.Word.Border[] borders = new Microsoft.Office.Interop.Word.Border[6];//массив бордеров
+			borders[0] = table.Borders[Microsoft.Office.Interop.Word.WdBorderType.wdBorderLeft];//левая граница 
+			borders[1] = table.Borders[Microsoft.Office.Interop.Word.WdBorderType.wdBorderRight];//правая граница 
+			borders[2] = table.Borders[Microsoft.Office.Interop.Word.WdBorderType.wdBorderTop];//нижняя граница 
+			borders[3] = table.Borders[Microsoft.Office.Interop.Word.WdBorderType.wdBorderBottom];//верхняя граница
+			borders[4] = table.Borders[Microsoft.Office.Interop.Word.WdBorderType.wdBorderHorizontal];//горизонтальная граница
+			borders[5] = table.Borders[Microsoft.Office.Interop.Word.WdBorderType.wdBorderVertical];//вертикальная граница
+			foreach (Microsoft.Office.Interop.Word.Border border in borders)
+			{
+				border.LineStyle = Microsoft.Office.Interop.Word.WdLineStyle.wdLineStyleSingle;//ставим стиль границы 
+				border.Color = Microsoft.Office.Interop.Word.WdColor.wdColorBlack;//задаем цвет границы
+			}
+			documentWord.Range(table.Cell(1, 1).Range.Start, table.Cell(2, 1).Range.End).Select();
+			applicationWord.Selection.Cells.Merge();
+			documentWord.Range(table.Cell(1, 2).Range.Start, table.Cell(2, 2).Range.End).Select();
+			applicationWord.Selection.Cells.Merge();
+			documentWord.Range(table.Cell(1, 3).Range.Start, table.Cell(2, 3).Range.End).Select();
+			applicationWord.Selection.Cells.Merge();
+			documentWord.Range(table.Cell(1, 5).Range.Start, table.Cell(1, 6).Range.End).Select();
+			applicationWord.Selection.Cells.Merge();
+			documentWord.Range(table.Cell(1, 6).Range.Start, table.Cell(2, 7).Range.End).Select();
+			applicationWord.Selection.Cells.Merge();
+
+			table.Cell(1, 1).Range.Text = "№\nз/п";
+			table.Cell(1, 2).Range.Text = "Прізвище, ініціали студента";
+			table.Cell(1, 3).Range.Text = "№ залікової книжки";
+			table.Cell(1, 4).Range.Text = "Рейтингові бали";
+			table.Cell(2, 4).Range.Text = "Всього";
+			table.Cell(1, 5).Range.Text = "Результат";
+			table.Cell(2, 5).Range.Text = "Оцінка ECTS";
+			table.Cell(2, 6).Range.Text = "Традиційна оцінка";
+			table.Cell(1, 6).Range.Text = "Підпис виклад.";
+
+			for (int i = 0, end = students.Length; i < end; i++)
+			{
+				table.Cell(i + 3, 1).Range.Text = (i + 1).ToString();
+				table.Cell(i + 3, 2).Range.Text = students[i].ShortName;
+				table.Cell(i + 3, 3).Range.Text = students[i].RecordBook;
+				table.Cell(i + 3, 4).Range.Text = examinations[i].Mark.ToString();
+				table.Cell(i + 3, 5).Range.Text = Marks.ToBolognaSystem(examinations[i].Mark,100);
+				table.Cell(i + 3, 6).Range.Text = Marks.ToTraditional(Marks.ToBolognaSystem(examinations[i].Mark, 100));
+			}
+
+			documentWord.SaveAs(Server.MapPath("~/Files") + "\\" + fileName);
+			applicationWord.Quit();
 			return fileName;
 		}
 
