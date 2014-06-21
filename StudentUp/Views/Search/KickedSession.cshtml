@@ -1,0 +1,63 @@
+﻿@using StudentUp.Models
+@{
+    Student[] students = ViewData["students"] as Student[];
+    Examination[] examinations = ViewData["examinations"] as Examination[];
+    Subject[] subjects = ViewData["subjects"] as Subject[];
+    Group[] groups = ViewData["groups"] as Group[];
+    if (examinations!=null && students!=null)
+    {
+        int numberStudent = 0,
+            numberExamination = 0;
+        for (int i = 0; i < subjects.Length && numberExamination < examinations.Length && numberStudent < students.Length; i++)
+        {
+            if (examinations[numberExamination].SubjectID == subjects[i].ID)
+            {
+                <h3>
+                    @subjects[i].Name
+                    @if (Request.Form["full"] != null)
+                    {
+                        Lecturer currentLecturer = new Lecturer(subjects[i].LecturerID);
+                        currentLecturer.GetInformationAboutUserFromDB();
+                        @(" - " + currentLecturer.FullName)
+                    }
+                </h3>
+                for (int j = 0; j < groups.Length && numberExamination < examinations.Length && numberStudent < students.Length; j++)
+                {
+                    if (examinations[numberExamination].SubjectID != subjects[i].ID)
+                    {
+                        break;
+                    }
+                    if (students[numberStudent].GroupID == groups[j].ID)
+                    {
+                        <h4>@groups[j].Name</h4>
+                        <table border="1" cellspacing="0">
+                            <tr>
+                                <th>Студент</th>
+                                <th>Кількість балів</th>
+                                <th>Оцінка за балонською системою</th>
+                                <th>Традеційна оцінка</th>
+                            </tr>
+                            @for (; numberExamination < examinations.Length && numberStudent < students.Length; numberExamination++, numberStudent++)
+                            {
+                                if (students[numberStudent].GroupID != groups[j].ID)
+                                {
+                                    break;
+                                }
+                                <tr>
+                                    <td>@students[numberStudent].FullName</td>
+                                    <td>@examinations[i].Mark</td>
+                                    <td>@Marks.ToBolognaSystem(examinations[i].Mark, 100)</td>
+                                    <td>@Marks.ToTraditional(Marks.ToBolognaSystem(examinations[i].Mark, 100))</td>
+                                </tr>
+                            }
+                        </table>
+                    }
+                }
+            }
+        }
+    }
+    else
+    {
+        <p>Таких студентів у Вас немає</p>
+    }
+}

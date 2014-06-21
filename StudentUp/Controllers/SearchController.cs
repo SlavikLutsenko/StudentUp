@@ -241,6 +241,10 @@ namespace StudentUp.Controllers
 				case 4:
 					query = string.Format("select student.Student_id from student inner join studentsubject inner join marks on student.Student_id = studentsubject.Student_id and studentsubject.StudentSubject_id = marks.StudentSubject_id where student.Student_id not in (select studentsubject.Student_id from marks inner join studentsubject on marks.StudentSubject_id = studentsubject.StudentSubject_id where marks.Mark <> marks.Max_mark)  and student.Group_id in {0};", groupsID);
 					break;
+				case 5:
+					KickedSession();
+					return View("KickedSession");
+					break;
 			}
 			DB.ResponseTable studentsID = (new DB()).QueryToRespontTable(query);
 			if (searchType == 2 && studentsID != null)
@@ -317,6 +321,50 @@ namespace StudentUp.Controllers
 				}
 			}
 			ViewData["students"] = result;
+			return View();
+		}
+
+		public ActionResult KickedSession()
+		{
+			Student[] students = null;
+			Examination[] examinations = null;
+			string[] tempEl = Request.Form["subjectsID"].Split(',');
+			Subject[] subjects = new Subject[tempEl.Length];
+			string subjectsID = "(";
+			for (int i = 0; i < tempEl.Length; i++)
+			{
+				subjects[i] = new Subject(Convert.ToInt32(tempEl[i]));
+				subjectsID += subjects[i].ID + (i == tempEl.Length - 1 ? "" : ",");
+				subjects[i].GetInformationAboutUserFromDB();
+			}
+			tempEl = Request.Form["groupsID"].Split(',');
+			Group[] groups = new Group[tempEl.Length];
+			string groupsID = "(";
+			for (int i = 0; i < tempEl.Length; i++)
+			{
+				groups[i] = new Group(Convert.ToInt32(tempEl[i]));
+				groupsID += groups[i].ID + (i == tempEl.Length - 1 ? "" : ",");
+				groups[i].GetInformationAboutUserFromDB();
+			}
+			groupsID += ")";
+			subjectsID += ")";
+			DB.ResponseTable examResult = (new DB()).QueryToRespontTable(string.Format("select student.Student_id, examination.Examination_id from groups inner join student inner join studentsubject inner join examination on groups.Group_id = student.Group_id and student.Student_id = studentsubject.Student_id and studentsubject.StudentSubject_id = examination.StudentSubject_id where student.Group_id in {0} and studentsubject.Subject_id in {1} and examination.Exam_type in ('іспит', 'пересдача1', 'пересдача2') and examination.Mark/examination.Min_mark < 0.6 order by groups.Name, student.Surname;", groupsID, subjectsID));
+			if (examResult != null)
+			{
+				students = new Student[examResult.CountRow];
+				examinations = new Examination[examResult.CountRow];
+				for (int i = 0; i < examResult.CountRow && examResult.Read(); i++)
+				{
+					students[i] = new Student(Convert.ToInt32(examResult["Student_id"]));
+					students[i].GetInformationAboutUserFromDB();
+					examinations[i] = new Examination(Convert.ToInt32(examResult["Examination_id"]));
+					examinations[i].GetInformationAboutUserFromDB();
+				}
+			}
+			ViewData["students"] = students;
+			ViewData["examinations"] = examinations;
+			ViewData["subjects"] = subjects;
+			ViewData["groups"] = groups;
 			return View();
 		}
 	}

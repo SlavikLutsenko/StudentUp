@@ -73,6 +73,12 @@ StudentUp - Add
 <input id="kickedAttestation" type="radio" name="typeAdd" value="subject" />
 <br />
 
+<label for="kickedSession">
+    Список студентів - кандедети на відрахування за результатом сесії
+</label>
+<input id="kickedSession" type="radio" name="typeAdd" value="subject" />
+<br />
+
 <div id="addGroup">
     <form action="/AddGroup" method="POST" accept-charset="utf-8">
         <input type="text" placeholder="Назва групи" name="name" />
@@ -245,6 +251,8 @@ StudentUp - Add
 <div id="b-kickedAttestation">
 </div>
 
+<div id="b-kickedSession"></div>
+
 @section Script
 {
     <script src="~/JS/jquery-2.1.1.min.js"></script>
@@ -270,9 +278,12 @@ StudentUp - Add
         }
         groupID = "@groupID";
         for (var i = 0; i < subjects.length; i++) {
-            $.post("/Search/SearchStudent", "searchType=" + 2 + "&subjectsID=" + subjects[i] + "&groupsID=" + groupID, function (data) {
+            $.post("/Search/SearchStudent", "searchType=2" + "&subjectsID=" + subjects[i] + "&groupsID=" + groupID + "&full=true", function (data) {
                 document.querySelector("#b-kickedAttestation").innerHTML += data;
             });
         }
+        $.post("/Search/KickedSession", "subjectsID=" + subjects + "&groupsID=" + groupID + "&full=true", function (data) {
+            document.querySelector("#b-kickedSession").innerHTML = data;
+        })
     </script>
 }
