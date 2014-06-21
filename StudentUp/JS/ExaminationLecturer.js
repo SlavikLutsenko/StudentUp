@@ -76,7 +76,7 @@ var typeSession = document.querySelector("select[name='typeSession']"),
     mySession = document.querySelector(".mySession");
 
 function ShowSession() {
-    $.post("/Search/SessionResult", { subjectID: subjectSelectSession.value, groupID: groupSelectSession.value, typeSession: typeSession.value }, function (data) {
+    $.post("/Search/SessionResultLecturer", { subjectID: subjectSelectSession.value, groupID: groupSelectSession.value, typeSession: typeSession.value }, function (data) {
         mySession.innerHTML = "<h3>" + subjectSelectSession.selectedOptions[0].innerHTML + ":" + groupSelectSession.selectedOptions[0].innerHTML + "</h3>" + data + "<br/><input type='button' value='Виставити сесію' name='showSetSession'/>";
         mySession.querySelector("input[type='button'][name='showSetSession']").addEventListener('click', function() {
             $.post("/Search/ShowSetSession", { subjectID: subjectSelectSession.value, groupID: groupSelectSession.value, typeSession: typeSession.value }, function (data) {

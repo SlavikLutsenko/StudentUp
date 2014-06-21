@@ -280,13 +280,16 @@
     <Content Include="Views\Search\SearchStudent.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Search\SessionResult.cshtml" />
+    <Content Include="Views\Search\SessionResultLecturer.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Search\ShowSetSession.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Search\KickedSession.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Search\SessionResultStudent.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

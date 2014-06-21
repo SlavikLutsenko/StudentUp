@@ -76,6 +76,10 @@
         <option value="пересдача2">Друга пересдача</option>-->
     </select>
     <select name="subjectSession">
+        @if (user.Type == Users.UserType.Student)
+        {
+            <option value='-1'>Усі</option>   
+        }
         @{
             mySubjects = ViewData["mySubjects"] as Subject[];
             for (int i = 0, end = mySubjects.Length; i < end; i++)

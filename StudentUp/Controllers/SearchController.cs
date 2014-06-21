@@ -280,10 +280,43 @@ namespace StudentUp.Controllers
 		/// <param name="groupID">Идентификатор группы</param>
 		/// <param name="typeSession">Тип сессии</param>
 		/// <returns>Частичное представление</returns>
-		public ActionResult SessionResult(int subjectID, int groupID, string typeSession)
+		public ActionResult SessionResultLecturer(int subjectID, int groupID, string typeSession)
 		{
 			Examination[] result = null;
 			DB.ResponseTable examID = (new DB()).QueryToRespontTable(string.Format("select examination.Examination_id from student inner join studentsubject inner join examination on student.Student_id = studentsubject.Student_id and studentsubject.StudentSubject_id = examination.StudentSubject_id where student.Group_id = {0} and studentsubject.Subject_id = {1} and examination.Exam_type = '{2}';", groupID, subjectID, typeSession));
+			if (examID != null)
+			{
+				result = new Examination[examID.CountRow];
+				for (int i = 0; i < result.Length && examID.Read(); i++)
+				{
+					result[i] = new Examination(Convert.ToInt32(examID["Examination_id"]));
+					result[i].GetInformationAboutUserFromDB();
+				}
+			}
+			ViewData["sessionResult"] = result;
+			return View();
+		}
+
+		/// <summary>
+		/// Выводит оценки по сессии студента по заданным предметам
+		/// </summary>
+		/// <param name="userID">Идентификатор пользователя - студента</param>
+		/// <param name="typeSession">Тип сессии</param>
+		/// <returns>Частичное представление</returns>
+		public ActionResult SessionResultStudent(int userID, string typeSession)
+		{
+			string[] tempEl = Request.Form["subjectsID"].Split(',');
+			Subject[] subjects = new Subject[tempEl.Length];
+			string subjectsID = "(";
+			for (int i = 0; i < tempEl.Length; i++)
+			{
+				subjects[i] = new Subject(Convert.ToInt32(tempEl[i]));
+				subjectsID += subjects[i].ID + (i == tempEl.Length - 1 ? "" : ",");
+				subjects[i].GetInformationAboutUserFromDB();
+			}
+			subjectsID += ")";
+			Examination[] result = null;
+			DB.ResponseTable examID = (new DB()).QueryToRespontTable(string.Format("select examination.Examination_id from users inner join student inner join studentsubject inner join examination on users.Student_id = student.Student_id and student.Student_id = studentsubject.Student_id and examination.StudentSubject_id = studentsubject.StudentSubject_id where users.User_id = {0} and studentsubject.Subject_id in {1} and examination.Exam_type = '{2}';", userID, subjectsID, typeSession));
 			if (examID != null)
 			{
 				result = new Examination[examID.CountRow];

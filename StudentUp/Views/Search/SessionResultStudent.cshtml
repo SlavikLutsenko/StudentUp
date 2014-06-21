@@ -1,0 +1,34 @@
+﻿@using StudentUp.Models
+@{
+    Examination[] sessionResult = ViewData["sessionResult"] as Examination[];
+    if (sessionResult != null)
+    {
+        <table border="1" cellspacing="0">
+            <tr>
+                <th>Викладач</th>
+                <th>Предмет</th>
+                <th>Кількість балів</th>
+                <th>Оцінка за балонською системою</th>
+                <th>Традеційна оцінка</th>
+            </tr>
+            @for (int i = 0; i < sessionResult.Length; i++)
+            {
+                Subject currentSubject = new Subject(sessionResult[i].SubjectID);
+                currentSubject.GetInformationAboutUserFromDB();
+                Lecturer currentLecturer = new Lecturer(currentSubject.LecturerID);
+                currentLecturer.GetInformationAboutUserFromDB();
+                <tr>
+                    <td>@currentLecturer.FullName</td>
+                    <td>@currentSubject.Name</td>
+                    <td>@sessionResult[i].Mark</td>
+                    <td>@Marks.ToBolognaSystem(sessionResult[i].Mark, 100)</td>
+                    <td>@Marks.ToTraditional(Marks.ToBolognaSystem(sessionResult[i].Mark, 100))</td>
+                </tr>
+            }
+        </table>
+    }
+    else
+    {
+        <p>За заданим предметом ще не виставленна сессія</p>
+    }
+}
