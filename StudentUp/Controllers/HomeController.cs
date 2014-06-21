@@ -349,6 +349,12 @@ namespace StudentUp.Controllers
 			return "Атестація виставлена";
 		}
 
+		/// <summary>
+		/// Выставляет сессию студентам группы
+		/// </summary>
+		/// <param name="subjectID">Предмет</param>
+		/// <param name="typeSession">Тип сессии</param>
+		/// <returns>Результат выставления</returns>
 		public string SetSession(int subjectID, string typeSession)
 		{
 			string[] students = Request.Form["studentsID"].Split(','),

@@ -234,6 +234,12 @@ namespace StudentUp.Models
 			return currentMark;
 		}
 
+		/// <summary>
+		/// Преобразует набранные балы в оценку по балонской системе
+		/// </summary>
+		/// <param name="mark">Набраные балы</param>
+		/// <param name="maxMark">максимальное количество балов</param>
+		/// <returns>Оценка по балонской системе</returns>
 		public static string ToBolognaSystem(int mark, int maxMark)
 		{
 			double percent = (double) mark/maxMark;
@@ -246,6 +252,11 @@ namespace StudentUp.Models
 			return "F";
 		}
 
+		/// <summary>
+		/// Преобразует оценку по балонской системе в традиционную оценку
+		/// </summary>
+		/// <param name="markBologna">Оценка по балонской системе</param>
+		/// <returns>Традиционная оценка</returns>
 		public static string ToTraditional(string markBologna)
 		{
 			switch (markBologna)

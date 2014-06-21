@@ -244,7 +244,6 @@ namespace StudentUp.Controllers
 				case 5:
 					KickedSession();
 					return View("KickedSession");
-					break;
 			}
 			DB.ResponseTable studentsID = (new DB()).QueryToRespontTable(query);
 			if (searchType == 2 && studentsID != null)
@@ -274,6 +273,13 @@ namespace StudentUp.Controllers
 			return View();
 		}
 
+		/// <summary>
+		/// Выводит результат сессии по предмету определенной группы
+		/// </summary>
+		/// <param name="subjectID">Идентификатор предмета</param>
+		/// <param name="groupID">Идентификатор группы</param>
+		/// <param name="typeSession">Тип сессии</param>
+		/// <returns>Частичное представление</returns>
 		public ActionResult SessionResult(int subjectID, int groupID, string typeSession)
 		{
 			Examination[] result = null;
@@ -291,6 +297,13 @@ namespace StudentUp.Controllers
 			return View();
 		}
 
+		/// <summary>
+		/// Выводит форму для выставления сесии
+		/// </summary>
+		/// <param name="subjectID">Идентификатор предмета</param>
+		/// <param name="groupID">Идентификатор группы</param>
+		/// <param name="typeSession">Тип сессии</param>
+		/// <returns>Частичное представление</returns>
 		public ActionResult ShowSetSession(int subjectID, int groupID, string typeSession)
 		{
 			string limit;
@@ -324,6 +337,10 @@ namespace StudentUp.Controllers
 			return View();
 		}
 
+		/// <summary>
+		/// Выводит студентов которых могут выгнать по результатам сессии
+		/// </summary>
+		/// <returns>Частичное представление</returns>
 		public ActionResult KickedSession()
 		{
 			Student[] students = null;

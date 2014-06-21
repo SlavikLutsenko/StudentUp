@@ -1,16 +1,16 @@
 ﻿var attestationSelect = document.querySelector("select[name='numberAttestation']"),
-    subjectSelect = document.querySelector("select[name='subject']"),
-    showButton = document.querySelector("input[type='button'][name='showMark']"),
+    subjectSelectAttestation = document.querySelector("select[name='subjectAttestation']"),
+    showButtonAttestation = document.querySelector("input[type='button'][name='showAttestation']"),
     myAttestation = document.querySelector(".myAttestation");
 
 function ShowAttestation() {
     var subject = new Array(),
         group = new Array(),
         option;
-    if (subjectSelect.value != "-1")
-        subject.push(Number(subjectSelect.value));
+    if (subjectSelectAttestation.value != "-1")
+        subject.push(Number(subjectSelectAttestation.value));
     else {
-        option = subjectSelect.querySelectorAll("option");
+        option = subjectSelectAttestation.querySelectorAll("option");
         for (var i = 0, end = option.length; i < end; i++)
             if (option[i].value != "-1")
                 subject.push(Number(option[i].value));
@@ -21,4 +21,4 @@ function ShowAttestation() {
     });
 }
 
-showButton.addEventListener("click", ShowAttestation, false);
+showButtonAttestation.addEventListener("click", ShowAttestation, false);
