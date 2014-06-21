@@ -161,6 +161,11 @@ namespace StudentUp.Models
 		public string FullName { get { return string.Format("{0} {1} {2}", this.surname, this.name, this.secondName); } }
 
 		/// <summary>
+		/// Возвращает фамилию и инициалы студента
+		/// </summary>
+		public string ShortName{get { return string.Format("{0} {1}.{2}.", this.surname, this.name[0], this.secondName[0]); }}
+
+		/// <summary>
 		/// Возвращает семестр на котором учится студент
 		/// </summary>
 		public int CurrentSemester { get { return this.currentSemester; } }

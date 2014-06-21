@@ -5,7 +5,8 @@ div#addSubject,
 div#setSubjectForStudent,
 div#selectElder,
 div#b-kickedAttestation,
-div#b-kickedSession {
+div#b-kickedSession,
+div#b-statement {
     display: none;
 }
 
@@ -16,6 +17,7 @@ input#subject[name="typeAdd"]:checked ~ div#addSubject,
 input#studentSubject[name="typeAdd"]:checked ~ div#setSubjectForStudent,
 input#selectElder[name="typeAdd"]:checked ~ div#selectElder,
 input#kickedAttestation[name="typeAdd"]:checked ~ div#b-kickedAttestation,
-input#kickedSession[name="typeAdd"]:checked ~ div#b-kickedSession {
+input#kickedSession[name="typeAdd"]:checked ~ div#b-kickedSession,
+input#statement[name="typeAdd"]:checked ~ div#b-statement {
     display: block;
 }

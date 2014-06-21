@@ -120,6 +120,22 @@ namespace StudentUp.Models
 			return result;
 		}
 
+		public Subject[] GetSubjects()
+		{
+			Subject[] result = null;
+			DB.ResponseTable subjectsID = (new DB()).QueryToRespontTable(string.Format("select studentsubject.Subject_id from groups inner join student inner join studentsubject on groups.Group_id = student.Group_id and student.Student_id = studentsubject.Student_id where groups.Group_id = {0} group by studentsubject.Subject_id;", this.ID));
+			if (subjectsID != null)
+			{
+				result = new Subject[subjectsID.CountRow];
+				for (int i = 0, end = result.Length; i < end && subjectsID.Read(); i++)
+				{
+					result[i] = new Subject(Convert.ToInt32(subjectsID["Subject_id"]));
+					result[i].GetInformationAboutUserFromDB();
+				}
+			}
+			return result;
+		}
+
 		/// <summary>
 		/// Устанавливает старосту группе
 		/// </summary>

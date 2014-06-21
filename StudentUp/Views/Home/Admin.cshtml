@@ -79,6 +79,12 @@ StudentUp - Add
 <input id="kickedSession" type="radio" name="typeAdd" value="subject" />
 <br />
 
+<label for="statement">
+    Формуваня відомостей
+</label>
+<input id="statement" type="radio" name="typeAdd" value="attestation"/>
+<br />
+
 <div id="addGroup">
     <form action="/AddGroup" method="POST" accept-charset="utf-8">
         <input type="text" placeholder="Назва групи" name="name" />
@@ -252,6 +258,12 @@ StudentUp - Add
 </div>
 
 <div id="b-kickedSession"></div>
+
+<div id="b-statement">
+    <input type="button" name="attestation1" value="Створити відомость по першій атестації"/>
+    <input type="button" name="attestation2" value="Створити відомость по другій атестації"/>
+    <input type="button" name="session" value="Створити відомость по сесії"/>
+</div>
 
 @section Script
 {
