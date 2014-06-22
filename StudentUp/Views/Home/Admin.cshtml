@@ -85,6 +85,12 @@ StudentUp - Add
 <input id="statement" type="radio" name="typeAdd" value="attestation"/>
 <br />
 
+<label for="mailParents">
+    Відправити письмо батькам
+</label>
+<input id="mailParents" type="radio" name="typeAdd" value="attestation"/>
+<br />
+
 <div id="addGroup">
     <form action="/AddGroup" method="POST" accept-charset="utf-8">
         <input type="text" placeholder="Назва групи" name="name" />
@@ -262,6 +268,25 @@ StudentUp - Add
 <div id="b-statement">
     <input type="button" name="attestation1" value="Створити відомость по першій атестації"/>
     <input type="button" name="attestation2" value="Створити відомость по другій атестації"/>
+</div>
+
+<div id="b-mailParents">
+    <form method="POST" action="SendMailParent" accept-charset="utf-8">
+        <select name="groupID">
+            @{
+                group.GoToStatrTable();
+                while (group != null && group.Read())
+                {
+                    <option value="@group["Group_id"]">@group["Name"]</option>
+                }
+            }
+        </select>
+        <select name="studentID">
+        </select>
+        <p>Email батьків: <input type="email" name="emailParents" placeholder="Введіть email батьків студента"></p>
+        <textarea name="mail" placeholder="Введіть послання батькам"></textarea>
+        <input type="submit" name="send" value="Відправити письмо"/>
+    </form>
 </div>
 
 @section Script

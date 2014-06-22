@@ -4,7 +4,10 @@
     studentSelect_SubjectForStudent = document.querySelector("#setSubjectForStudent select[name='students']"),
 
     groupSelect_selectElder = document.querySelector("#selectElder select[name='group']"),
-    elderSelect_selectElder = document.querySelector("#selectElder select[name='elder']");
+    elderSelect_selectElder = document.querySelector("#selectElder select[name='elder']"),
+
+    groupSelect_Mail = document.querySelector("#b-mailParents select[name='groupID']"),
+    studentSelect_Mail = document.querySelector("#b-mailParents select[name='studentID']");
 
 $(document).ready(function () {
     $.post("/Search/GetSubjectsLecturer", { lecturerID: lecturerSelect_SubjectForStudent.value }, function (data) {
@@ -15,6 +18,9 @@ $(document).ready(function () {
     });
     $.post("/Search/GetGroupOfStudents", { groupID: groupSelect_selectElder.value }, function (data) {
         elderSelect_selectElder.innerHTML = data;
+    });
+    $.post("/Search/GetGroupOfStudents", { groupID: groupSelect_Mail.value }, function (data) {
+        studentSelect_Mail.innerHTML = data;
     });
 });
 
@@ -48,3 +54,20 @@ document.querySelector("input[type='button'][name='attestation2']").addEventList
         window.location = '/Files/Download?fileName=' + fileName;
     });
 }, false);
+
+/*****************************************************************/
+
+groupSelect_Mail.addEventListener("change", function () {
+    $.post("/Search/GetGroupOfStudents", { groupID: groupSelect_Mail.value }, function (data) {
+        studentSelect_Mail.innerHTML = data;
+        $.post("/Search/GetContactParentStudent", { studentID: studentSelect_Mail.value }, function (data) {
+            document.querySelector("#b-mailParents input[type='email'][name='emailParents']").value = data;
+        });
+    });
+}, false);
+
+studentSelect_Mail.addEventListener("change",function() {
+    $.post("/Search/GetContactParentStudent", { studentID: studentSelect_Mail.value }, function (data) {
+        document.querySelector("#b-mailParents input[type='email'][name='emailParents']").value = data;
+    });
+},false)

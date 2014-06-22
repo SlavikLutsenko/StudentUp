@@ -223,7 +223,7 @@ namespace StudentUp.Models
 				this.telephone = (string)users["Telephone"];
 				this.recordBook = (string)users["Record_book"];
 				this.typeOfEducetion = Student.ConverStringToEnum((string)users["Type_of_education"]);
-				this.contactsParents = (string)users["ontacts_parents"];
+				this.contactsParents = (string)users["Contacts_parents"];
 				this.employmentInTheDepartment = (string)users["Employment_in_the_department"];
 				return true;
 			}
@@ -265,7 +265,7 @@ namespace StudentUp.Models
 				this.telephone = (string)users["Telephone"];
 				this.recordBook = (string)users["Record_book"];
 				this.typeOfEducetion = Student.ConverStringToEnum((string)users["Type_of_education"]);
-				this.contactsParents = (string)users["ontacts_parents"];
+				this.contactsParents = (string)users["Сontacts_parents"];
 				this.employmentInTheDepartment = (string)users["Employment_in_the_department"];
 				return true;
 			}

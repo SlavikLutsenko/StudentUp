@@ -417,5 +417,17 @@ namespace StudentUp.Controllers
 			ViewData["groups"] = groups;
 			return View();
 		}
+
+		/// <summary>
+		/// Возвращает контакты родителей студента
+		/// </summary>
+		/// <param name="studentID">Идентификатор студента</param>
+		/// <returns>Контакты родителей</returns>
+		public string GetContactParentStudent(int studentID)
+		{
+			Student student = new Student(studentID);
+			student.GetInformationAboutUserFromDB();
+			return student.ContactsParents;
+		}
 	}
 }

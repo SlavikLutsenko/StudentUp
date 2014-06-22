@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Web;
 using System.Web.Mvc;
 using MySql.Data.MySqlClient;
@@ -821,6 +822,27 @@ namespace StudentUp.Controllers
 						  "http://" + Request.Url.Authority + "/RestorePasswordUser?idRestorePassword=" + idRestorePassword);
 			TempData["idRestorePassword"] = idRestorePassword;
 			return Redirect("/RestorePassword");
+		}
+
+		/// <summary>
+		/// Отправляет письмо родителям студента
+		/// </summary>
+		/// <param name="studentID">Идентификатор студента</param>
+		/// <param name="emailParents">Email родителей</param>
+		/// <param name="mail">Сообщение родителям</param>
+		/// <returns>Страница</returns>
+		public ActionResult SendMailParent(int studentID, string emailParents, string mail)
+		{
+			Student student = new Student(studentID);
+			student.GetInformationAboutUserFromDB();
+			Mail.SendMail("smtp.gmail.com",
+						  ConfigurationManager.AppSettings.Get("AIDemail"),
+						  ConfigurationManager.AppSettings.Get("AIDpassword"),
+						  emailParents,
+						  "Успішність " + student.FullName,
+						  mail);
+			TempData["messages"] = (new Messages{{Messages.Message.TypeMessage.good, "Письмо було відправлено"}});
+			return Redirect("/Admin");
 		}
 	}
 }
