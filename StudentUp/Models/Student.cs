@@ -207,7 +207,7 @@ namespace StudentUp.Models
 		public bool Login()
 		{
 			DB db = new DB();
-			DB.ResponseTable users = db.QueryToRespontTable(string.Format("select * from Student inner join Users on Student.Student_id = Users.Student_id where Email='{0}' and Password='{1}';", this.Email, this.Password));
+			DB.ResponseTable users = db.QueryToRespontTable(string.Format("select * from student inner join users on student.Student_id = users.Student_id where Email='{0}' and Password='{1}';", this.Email, this.Password));
 			if (users != null && users.CountRow == 1)
 			{
 				users.Read();
@@ -239,13 +239,13 @@ namespace StudentUp.Models
 			DB db = new DB();
 			string query;
 			if (this.email != string.Empty && this.passwodr != string.Empty)
-				query = string.Format("select * from Student inner join Users on Student.Student_id = Users.Student_id where Users.Email='{0}' and Users.Password='{1}';", this.Email, this.Password);
+				query = string.Format("select * from student inner join users on student.Student_id = users.Student_id where users.Email='{0}' and users.Password='{1}';", this.Email, this.Password);
 			else
 				if (this.userID != -1)
-					query = string.Format("select * from Student inner join Users on Student.Student_id = Users.Student_id where Users.User_id = {0};", this.userID);
+					query = string.Format("select * from student inner join Users on student.Student_id = users.Student_id where users.User_id = {0};", this.userID);
 				else 
 					if (this.studentID != -1)
-						query = string.Format("select * from Student inner join Users on Student.Student_id = Users.Student_id where Student.Student_id = {0};", this.studentID);
+						query = string.Format("select * from student inner join users on student.Student_id = users.Student_id where student.Student_id = {0};", this.studentID);
 					else query = "";
 			DB.ResponseTable users = db.QueryToRespontTable(query);
 			if (users != null && users.CountRow == 1)
@@ -294,7 +294,7 @@ namespace StudentUp.Models
 			string employmentInTheDepartment, bool admin)
 		{
 			DB db = new DB();
-			db.QueryToRespontTable(string.Format("insert into Student(Group_id, Surname, Name, Second_name, Semester, Address, Telephone, Record_book, Type_of_education, Сontacts_parents, Employment_in_the_department) values ({0}, '{1}', '{2}', '{3}', {4}, '{5}', '{6}', '{7}', '{8}', '{9}', '{10}');", group, surname, name, secondName, currentSemestr, address, telephone, recordBook, Student.GetEnumDescription(typeOfEducation), contactsParents, employmentInTheDepartment));
+			db.QueryToRespontTable(string.Format("insert into student(Group_id, Surname, Name, Second_name, Semester, Address, Telephone, Record_book, Type_of_education, Сontacts_parents, Employment_in_the_department) values ({0}, '{1}', '{2}', '{3}', {4}, '{5}', '{6}', '{7}', '{8}', '{9}', '{10}');", group, surname, name, secondName, currentSemestr, address, telephone, recordBook, Student.GetEnumDescription(typeOfEducation), contactsParents, employmentInTheDepartment));
 			DB.ResponseTable userIdTable = db.QueryToRespontTable("select LAST_INSERT_ID() as id;");
 			userIdTable.Read();
 			Student user = new Student(Users.AddStudentUsers(email, admin ? 2 : 0, Convert.ToInt32(userIdTable["id"])));

@@ -188,7 +188,7 @@ namespace StudentUp.Controllers
 				string idChangeEmail = Validation.StringToMd5Hash(user.Email + user.Password);
 				ViewData["user"] = user;
 				DB db = new DB();
-				db.QueryToRespontTable(string.Format("insert into ChangeEmail (ChangeEmail_id, New_email, User_id) value ('{0}', '{1}', '{2}')", idChangeEmail, newEmail, user.ID));
+				db.QueryToRespontTable(string.Format("insert into changeemail (ChangeEmail_id, New_email, User_id) value ('{0}', '{1}', '{2}')", idChangeEmail, newEmail, user.ID));
 				Mail.SendMail("smtp.gmail.com",
 								ConfigurationManager.AppSettings.Get("AIDemail"),
 								ConfigurationManager.AppSettings.Get("AIDpassword"),
@@ -222,20 +222,20 @@ namespace StudentUp.Controllers
 			if (user != null)
 			{
 				DB db = new DB();
-				DB.ResponseTable changeEmail = db.QueryToRespontTable(string.Format("select * from ChangeEmail where ChangeEmail_id = '{0}'", idChangeEmail));
+				DB.ResponseTable changeEmail = db.QueryToRespontTable(string.Format("select * from changeemail where ChangeEmail_id = '{0}'", idChangeEmail));
 				if (changeEmail == null || changeEmail.CountRow != 1) return Redirect("/ChangeEmail");
 				Messages messages = new Messages();
 				ViewData["user"] = user;
 				changeEmail.Read();
 				if (Validation.VerifyMd5Hash(user.Email + user.Password + changeEmail["New_email"].ToString(), idChangeEmail))
 				{
-					db.QueryToRespontTable(string.Format("update users set Email = '{0}' where User_id = {1};delete from ChangeEmail where ChangeEmail_id = '{2}';", changeEmail["New_email"].ToString(), user.ID, idChangeEmail));
+					db.QueryToRespontTable(string.Format("update users set Email = '{0}' where User_id = {1};delete from changeemail where ChangeEmail_id = '{2}';", changeEmail["New_email"].ToString(), user.ID, idChangeEmail));
 					messages.Add(Messages.Message.TypeMessage.good, "Ваш email был успешно изменен");
 				}
 				else
 				{
 					idChangeEmail = Validation.StringToMd5Hash(user.Email + user.Password + changeEmail["New_email"].ToString());
-					db.QueryToRespontTable(string.Format("update ChangeEmail set ChangeEmail_id = '{0}' where ChangeEmail_id = '{1}'", idChangeEmail, changeEmail["ChangeEmail_id"].ToString()));
+					db.QueryToRespontTable(string.Format("update changeemail set ChangeEmail_id = '{0}' where ChangeEmail_id = '{1}'", idChangeEmail, changeEmail["ChangeEmail_id"].ToString()));
 					Mail.SendMail("smtp.gmail.com",
 						ConfigurationManager.AppSettings.Get("AIDemail"),
 						ConfigurationManager.AppSettings.Get("AIDpassword"),
@@ -381,13 +381,13 @@ namespace StudentUp.Controllers
 				DB db = new DB();
 				DB.ResponseTable responseTable;
 				ViewData["user"] = user;
-				ViewData["departments"] = db.QueryToRespontTable("select * from Department;");
-				ViewData["groups"] = db.QueryToRespontTable("select * from Groups order by Name;");
-				responseTable = db.QueryToRespontTable("show columns from Student like 'Type_of_education';");
+				ViewData["departments"] = db.QueryToRespontTable("select * from department;");
+				ViewData["groups"] = db.QueryToRespontTable("select * from groups order by Name;");
+				responseTable = db.QueryToRespontTable("show columns from student like 'Type_of_education';");
 				responseTable.Read();
 				ViewData["typeEducation"] = ((string)responseTable["Type"]).Replace("enum('", "").Replace("')", "").Replace("'", "").Split(',');
-				ViewData["lecturers"] = db.QueryToRespontTable("select Lecturer_id, Name, Surname, Second_name from Lecturer;");
-				responseTable = db.QueryToRespontTable("show columns from Subject like 'Exam_type';");
+				ViewData["lecturers"] = db.QueryToRespontTable("select Lecturer_id, Name, Surname, Second_name from lecturer;");
+				responseTable = db.QueryToRespontTable("show columns from subject like 'Exam_type';");
 				responseTable.Read();
 				ViewData["examType"] = ((string)responseTable["Type"]).Replace("enum('", "").Replace("')", "").Replace("'", "").Split(',');
 				return View();
@@ -647,7 +647,7 @@ namespace StudentUp.Controllers
 					ViewData["user"] = user;
 					ViewData["mySubjects"] = user.GetMySubjects();
 					ViewData["currentSubject"] = currentSubject;
-					responseTable = db.QueryToRespontTable("show columns from Marks like 'Type_marks';");
+					responseTable = db.QueryToRespontTable("show columns from marks like 'Type_marks';");
 					responseTable.Read();
 					ViewData["typeMarks"] = ((string)responseTable["Type"]).Replace("enum('", "").Replace("')", "").Replace("'", "").Split(',');
 					return View();
@@ -719,7 +719,7 @@ namespace StudentUp.Controllers
 				if (!user.IsExistsInDB()) throw new ValidationDataException("no user");
 				user.GetInformationAboutUserFromDB();
 				idRestorePassword = Validation.StringToMd5Hash(user.Email + user.Password);
-				(new DB()).QueryToRespontTable(string.Format("insert into RestorePassword(RestorePassword_id, User_id) value ('{0}', {1});",
+				(new DB()).QueryToRespontTable(string.Format("insert into restorepassword(RestorePassword_id, User_id) value ('{0}', {1});",
 					idRestorePassword, user.ID));
 				Mail.SendMail("smtp.gmail.com",
 								ConfigurationManager.AppSettings.Get("AIDemail"),
@@ -765,7 +765,7 @@ namespace StudentUp.Controllers
 		/// <returns>Странница</returns>
 		public ActionResult RestorePasswordUser(string idRestorePassword)
 		{
-			if ((new DB()).QueryToRespontTable(string.Format("select User_id from RestorePassword where RestorePassword_id = \"{0}\";", idRestorePassword)) == null)
+			if ((new DB()).QueryToRespontTable(string.Format("select User_id from restorepassword where RestorePassword_id = \"{0}\";", idRestorePassword)) == null)
 				return Redirect("/restorepassword");
 			ViewData["id"] = idRestorePassword;
 			return View();
@@ -782,7 +782,7 @@ namespace StudentUp.Controllers
 		public ActionResult RestorePasswordUser(string idRestorePassword, string password, string replacePassword)
 		{
 			DB db = new DB();
-			DB.ResponseTable user = db.QueryToRespontTable(string.Format("select User_id from RestorePassword where RestorePassword_id = '{0}';", idRestorePassword));
+			DB.ResponseTable user = db.QueryToRespontTable(string.Format("select User_id from restorepassword where RestorePassword_id = '{0}';", idRestorePassword));
 			if (user == null) return Redirect("/restorepassword");
 			Messages messages = new Messages();
 			if (password == "") messages.Add(Messages.Message.TypeMessage.error, "Вы не ввели новый пароль");
@@ -792,7 +792,7 @@ namespace StudentUp.Controllers
 				{
 					user.Read();
 					db.QueryToRespontTable(string.Format("update users set Password = '{0}' where User_id = {1};" +
-														 "delete from RestorePassword where RestorePassword_id = '{2}';", password, user["User_id"], idRestorePassword));
+														 "delete from restorepassword where RestorePassword_id = '{2}';", password, user["User_id"], idRestorePassword));
 					messages.Add(Messages.Message.TypeMessage.good, string.Format("Пароль был востановлен. Авторизируйтесь в системе используя толькочто созданный пароль.<br /> <a href='http://{0}/'>Вход</a>", Request.Url.Authority));
 				}
 			ViewData["messages"] = messages;
@@ -806,8 +806,8 @@ namespace StudentUp.Controllers
 		/// <returns>Сообщение об отправке письма</returns>
 		public ActionResult ResendEmailRestorePassword(string idRestorePassword)
 		{
-			DB.ResponseTable restoreSession = (new DB()).QueryToRespontTable(string.Format("select User_id from RestorePassword where RestorePassword_id = \"{0}\";", idRestorePassword));
-			if ((new DB()).QueryToRespontTable(string.Format("select User_id from RestorePassword where RestorePassword_id = \"{0}\";", idRestorePassword)) == null)
+			DB.ResponseTable restoreSession = (new DB()).QueryToRespontTable(string.Format("select User_id from restorepassword where RestorePassword_id = \"{0}\";", idRestorePassword));
+			if ((new DB()).QueryToRespontTable(string.Format("select User_id from restorepassword where RestorePassword_id = \"{0}\";", idRestorePassword)) == null)
 				return Redirect("/restorepassword");
 			restoreSession.Read();
 			Users user = new Users((int)restoreSession["User_id"]);

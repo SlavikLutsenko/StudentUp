@@ -119,7 +119,7 @@ namespace StudentUp.Models
 		public bool IsExistsInDB()
 		{
 			DB db = new DB();
-			DB.ResponseTable examination = db.QueryToRespontTable(string.Format("select * from examination where Examination.Examination_id = {0};", this.examinationID));
+			DB.ResponseTable examination = db.QueryToRespontTable(string.Format("select * from examination where examination.Examination_id = {0};", this.examinationID));
 			return examination != null && examination.CountRow == 1;
 		}
 
@@ -130,7 +130,7 @@ namespace StudentUp.Models
 		public bool GetInformationAboutUserFromDB()
 		{
 			DB db = new DB();
-			DB.ResponseTable examination = db.QueryToRespontTable(string.Format("select * from examination inner join studentsubject on examination.StudentSubject_id = studentsubject.StudentSubject_id where Examination.Examination_id = {0};", this.examinationID));
+			DB.ResponseTable examination = db.QueryToRespontTable(string.Format("select * from examination inner join studentsubject on examination.StudentSubject_id = studentsubject.StudentSubject_id where examination.Examination_id = {0};", this.examinationID));
 			if (examination != null && examination.CountRow > 0)
 			{
 				examination.Read();

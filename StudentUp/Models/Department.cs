@@ -65,10 +65,10 @@
 			DB db = new DB();
 			string query;
 			if (this.departmentID != -1)
-				query = string.Format("select * from Department where Department_id = {0};", this.departmentID);
+				query = string.Format("select * from department where Department_id = {0};", this.departmentID);
 			else
 				if (this.name != "" && this.facultyName != "")
-					query = string.Format("select * from Department where Name='{0}' and Faculty_name='{1}';", this.name, this.departmentID);
+					query = string.Format("select * from department where Name='{0}' and Faculty_name='{1}';", this.name, this.departmentID);
 				else query = "";
 			DB.ResponseTable department = db.QueryToRespontTable(query);
 			return department != null && department.CountRow == 1;
@@ -83,10 +83,10 @@
 			DB db = new DB();
 			string query;
 			if (this.departmentID != -1)
-				query = string.Format("select * from Department where Department_id = {0};", this.departmentID);
+				query = string.Format("select * from department where Department_id = {0};", this.departmentID);
 			else
 				if (this.name != "" && this.facultyName != "")
-					query = string.Format("select * from Department where Name='{0}' and Faculty_name='{1}';", this.name, this.departmentID);
+					query = string.Format("select * from department where Name='{0}' and Faculty_name='{1}';", this.name, this.departmentID);
 				else query = "";
 			DB.ResponseTable department = db.QueryToRespontTable(query);
 			if (department == null || department.CountRow <= 0) return false;

@@ -193,13 +193,13 @@ namespace StudentUp.Models
 			DB db = new DB();
 			DB.ResponseTable users = null;
 			if (this.email != string.Empty && this.passwodr != string.Empty)
-				users = db.QueryToRespontTable(string.Format("select * from Users where Email='{0}' and Password='{1}';", this.Email, this.Password));
+				users = db.QueryToRespontTable(string.Format("select * from users where Email='{0}' and Password='{1}';", this.Email, this.Password));
 			else
 				if (this.userID != -1)
-					users = db.QueryToRespontTable(string.Format("select * from Users where User_id='{0}';", this.userID));
+					users = db.QueryToRespontTable(string.Format("select * from users where User_id='{0}';", this.userID));
 				else
 					if (this.email != string.Empty)
-						users = db.QueryToRespontTable(string.Format("select * from Users where Email='{0}';", this.email));
+						users = db.QueryToRespontTable(string.Format("select * from users where Email='{0}';", this.email));
 			return users != null && users.CountRow == 1;
 		}
 
@@ -213,13 +213,13 @@ namespace StudentUp.Models
 			DB db = new DB();
 			DB.ResponseTable users = null;
 			if (this.email != string.Empty && this.passwodr != string.Empty)
-				users = db.QueryToRespontTable(string.Format("select * from Users where Email='{0}' and Password='{1}';", this.Email, this.Password));
+				users = db.QueryToRespontTable(string.Format("select * from users where Email='{0}' and Password='{1}';", this.Email, this.Password));
 			else
 				if (this.userID != -1)
-					users = db.QueryToRespontTable(string.Format("select * from Users where User_id='{0}';", this.userID));
+					users = db.QueryToRespontTable(string.Format("select * from users where User_id='{0}';", this.userID));
 				else
 					if (this.email != "")
-						users = db.QueryToRespontTable(string.Format("select * from Users where Email='{0}';", this.Email));
+						users = db.QueryToRespontTable(string.Format("select * from users where Email='{0}';", this.Email));
 			if (users == null || users.CountRow <= 0) return false;
 			users.Read();
 			this.userID = (int)users["User_id"];
@@ -375,10 +375,10 @@ namespace StudentUp.Models
 			DB db = new DB();
 			string password = Validation.GeneratePassword(8);
 			if (idLecturer <= 0)
-				db.QueryToRespontTable(string.Format("insert into Users(Student_id, Email, Password, Access_level) values ({0}, '{1}', '{2}', {3});", idStudent, email, password, accessLevel));
+				db.QueryToRespontTable(string.Format("insert into users(Student_id, Email, Password, Access_level) values ({0}, '{1}', '{2}', {3});", idStudent, email, password, accessLevel));
 			else
 				if (idStudent <= 0)
-					db.QueryToRespontTable(string.Format("insert into Users(Lecturer_id, Email, Password, Access_level) values ({0}, '{1}', '{2}', {3});", idLecturer, email, password, accessLevel));
+					db.QueryToRespontTable(string.Format("insert into users(Lecturer_id, Email, Password, Access_level) values ({0}, '{1}', '{2}', {3});", idLecturer, email, password, accessLevel));
 				else throw new Exception("error in data add user");
 			Users user = new Users(email, password);
 			user.GetInformationAboutUserFromDB();

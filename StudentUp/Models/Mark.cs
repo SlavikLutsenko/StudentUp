@@ -135,7 +135,7 @@ namespace StudentUp.Models
 		public bool IsExistsInDB()
 		{
 			DB db = new DB();
-			DB.ResponseTable marks = db.QueryToRespontTable(string.Format("select * from Marks where Mark_id = {0}", this.markID));
+			DB.ResponseTable marks = db.QueryToRespontTable(string.Format("select * from marks where Mark_id = {0}", this.markID));
 			return marks != null && marks.CountRow == 1;
 		}
 
@@ -226,7 +226,7 @@ namespace StudentUp.Models
 		public static Marks AddMark(int studentID, int subjectID, int mark, int bonusMark, int maxMark, Marks.TypeMarks typeMark, DateTime date)
 		{
 			DB db = new DB();
-			db.QueryToRespontTable(string.Format("insert into Marks(Date, Mark, Bonus_mark, Max_mark, StudentSubject_id, Type_marks) value ('{0}', {1}, {2}, {3}, (select StudentSubject_id from studentsubject where Student_id = {4} and Subject_id = {5}), '{6}');", date.ToString("yyyy-MM-dd"), mark, bonusMark, maxMark, studentID, subjectID, Marks.GetEnumDescription(typeMark)));
+			db.QueryToRespontTable(string.Format("insert into marks(Date, Mark, Bonus_mark, Max_mark, StudentSubject_id, Type_marks) value ('{0}', {1}, {2}, {3}, (select StudentSubject_id from studentsubject where Student_id = {4} and Subject_id = {5}), '{6}');", date.ToString("yyyy-MM-dd"), mark, bonusMark, maxMark, studentID, subjectID, Marks.GetEnumDescription(typeMark)));
 			DB.ResponseTable markID = db.QueryToRespontTable("select LAST_INSERT_ID() as id;");
 			markID.Read();
 			Marks currentMark = new Marks(Convert.ToInt32(markID["id"]));

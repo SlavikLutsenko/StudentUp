@@ -134,7 +134,7 @@ namespace StudentUp.Models
 		public bool Login()
 		{
 			DB db = new DB();
-			DB.ResponseTable users = db.QueryToRespontTable(string.Format("select * from Lecturer inner join Users on Lecturer.Lecturer_id = Users.Lecturer_id where Email='{0}' and Password='{1}';", this.Email, this.Password));
+			DB.ResponseTable users = db.QueryToRespontTable(string.Format("select * from lecturer inner join users on lecturer.Lecturer_id = users.Lecturer_id where Email='{0}' and Password='{1}';", this.Email, this.Password));
 			if (users != null && users.CountRow == 1)
 			{
 				users.Read();
@@ -161,13 +161,13 @@ namespace StudentUp.Models
 			DB db = new DB();
 			string query;
 			if (this.email != string.Empty && this.passwodr != string.Empty)
-				query = string.Format("select * from Lecturer inner join Users on Lecturer.Lecturer_id = Users.Lecturer_id where Users.Email='{0}' and Users.Password='{1}';", this.Email, this.Password);
+				query = string.Format("select * from lecturer inner join users on lecturer.Lecturer_id = users.Lecturer_id where users.Email='{0}' and users.Password='{1}';", this.Email, this.Password);
 			else
 				if (this.userID != -1)
-					query = string.Format("select * from Lecturer inner join Users on Lecturer.Lecturer_id = Users.Lecturer_id where Users.User_id = {0};", this.userID);
+					query = string.Format("select * from lecturer inner join users on lecturer.Lecturer_id = users.Lecturer_id where users.User_id = {0};", this.userID);
 				else
 					if (this.lecturerID != -1)
-						query = string.Format("select * from Lecturer inner join Users on Lecturer.Lecturer_id = Users.Lecturer_id where Lecturer.Lecturer_id = {0};", this.lecturerID);
+						query = string.Format("select * from lecturer inner join users on lecturer.Lecturer_id = users.Lecturer_id where lecturer.Lecturer_id = {0};", this.lecturerID);
 					else query = "";
 			DB.ResponseTable users = db.QueryToRespontTable(query);
 			if (users != null && users.CountRow == 1)
@@ -204,7 +204,7 @@ namespace StudentUp.Models
 			for (int i = 0, end = subjects.Length; i < end; i++)
 				subjectsID += subjects[i].ID + (i != end - 1 ? "," : "");
 			subjectsID += ")";
-			DB.ResponseTable groupID = db.QueryToRespontTable(string.Format("select groups.Group_id from groups inner join student inner join StudentSubject on groups.Group_id = student.Group_id and student.Student_id = StudentSubject.Student_id and StudentSubject.Subject_id in {0} Group by groups.Group_id order by groups.Name;", subjectsID));
+			DB.ResponseTable groupID = db.QueryToRespontTable(string.Format("select groups.Group_id from groups inner join student inner join studentsubject on groups.Group_id = student.Group_id and student.Student_id = studentsubject.Student_id and studentsubject.Subject_id in {0} Group by groups.Group_id order by groups.Name;", subjectsID));
 			if (groupID != null)
 			{
 				result = new Group[groupID.CountRow];
@@ -261,7 +261,7 @@ namespace StudentUp.Models
 			DB db = new DB();
 			db.QueryToRespontTable(
 				string.Format(
-					"insert into Lecturer(Department_id, Name, Surname, Second_name, Position, Telephone) value({0}, '{1}', '{2}', '{3}', '{4}', '{5}');", department, name, surname, secondName, position, telephone));
+					"insert into lecturer(Department_id, Name, Surname, Second_name, Position, Telephone) value({0}, '{1}', '{2}', '{3}', '{4}', '{5}');", department, name, surname, secondName, position, telephone));
 			DB.ResponseTable userIdTable = db.QueryToRespontTable("select LAST_INSERT_ID() as id;");
 			userIdTable.Read();
 			Lecturer user = new Lecturer(Users.AddLecturerUsers(email, admin ? 2 : 1, Convert.ToInt32(userIdTable["id"])));

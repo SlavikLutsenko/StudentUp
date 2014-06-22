@@ -86,7 +86,7 @@ namespace StudentUp.Models
 		public bool IsExistsInDB()
 		{
 			DB db = new DB();
-			DB.ResponseTable subject = db.QueryToRespontTable(string.Format("select * from Subject where Subject_id = {0};", this.subjectID));
+			DB.ResponseTable subject = db.QueryToRespontTable(string.Format("select * from subject where Subject_id = {0};", this.subjectID));
 			return subject != null && subject.CountRow == 1;
 		}
 
@@ -97,7 +97,7 @@ namespace StudentUp.Models
 		public bool GetInformationAboutUserFromDB()
 		{
 			DB db = new DB();
-			DB.ResponseTable subject = db.QueryToRespontTable(string.Format("select * from Subject where Subject_id = {0};", this.subjectID));
+			DB.ResponseTable subject = db.QueryToRespontTable(string.Format("select * from subject where Subject_id = {0};", this.subjectID));
 			if (subject != null && subject.CountRow > 0)
 			{
 				subject.Read();
@@ -160,7 +160,7 @@ namespace StudentUp.Models
 		{
 			Group[] result = null;
 			DB db = new DB();
-			DB.ResponseTable groupID = db.QueryToRespontTable(string.Format("select groups.Group_id from groups inner join student inner join StudentSubject inner join subject on groups.Group_id = student.Group_id and student.Student_id = StudentSubject.Student_id and StudentSubject.Subject_id = subject.Subject_id and subject.Subject_id = {0} Group by groups.Group_id order by groups.Name;", this.subjectID));
+			DB.ResponseTable groupID = db.QueryToRespontTable(string.Format("select groups.Group_id from groups inner join student inner join studentsubject inner join subject on groups.Group_id = student.Group_id and student.Student_id = studentsubject.Student_id and studentsubject.Subject_id = subject.Subject_id and subject.Subject_id = {0} Group by groups.Group_id order by groups.Name;", this.subjectID));
 			if (groupID != null)
 			{
 				result = new Group[groupID.CountRow];
@@ -182,7 +182,7 @@ namespace StudentUp.Models
 		{
 			Student[] result = null;
 			DB db = new DB();
-			DB.ResponseTable studentID = db.QueryToRespontTable(string.Format("select student.Student_id from groups inner join student inner join StudentSubject inner join subject on groups.Group_id = student.Group_id and groups.Group_id = {0} and student.Student_id = StudentSubject.Student_id and StudentSubject.Subject_id = subject.Subject_id and subject.Subject_id = {1};", groupID, this.subjectID));
+			DB.ResponseTable studentID = db.QueryToRespontTable(string.Format("select student.Student_id from groups inner join student inner join studentSubject inner join subject on groups.Group_id = student.Group_id and groups.Group_id = {0} and student.Student_id = studentSubject.Student_id and studentSubject.Subject_id = subject.Subject_id and subject.Subject_id = {1};", groupID, this.subjectID));
 			if (studentID != null)
 			{
 				result = new Student[studentID.CountRow];
@@ -202,7 +202,7 @@ namespace StudentUp.Models
 		public void SetStudent(int[] students)
 		{
 			DB db = new DB();
-			string query = "insert into StudentSubject(Subject_id, Student_id) values ";
+			string query = "insert into studentSubject(Subject_id, Student_id) values ";
 			for (int i = 0, end = students.Length; i < end; i++)
 			{
 				query += string.Format("({0}, {1})", this.subjectID, students[i]);
@@ -223,7 +223,7 @@ namespace StudentUp.Models
 		{
 			DB db = new DB();
 			if (Subject.ConverStringToEnum(examType) == ExamType.nothing && examType != "-") return null;
-			db.QueryToRespontTable(string.Format("insert into Subject(Lecturer_id, Name, Exam_type) value ({0}, '{1}', '{2}');", lecturerID, name, examType));
+			db.QueryToRespontTable(string.Format("insert into subject(Lecturer_id, Name, Exam_type) value ({0}, '{1}', '{2}');", lecturerID, name, examType));
 			DB.ResponseTable idSubject = db.QueryToRespontTable("select LAST_INSERT_ID() as id;");
 			idSubject.Read();
 			Subject subject = new Subject(Convert.ToInt32(idSubject["id"]));

@@ -76,7 +76,7 @@ namespace StudentUp.Models
 			DB db = new DB();
 			DB.ResponseTable group = null;
 			if (this.groupID != -1)
-				group = db.QueryToRespontTable(string.Format("select * from Groups where Group_id = {0};", this.groupID));
+				group = db.QueryToRespontTable(string.Format("select * from groups where Group_id = {0};", this.groupID));
 			return group != null && group.CountRow == 1;
 		}
 
@@ -89,7 +89,7 @@ namespace StudentUp.Models
 			DB db = new DB();
 			DB.ResponseTable group = null;
 			if (this.groupID != -1)
-				group = db.QueryToRespontTable(string.Format("select * from Groups where Group_id = {0};", this.groupID));
+				group = db.QueryToRespontTable(string.Format("select * from groups where Group_id = {0};", this.groupID));
 			if (group == null || group.CountRow <= 0) return false;
 			group.Read();
 			this.departmentID = Convert.ToInt32(group["Department_id"]);
@@ -161,7 +161,7 @@ namespace StudentUp.Models
 		public static Group AddGroup(string nameGroup, int department)
 		{
 			DB db = new DB();
-			db.QueryToRespontTable(string.Format("insert into Groups(Department_id, Name) value ({0}, '{1}');", department, nameGroup));
+			db.QueryToRespontTable(string.Format("insert into groups(Department_id, Name) value ({0}, '{1}');", department, nameGroup));
 			DB.ResponseTable idGoup = db.QueryToRespontTable("select LAST_INSERT_ID() as id;");
 			idGoup.Read();
 			Group group = new Group(Convert.ToInt32(idGoup["id"]));
