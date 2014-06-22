@@ -32,6 +32,9 @@
         case "MyStudents":
             typePage = 6;
             break;
+        case "Prediction":
+            typePage = 7;
+            break;
     }
 }
 
@@ -73,6 +76,10 @@
             <a href="/MyStudents" class="graph element @(typePage == 6? "action" : "")">
                 <span class="icon"></span>
                 <span class="name">Мої студенти</span>
+            </a>
+            <a href="/Prediction" class="prediction element @(typePage == 7? "action" : "")">
+                <span class="icon"></span>
+                <span class="name">Передбачування</span>
             </a>
         }
         <a href="/Examination" class="exam element @(typePage == 5? "action" : "")">

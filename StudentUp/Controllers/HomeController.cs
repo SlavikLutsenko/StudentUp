@@ -2,6 +2,7 @@
 using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI.WebControls;
 using MySql.Data.MySqlClient;
 using StudentUp.Models;
 using System.Configuration;
@@ -843,6 +844,48 @@ namespace StudentUp.Controllers
 						  mail);
 			TempData["messages"] = (new Messages{{Messages.Message.TypeMessage.good, "Письмо було відправлено"}});
 			return Redirect("/Admin");
+		}
+
+		public ActionResult Prediction()
+		{
+			Users user = Login();
+			if (user != null && user.Type == Users.UserType.Lecturer)
+			{
+				ViewData["user"] = user;
+				ViewData["subjects"] = user.GetMySubjects();
+				return View();
+			}
+			return Redirect("/");
+		}
+
+		[HttpPost]
+		public ActionResult Prediction(int attestation1, int attestation2, int subjectID, int groupID)
+		{
+			Users user = Login();
+			if (user != null && user.Type == Users.UserType.Lecturer)
+			{
+				Group @group = new Group(groupID);
+				group.GetInformationAboutUserFromDB();
+				Subject subject = new Subject(subjectID);
+				subject.GetInformationAboutUserFromDB();
+				Student[] students = group.GetStudent();
+
+
+				ViewData["attestation1"] = attestation1;
+				ViewData["attestation2"] = attestation2;
+
+
+				ViewData["user"] = user;
+				ViewData["subjects"] = user.GetMySubjects();
+				ViewData["subject"] = subject;
+				ViewData["group"] = group;
+				ViewData["students"] = students;
+
+				ViewData["show"] = true;
+
+				return View();
+			}
+			return Redirect("/");
 		}
 	}
 }

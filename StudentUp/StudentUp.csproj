@@ -175,6 +175,7 @@
     <Content Include="Images\logo.mini.png" />
     <Content Include="Images\logo.png" />
     <Content Include="Images\message.png" />
+    <Content Include="Images\prediction.png" />
     <Content Include="Images\sample_file_with_students.PNG" />
     <Content Include="Images\subject.png" />
     <Content Include="JS\AddMark.js" />
@@ -186,6 +187,7 @@
     <Content Include="JS\MyMarkLecturer.js" />
     <Content Include="JS\MyMarkStudent.js" />
     <Content Include="JS\MyStudent.js" />
+    <Content Include="JS\Prediction.js" />
     <Content Include="JS\ScriptIndexMasterPage.js" />
     <Content Include="JS\Validation.js" />
     <Content Include="Web.config">
@@ -297,6 +299,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Search\SessionResultStudent.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\Prediction.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

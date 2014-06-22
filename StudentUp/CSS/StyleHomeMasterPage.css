@@ -90,6 +90,10 @@ body {
             background: url("../images/subject.png") no-repeat;
         }
 
+        .b-menu .element.prediction > .icon {
+            background: url("../images/prediction.png") no-repeat;
+        }
+
         .b-menu .element.exit > .icon {
             background: url("../images/exit.png") no-repeat;
         }

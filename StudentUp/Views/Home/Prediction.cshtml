@@ -1,0 +1,88 @@
+﻿@using StudentUp.Models
+@{
+    ViewBag.Title = "Prediction";
+    Layout = "~/Views/MasterPages/HomeMasterPage.cshtml";
+}
+
+@section Title
+{
+    StudentUp - Передбачення
+}
+
+@section Style
+{}
+
+@{
+    Users user = ViewData["user"] as Users;
+}
+
+<form action="" method="POST" accept-charset="utf-8">
+    <select name="subjectID">
+        @{
+            Subject[] subjects = ViewData["subjects"] as Subject[];
+            for (int i = 0; i < subjects.Length; i++)
+            {
+                <option value="@subjects[i].ID">@subjects[i].Name</option>
+            }
+        }
+    </select>
+    <select name="groupID"></select>
+    <p>Мінімальна кількість балів для 1 атестації: <input type="number" name="attestation1"/></p>
+    <p>Мінімальна кількість балів для 2 атестації: <input type="number" name="attestation2"/></p>
+    <input type="submit" value="Показати результат"/>
+</form>
+
+@if (Convert.ToBoolean(ViewData["show"]))
+{
+    Student[] students = ViewData["students"] as Student[];
+    Subject subject = ViewData["subject"] as Subject;
+    Group @group = ViewData["group"] as Group;
+    int attestation1 = Convert.ToInt32(ViewData["attestation1"]);
+    int attestation2 = Convert.ToInt32(ViewData["attestation2"]);
+    <h3>@subject.Name : @group.Name</h3>
+    <table border="1" cellspacing="0">
+        <tr>
+            <th>Студент</th>
+            <th>Атестація № 1</th>
+            <th>Атестація № 2</th>
+            <th>Набрана кількість балів</th>
+            <th>Оцінка на сесії</th>
+        </tr>
+        @for (int i = 0; i < students.Length; i++)
+        {
+            Marks[] marks = students[i].GetMyMarks(subject.ID);
+            double percent = 0;
+            int totalMark = 0;
+            if (marks != null)
+            {
+                for (int j = 0; j < marks.Length; j++)
+                {
+                    totalMark += marks[j].Mark + marks[j].BonusMark;
+                    percent += (double)(marks[j].Mark + marks[j].BonusMark)/marks[j].MaxMark;
+                }
+                percent /= marks.Length;
+            }
+            <tr>
+                <td>@students[i].ShortName</td>
+                @if (percent == 0 || totalMark == 0)
+                {
+                    <td colspan="4">У студента не має оцінок. Не можливо створити для нього передбачення</td>
+                }
+                else
+                {
+                    <td>@( totalMark + totalMark*percent < attestation1 ? "не має" : "має")</td>
+                    <td>@( 5*percent*totalMark + totalMark*percent < attestation2 ? "не має" : "має")</td>
+                    <td>@((int)(100*percent))</td>
+                    <td>@Marks.ToBolognaSystem((int)(100*percent), 100)</td>
+                }
+            </tr>
+        }
+    </table>
+}
+
+
+@section Script
+{
+    <script src="~/JS/jquery-2.1.1.min.js"></script>
+    <script src="~/JS/Prediction.js"></script>
+}
